@@ -5,11 +5,33 @@ import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import { Search, ShoppingCart } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
+import AnNavbar from "./AnNavbar";
 
 const Navbar = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home"); // Track active tab
+  const [scrollNum, setScroll] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Log scroll position every time the user scrolls
+      console.log("Scroll position: " + window.scrollY);
+
+      // Check if the scroll position is greater than 50 pixels
+      if (window.scrollY > 55) {
+        setScroll(true);
+      } else {
+        setScroll(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -36,16 +58,20 @@ const Navbar = () => {
   }, []);
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
   const tabs = ["For Her", "For Him", "About Us", "Gallery", "Contact Us"];
 
   return (
-    <div className="w-full h-[100vh] bg-custombg fixed text-white">
+    <div className="w-full h-[100vh] bg-custombg  text-white">
       {/* Laptop navigation */}
-      <div className="w-full mt-16 relative flex justify-center">
-        <div className="bg-white w-4/5 h-[12vh] flex items-center shadow-lg rounded-lg">
+      <div className="w-full pt-16  flex justify-center">
+        <div className={`${scrollNum ? 'bg-white w-full h-[12vh] flex items-center shadow-lg ' : 'bg-white w-4/5 h-[12vh] flex items-center shadow-lg rounded-lg'}`} >
           <div className="logo w-1/6 flex justify-center items-center">
             <Image
               src={logo}
@@ -70,18 +96,25 @@ const Navbar = () => {
               </p>
             ))}
           </div>
-          <div className="breaker w-2 bg-gray-300 h-[100%] "></div>
+          <div className={`${scrollNum ? '' : 'breaker w-2 bg-gray-300 h-[100%]'}`} ></div>
+          {/* this is the breaker */}
 
-          <div className="bg-custombg mb-2 h-[100%] w-fit">
-          <div className="icons flex space-x-4 items-center px-4">
-            <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
-            <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
-          </div>
+          <div className={`${scrollNum ? '' : 'onlyBg bg-custombg h-[100%]'}`}  >
+            <div className={`${scrollNum ? 'bg-white  h-[105%] w-fit flex justify-end pl-24' : 'bg-white mt-1 h-[105%] w-fit flex justify-end pl-24'}`} >
+              <div className="icons flex space-x-4 items-center px-4">
+                <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Smartphone navigation */}
+      <div className="sm:hidden">
+        <AnNavbar />
+      </div>
+
       {/* Add your smartphone nav code here */}
     </div>
   );
