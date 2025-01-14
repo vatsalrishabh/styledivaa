@@ -7,6 +7,8 @@ import Badge from "@mui/material/Badge";
 import { Search, ShoppingCart } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
 import AnNavbar from "./AnNavbar";
+import 'animate.css';
+
 
 const Navbar = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -55,7 +57,7 @@ const Navbar = () => {
 
   // Extracted common styles
   const navbarStyles = scrollNum
-    ? "hidden lg:flex w-full pt-0 justify-center fixed shadow-lg"
+    ? "hidden lg:flex w-full pt-0 justify-center fixed shadow-lg opacity-70 animate__animated animate__slideInDown "
     : "hidden lg:flex w-full pt-16 justify-center fixed";
 
   const whiteBoxStyles = scrollNum
