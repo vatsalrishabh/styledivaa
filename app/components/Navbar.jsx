@@ -68,10 +68,22 @@ const Navbar = () => {
   const tabs = ["For Her", "For Him", "About Us", "Gallery", "Contact Us"];
 
   return (
-    <div className="w-full h-[100vh] bg-custombg  text-white">
+    <div className=" w-full h-[100vh] bg-custombg  text-white">
       {/* Laptop navigation */}
-      <div className="w-full pt-16  flex justify-center">
-        <div className={`${scrollNum ? 'bg-white w-full h-[12vh] flex items-center shadow-lg ' : 'bg-white w-4/5 h-[12vh] flex items-center shadow-lg rounded-lg'}`} >
+      <div
+        className={`${
+          scrollNum
+            ? "hidden lg:flex w-full pt-0  justify-center fixed mt-0"
+            : "hidden lg:flex w-full pt-16   justify-center fixed mt-0 "
+        }`}
+      >
+        <div
+          className={`${
+            scrollNum
+              ? "bg-white w-full h-[12vh] flex items-center shadow-lg "
+              : "bg-white w-4/5 h-[12vh] flex items-center shadow-lg rounded-lg"
+          }`}
+        >
           <div className="logo w-1/6 flex justify-center items-center">
             <Image
               src={logo}
@@ -96,26 +108,41 @@ const Navbar = () => {
               </p>
             ))}
           </div>
-          <div className={`${scrollNum ? '' : 'breaker w-2 bg-gray-300 h-[100%]'}`} ></div>
+          <div
+            className={`${scrollNum ? "" : "breaker w-2 bg-gray-200 h-[100%]"}`}
+          ></div>
           {/* this is the breaker */}
 
-          <div className={`${scrollNum ? '' : 'onlyBg bg-custombg h-[100%]'}`}  >
-            <div className={`${scrollNum ? 'bg-white  h-[105%] w-fit flex justify-end pl-24' : 'bg-white mt-1 h-[105%] w-fit flex justify-end pl-24'}`} >
+          <div className={`${scrollNum ? "" : "onlyBg bg-custombg h-[100%]"}`}>
+            <div
+              className={`${
+                scrollNum
+                  ? "bg-white  h-[105%] w-fit flex justify-end pl-24"
+                  : "bg-[#F7F7F7] mt-1 h-[105%] w-fit flex justify-end pl-24"
+              }`}
+            >
               <div className="icons flex space-x-4 items-center px-4">
-                <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                <div>
+                  <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                </div>
+
                 <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
               </div>
             </div>
           </div>
         </div>
+
+        {/* search dropdown starts */}
+       
+        {/* search dropdown ends */}
       </div>
 
       {/* Smartphone navigation */}
       <div className="sm:hidden">
         <AnNavbar />
       </div>
-
       {/* Add your smartphone nav code here */}
+      
     </div>
   );
 };
