@@ -4,11 +4,10 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import Badge from "@mui/material/Badge";
-import { Search, ShoppingCart } from "@mui/icons-material";
+import { Search, ShoppingCart, Close } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
 import AnNavbar from "./AnNavbar";
 import 'animate.css';
-
 
 const Navbar = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -16,6 +15,8 @@ const Navbar = () => {
   const [activeTab, setActiveTab] = useState("Home");
   const [scrollNum, setScroll] = useState(false);
   const [cartItems, setCartItems] = useState(4); // Example: Cart item count
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search bar
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Handle scroll event
   useEffect(() => {
@@ -68,10 +69,15 @@ const Navbar = () => {
     ? "bg-white h-full flex justify-end px-8 items-center"
     : "bg-[#F7F7F7] h-full w-[216px] flex justify-end px-8 items-center translate-y-2 ";
 
+  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+
   return (
     <div className="w-full h-screen bg-custombg text-white">
       {/* Laptop/Desktop Navigation */}
       <div className={navbarStyles}>
+        <div>
+          
+        </div>
         <div className={whiteBoxStyles}>
           {/* Logo Section */}
           <div className="logo w-1/6 flex justify-center items-center">
@@ -105,16 +111,24 @@ const Navbar = () => {
 
           {/* Icons Section */}
           <div className={scrollNum ? "w-1/6 h-full flex" : "w-1/6 h-full flex bg-custombg"}>
-  {/* the tilt starts */}
-          <div className="breakerHol w-[8px] h-[108%]">
-          <div className="w-[8px] bg-gray-200 h-[4%]" style={{clipPath: 'polygon(0 1%, 0% 100%, 100% 100%)'}} ></div>
-          <div className={scrollNum?'w-[8px] bg-white':'w-[8px] bg-gray-200 h-[92%]'} ></div>
-          <div className="w-[8px] bg-gray-200 h-[4%]" style={{clipPath: 'polygon(0 1%, 100% 0, 100% 100%)'}}></div>
-          </div>
-    {/* the tilt ends */}
+            <div className="breakerHol w-[8px] h-[108%]">
+              <div
+                className="w-[8px] bg-gray-200 h-[4%]"
+                style={{ clipPath: "polygon(0 1%, 0% 100%, 100% 100%)" }}
+              ></div>
+              <div className={scrollNum ? "w-[8px] bg-white" : "w-[8px] bg-gray-200 h-[92%]"}></div>
+              <div
+                className="w-[8px] bg-gray-200 h-[4%]"
+                style={{ clipPath: "polygon(0 1%, 100% 0, 100% 100%)" }}
+              ></div>
+            </div>
+
             <div className={iconContainerStyles}>
               <div className="icons flex space-x-4 items-center">
-                <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                <Search
+                  className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink"
+                  onClick={toggleSearch}
+                />
                 <Badge
                   badgeContent={cartItems}
                   color="secondary"
@@ -135,6 +149,24 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+
+        {/* Search Bar */}
+        {isSearchOpen && (
+          <div className=" absolute top-[165px] searchbar h-[6vh] w-3/6 bg-slate-50 flex items-center px-4 animate__animated animate__fadeIn">
+            <Search className="text-gray-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for products..."
+              className="flex-grow px-2 py-1 border-none outline-none text-gray-700"
+            />
+            <Close
+              className="cursor-pointer text-gray-500"
+              onClick={toggleSearch}
+            />
+          </div>
+        )}
       </div>
 
       {/* Mobile Navigation */}
