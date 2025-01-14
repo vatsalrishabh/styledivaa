@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Image from "next/image";
+import Badge from "@mui/material/Badge";
 import { Search, ShoppingCart } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
 import AnNavbar from "./AnNavbar";
@@ -12,6 +13,7 @@ const Navbar = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
   const [scrollNum, setScroll] = useState(false);
+  const [cartItems, setCartItems] = useState(4); // Example: Cart item count
 
   // Handle scroll event
   useEffect(() => {
@@ -81,29 +83,52 @@ const Navbar = () => {
           </div>
 
           {/* Tabs Section */}
-          <div className="tabs w-4/6 flex justify-between text-lg font-semibold">
-            {tabs.map((tab) => (
-              <p
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`cursor-pointer px-4 py-2 rounded-lg transition-all duration-300 ease-in-out ${
-                  activeTab === tab
-                    ? "bg-brightPink text-white shadow-lg scale-110"
-                    : "hover:bg-lightPink hover:text-brightPink text-customText"
-                }`}
-              >
-                {tab}
-              </p>
-            ))}
+          <div className="w-4/6">
+            <div className="tabs w-4/6 flex justify-between text-lg ">
+              {tabs.map((tab) => (
+                <p
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
+                    activeTab === tab
+                      ? "bg-brightPink text-white shadow-lg scale-110"
+                      : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
+                  }`}
+                >
+                  {tab}
+                </p>
+              ))}
+            </div>
           </div>
 
           {/* Icons Section */}
-          <div className={scrollNum?'w-1/6 h-full flex':'w-1/6 h-full flex bg-custombg'}>
-          <div className="w-[8px] bg-gray-200"></div>
+          <div className={scrollNum ? "w-1/6 h-full flex" : "w-1/6 h-full flex bg-custombg"}>
+  {/* the tilt starts */}
+          <div className="breakerHol w-[8px] h-[108%]">
+          <div className="w-[8px] bg-gray-200 h-[4%]" style={{clipPath: 'polygon(0 1%, 0% 100%, 100% 100%)'}} ></div>
+          <div className={scrollNum?'w-[8px] bg-white':'w-[8px] bg-gray-200 h-[92%]'} ></div>
+          <div className="w-[8px] bg-gray-200 h-[4%]" style={{clipPath: 'polygon(0 1%, 100% 0, 100% 100%)'}}></div>
+          </div>
+    {/* the tilt ends */}
             <div className={iconContainerStyles}>
               <div className="icons flex space-x-4 items-center">
                 <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
-                <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                <Badge
+                  badgeContent={cartItems}
+                  color="secondary"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      backgroundColor: "rgb(239, 83, 80)", // Bright pink for emphasis
+                      color: "white", // Text color inside the badge
+                      fontWeight: "bold",
+                      fontSize: "0.8rem",
+                      minWidth: "20px",
+                      height: "20px",
+                    },
+                  }}
+                >
+                  <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                </Badge>
               </div>
             </div>
           </div>
