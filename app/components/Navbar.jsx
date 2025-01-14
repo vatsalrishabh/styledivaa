@@ -10,43 +10,27 @@ import AnNavbar from "./AnNavbar";
 const Navbar = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("Home"); // Track active tab
+  const [activeTab, setActiveTab] = useState("Home");
   const [scrollNum, setScroll] = useState(false);
 
+  // Handle scroll event
   useEffect(() => {
-    const handleScroll = () => {
-      // Log scroll position every time the user scrolls
-      console.log("Scroll position: " + window.scrollY);
-
-      // Check if the scroll position is greater than 50 pixels
-      if (window.scrollY > 55) {
-        setScroll(true);
-      } else {
-        setScroll(false);
-      }
-    };
+    const handleScroll = () => setScroll(window.scrollY > 55);
 
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Load user details
   useEffect(() => {
     const loadUser = async () => {
       try {
         const token = localStorage.getItem("token");
         if (token) {
           const res = await fetch("/api/user", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           });
-          if (res.ok) {
-            const userData = await res.json();
-            setLoggedInUser(userData);
-          }
+          if (res.ok) setLoggedInUser(await res.json());
         }
       } catch (error) {
         console.error("Error loading user:", error);
@@ -67,23 +51,25 @@ const Navbar = () => {
 
   const tabs = ["For Her", "For Him", "About Us", "Gallery", "Contact Us"];
 
+  // Extracted common styles
+  const navbarStyles = scrollNum
+    ? "hidden lg:flex w-full pt-0 justify-center fixed shadow-lg"
+    : "hidden lg:flex w-full pt-16 justify-center fixed";
+
+  const whiteBoxStyles = scrollNum
+    ? "bg-white w-full h-[12vh] flex items-center shadow-lg"
+    : "bg-white w-4/5 h-[12vh] flex items-center shadow-lg rounded-lg";
+
+  const iconContainerStyles = scrollNum
+    ? "bg-white h-full flex justify-end px-8 items-center"
+    : "bg-[#F7F7F7] h-full w-[216px] flex justify-end px-8 items-center translate-y-2 ";
+
   return (
-    <div className=" w-full h-[100vh] bg-custombg  text-white">
-      {/* Laptop navigation */}
-      <div
-        className={`${
-          scrollNum
-            ? "hidden lg:flex w-full pt-0  justify-center fixed mt-0"
-            : "hidden lg:flex w-full pt-16   justify-center fixed mt-0 "
-        }`}
-      >
-        <div
-          className={`${
-            scrollNum
-              ? "bg-white w-full h-[12vh] flex items-center shadow-lg "
-              : "bg-white w-4/5 h-[12vh] flex items-center shadow-lg rounded-lg"
-          }`}
-        >
+    <div className="w-full h-screen bg-custombg text-white">
+      {/* Laptop/Desktop Navigation */}
+      <div className={navbarStyles}>
+        <div className={whiteBoxStyles}>
+          {/* Logo Section */}
           <div className="logo w-1/6 flex justify-center items-center">
             <Image
               src={logo}
@@ -93,6 +79,8 @@ const Navbar = () => {
               className="rounded-full"
             />
           </div>
+
+          {/* Tabs Section */}
           <div className="tabs w-4/6 flex justify-between text-lg font-semibold">
             {tabs.map((tab) => (
               <p
@@ -108,41 +96,24 @@ const Navbar = () => {
               </p>
             ))}
           </div>
-          <div
-            className={`${scrollNum ? "" : "breaker w-2 bg-gray-200 h-[100%]"}`}
-          ></div>
-          {/* this is the breaker */}
 
-          <div className={`${scrollNum ? "" : "onlyBg bg-custombg h-[100%]"}`}>
-            <div
-              className={`${
-                scrollNum
-                  ? "bg-white  h-[105%] w-fit flex justify-end pl-24"
-                  : "bg-[#F7F7F7] mt-1 h-[105%] w-fit flex justify-end pl-24"
-              }`}
-            >
-              <div className="icons flex space-x-4 items-center px-4">
-                <div>
-                  <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
-                </div>
-
+          {/* Icons Section */}
+          <div className={scrollNum?'w-1/6 h-full flex':'w-1/6 h-full flex bg-custombg'}>
+          <div className="w-[8px] bg-gray-200"></div>
+            <div className={iconContainerStyles}>
+              <div className="icons flex space-x-4 items-center">
+                <Search className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
                 <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
               </div>
             </div>
           </div>
         </div>
-
-        {/* search dropdown starts */}
-       
-        {/* search dropdown ends */}
       </div>
 
-      {/* Smartphone navigation */}
+      {/* Mobile Navigation */}
       <div className="sm:hidden">
         <AnNavbar />
       </div>
-      {/* Add your smartphone nav code here */}
-      
     </div>
   );
 };
