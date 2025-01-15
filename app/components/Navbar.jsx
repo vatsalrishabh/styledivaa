@@ -32,6 +32,7 @@ const Navbar = () => {
     const loadUser = async () => {
       try {
         const token = localStorage.getItem("token");
+        setIsLoading(false);
         if (token) {
           const res = await fetch("/api/user", {
             headers: { Authorization: `Bearer ${token}` },
@@ -171,7 +172,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="sm:hidden">
+      <div className="lg:hidden flex">
         <AnNavbar />
       </div>
 

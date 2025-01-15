@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <div className="Footer bg-gray-900 text-gray-300 py-8">
       {/* Top Footer */}
-      <div className="topFooter grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 px-8">
+      <div className="topFooter grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 px-8 pt-6">
         {/* Column 1 */}
         <div className="col1">
           <h1 className="text-brightPink text-xl font-semibold mb-4 hover:text-lightPink transition-all duration-300">
