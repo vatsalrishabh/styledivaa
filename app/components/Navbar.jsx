@@ -6,6 +6,7 @@ import Image from "next/image";
 import Badge from "@mui/material/Badge";
 import { Search, ShoppingCart, Close } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
+import heromodel from "../../public/assets/heromodel.png"
 import AnNavbar from "./AnNavbar";
 import 'animate.css';
 
@@ -58,8 +59,8 @@ const Navbar = () => {
 
   // Extracted common styles
   const navbarStyles = scrollNum
-    ? "hidden lg:flex w-full pt-0 justify-center fixed shadow-lg opacity-70 animate__animated animate__slideInDown "
-    : "hidden lg:flex w-full pt-16 justify-center fixed";
+    ? "hidden lg:flex w-full pt-0 justify-center fixed shadow-lg opacity-70 animate__animated animate__slideInDown z-10 "
+    : "hidden lg:flex w-full pt-16 justify-center fixed z-10 ";
 
   const whiteBoxStyles = scrollNum
     ? "bg-white w-full h-[12vh] flex items-center shadow-lg"
@@ -173,6 +174,39 @@ const Navbar = () => {
       <div className="sm:hidden">
         <AnNavbar />
       </div>
+
+      {/* The left slideIn Images and text start */}
+
+      <div className="absolute top-[200px] w-full flex justify-center items-center bg-custombg">
+  {/* Left Side - Text Section */}
+  <div className="w-full md:w-2/5 bg-custombg flex text-black animate__animated animate__slideInLeft flex-col justify-center items-center h-[70vh] px-4">
+    <h1
+      className="text-6xl md:text-8xl leading-none tracking-tight text-pink-500 font-cursive italic mb-4"
+      style={{ fontFamily: "'Dancing Script', cursive" }}
+    >
+      STYLE
+    </h1>
+
+    <h1
+      className="text-5xl md:text-7xl font-display text-pink-600 italic mb-6"
+      style={{ fontFamily: "'Merriweather', serif" }}
+    >
+      DIVAA
+    </h1>
+  </div>
+
+  {/* Right Side - Image Section */}
+  <div className="w-full md:w-3/5 flex justify-center items-center animate__animated animate__slideInLeft">
+    <Image
+      src={heromodel}
+      alt="Hero Image"
+      width={1600} // Increased image width for larger screens
+      height={1200} // Increased image height for larger screens
+      className="object-cover rounded-lg "
+    />
+  </div>
+</div>
+
     </div>
   );
 };
