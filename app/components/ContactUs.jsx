@@ -6,17 +6,13 @@ import Image from "next/image";
 import Badge from "@mui/material/Badge";
 import { Search, ShoppingCart, Close } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
-import heromodel from "../../public/assets/heromodel.png"
+import heromodel from "../../public/assets/contactusbg.png";
 import AnNavbar from "./AnNavbar";
 import Link from "next/link";
-import 'animate.css';
-import LogInUserDetail from "./LogInUserDetail";
-import { useSelector , useDispatch} from "react-redux";
-import { toggleCart ,updateNumOfItems } from "../../redux/cart/openCartSlice"; 
+import "animate.css";
+import BreadCrumbs from "./BreadCrumbs";
 
-const Navbar = () => {
-  const dispatch = useDispatch();
-  const {  numOfItems } = useSelector((state) => state.openCart);
+const ContactUs = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
@@ -24,12 +20,6 @@ const Navbar = () => {
   const [cartItems, setCartItems] = useState(4); // Example: Cart item count
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search bar
   const [searchQuery, setSearchQuery] = useState("");
-
-
-    // Function to handle the cart icon click
-    const handleCartClick = () => {
-      dispatch(toggleCart()); // Toggle the cart open/close
-    };
 
   // Handle scroll event
   useEffect(() => {
@@ -92,55 +82,60 @@ const Navbar = () => {
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <div className="w-full h-screen bg-custombg text-white">
+    <div className="w-full h-screen  bg-custombg text-white">
       {/* Laptop/Desktop Navigation */}
       <div className={navbarStyles}>
-        <div>
-          
-        </div>
+        <div></div>
         <div className={whiteBoxStyles}>
           {/* Logo Section */}
           <div className="logo w-1/6 flex justify-center items-center">
-            <Image
+          <Link href="/">
+          <Image
               src={logo}
               alt="Logo"
               width={150}
               height={150}
               className="rounded-full"
             />
+          </Link>
           </div>
 
           {/* Tabs Section */}
           <div className="w-4/6">
-          <div className="tabs w-4/6 flex justify-between text-lg">
-  {tabs.map((tab) => (
-    <Link key={tab.name} href={tab.href}>
-      <p
-        onClick={() => setActiveTab(tab.name)} // Update the active tab
-        className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
-          activeTab === tab.name
-            ? "bg-brightPink text-white shadow-lg scale-110"
-            : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
-        }`}
-      >
-        {tab.name}
-      </p>
-    </Link>
-  ))}
-</div>
-
-
-
+            <div className="tabs w-4/6 flex justify-between text-lg">
+              {tabs.map((tab) => (
+                <Link key={tab.name} href={tab.href}>
+                  <p
+                    onClick={() => setActiveTab(tab.name)} // Update the active tab
+                    className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
+                      activeTab === tab.name
+                        ? "bg-brightPink text-white shadow-lg scale-110"
+                        : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
+                    }`}
+                  >
+                    {tab.name}
+                  </p>
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Icons Section */}
-          <div className={scrollNum ? "w-1/6 h-full flex" : "w-1/6 h-full flex bg-custombg"}>
+          <div
+            className={
+              scrollNum ? "w-1/6 h-full flex" : "w-1/6 h-full flex bg-custombg"
+            }
+          >
             <div className="breakerHol w-[8px] h-[108%]">
               <div
                 className="w-[8px] bg-gray-200 h-[4%]"
                 style={{ clipPath: "polygon(0 1%, 0% 100%, 100% 100%)" }}
               ></div>
-              <div className={scrollNum ? "w-[8px] bg-white" : "w-[8px] bg-gray-200 h-[92%]"}></div>
+              <div
+                className={
+                  scrollNum ? "w-[8px] bg-white" : "w-[8px] bg-gray-200 h-[92%]"
+                }
+              ></div>
               <div
                 className="w-[8px] bg-gray-200 h-[4%]"
                 style={{ clipPath: "polygon(0 1%, 100% 0, 100% 100%)" }}
@@ -148,15 +143,13 @@ const Navbar = () => {
             </div>
 
             <div className={iconContainerStyles}>
-            <LogInUserDetail/>
               <div className="icons flex space-x-4 items-center">
                 <Search
                   className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink"
                   onClick={toggleSearch}
                 />
-                <div className="OpneCart" onClick={handleCartClick}>
                 <Badge
-                  badgeContent={numOfItems}
+                  badgeContent={cartItems}
                   color="secondary"
                   sx={{
                     "& .MuiBadge-badge": {
@@ -171,8 +164,6 @@ const Navbar = () => {
                 >
                   <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
                 </Badge>
-                </div>
-                
               </div>
             </div>
           </div>
@@ -204,38 +195,29 @@ const Navbar = () => {
 
       {/* The left slideIn Images and text start */}
 
-      <div className="absolute top-[200px] w-full flex justify-center items-center bg-custombg">
-  {/* Left Side - Text Section */}
-  <div className="w-full md:w-2/5 bg-custombg flex text-black animate__animated animate__slideInLeft flex-col justify-center items-center h-[70vh] px-4">
-    <h1
-   className="text-5xl md:text-7xl font-display text-pink-600 italic mb-6"
-   style={{ fontFamily: "'Merriweather', serif" }}
-    >
-      STYLE
-    </h1>
+      <div className="absolute lg:top-[200px] w-full bg-custombg">
+        <div className="theLeft-Text-Right-Image w-full lg:flex justify-center items-center bg-custombg">
+          {/* Left Side - Text Section */}
+          <div className="w-full md:w-2/5 bg-custombg  text-black  flex-col  lg:h-[70vh] sm:h-[20vh] px-4">
+            {/* the breadcrumb starts */}
+              <BreadCrumbs/>
+            {/* breadcrumb ends  */}
+          </div>
 
-    <h1
-      className="text-5xl md:text-7xl font-display text-pink-600 italic mb-6"
-      style={{ fontFamily: "'Merriweather', serif" }}
-    >
-      DIVAA
-    </h1>
-  </div>
-
-  {/* Right Side - Image Section */}
-  <div className="w-full md:w-3/5 flex justify-center items-center animate__animated animate__slideInLeft">
-    <Image
-      src={heromodel}
-      alt="Hero Image"
-      width={1600} // Increased image width for larger screens
-      height={1200} // Increased image height for larger screens
-      className="object-cover rounded-lg "
-    />
-  </div>
-</div>
-
+          {/* Right Side - Image Section */}
+          <div className="w-full md:w-3/5 flex justify-center items-center animate__animated animate__slideInLeft">
+            <Image
+              src={heromodel}
+              alt="Hero Image"
+              width={1600} // Increased image width for larger screens
+              height={1200} // Increased image height for larger screens
+              className="object-cover rounded-lg "
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Navbar;
+export default ContactUs;

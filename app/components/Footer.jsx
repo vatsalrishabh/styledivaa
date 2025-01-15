@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -13,9 +14,9 @@ const Footer = () => {
             About Us
           </h1>
           <p className="hover:text-gray-100 transition-all duration-300">
-            StyleDivaa provides designer dresses and fashion courses. Lorem
-            ipsum dolor sit amet consectetur adipisicing elit. Consequatur
-            magni delectus error dignissimos.
+            StyleDivaa, based in Bangalore, offers custom designer dresses, 
+            expert tailoring, and fashion courses. Elevate your style and 
+            learn the art of fashion with us.
           </p>
         </div>
 
@@ -26,16 +27,16 @@ const Footer = () => {
           </h1>
           <ul className="space-y-2">
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Designer Dresses
+              <Link href="/forher">For Her</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Fashion Courses
+              <Link href="/forhim">For Him</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Custom Tailoring
+              <Link href="/services">Services</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Styling Tips
+              <Link href="/stylingtips">Styling Tips</Link>
             </li>
           </ul>
         </div>
@@ -47,16 +48,19 @@ const Footer = () => {
           </h1>
           <ul className="space-y-2">
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Home
+              <Link href="/">Home</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              About Us
+              <Link href="/aboutus">About Us</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Contact Us
+              <Link href="/contactus">Contact Us</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              FAQs
+              <Link href="/gallery">Gallery</Link>
+            </li>
+            <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
+              <Link href="/faqs">FAQs</Link>
             </li>
           </ul>
         </div>
@@ -68,16 +72,16 @@ const Footer = () => {
           </h1>
           <ul className="space-y-2">
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Facebook
+              <Link href="https://facebook.com">Facebook</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Instagram
+              <Link href="https://instagram.com">Instagram</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Twitter
+              <Link href="https://twitter.com">Twitter</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              Pinterest
+              <Link href="https://pinterest.com">Pinterest</Link>
             </li>
           </ul>
         </div>
@@ -86,13 +90,15 @@ const Footer = () => {
       {/* Bottom Footer */}
       <div className="bottomFooter flex flex-col lg:flex-row items-center justify-between mt-8 border-t border-gray-700 pt-4 px-8">
         <div className="bottomFooter-Left text-gray-400">
-          StyleDivaa is your one-stop destination for style and elegance.
+          StyleDivaa is your one-stop destination for bespoke fashion and elegance.
         </div>
         <div className="bottomFooter-Right text-gray-400 mt-4 lg:mt-0">
           © {year} StyleDivaa | All Rights Reserved | Powered by{" "}
-          <span className="text-brightPink hover:text-lightPink transition-all duration-300 cursor-pointer">
-            NebulaNet
-          </span>
+          <Link href="https://www.nebulanet.in">
+            <span className="text-brightPink hover:text-lightPink transition-all duration-300 cursor-pointer">
+              NebulaNet
+            </span>
+          </Link>
         </div>
       </div>
     </div>
