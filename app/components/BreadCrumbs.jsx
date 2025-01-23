@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
 
-const BreadCrumbs = () => {
+const BreadCrumbs = ({one,oneLink, two , twoLink}) => {
   const breadcrumbs = [
-    { label: "Home", href: "/" },
-    { label: "Contact Us", href: "/contactus" },
+    { label: one, href: oneLink },
+    { label: two, href: twoLink },
   ];
 
   return (

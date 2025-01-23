@@ -12,7 +12,7 @@ import Link from "next/link";
 import "animate.css";
 import BreadCrumbs from "./BreadCrumbs";
 
-const ContactUs = () => {
+const AboutUs = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
@@ -200,7 +200,7 @@ const ContactUs = () => {
           {/* Left Side - Text Section */}
           <div className="w-full md:w-2/5 bg-custombg  text-black  flex-col  lg:h-[70vh] sm:h-[20vh] px-4">
             {/* the breadcrumb starts */}
-            <BreadCrumbs one="Home" oneLink="/" two="Contact Us"  twoLink="/contactus"/>
+              <BreadCrumbs one="Home" oneLink="/" two="About Us"  twoLink="/aboutus"/>
             {/* breadcrumb ends  */}
           </div>
 
@@ -220,4 +220,4 @@ const ContactUs = () => {
   );
 };
 
-export default ContactUs;
+export default AboutUs;

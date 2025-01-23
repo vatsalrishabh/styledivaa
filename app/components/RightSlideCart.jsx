@@ -5,7 +5,7 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
 import { addItem, removeItem, updateQuantity, clearCart } from "../../redux/cart/cartSlice";
-import { openCart as openCartAction } from "../../redux/cart/openCartSlice";
+import { openCart as openCartAction, closeCart } from "../../redux/cart/openCartSlice";
 import { updateNumOfItems } from "../../redux/cart/openCartSlice"; // Import the updateNumOfItems action
 
 export default function RightSlideCart() {
@@ -55,7 +55,7 @@ export default function RightSlideCart() {
                     <div className="ml-3 flex h-7 items-center">
                       <button
                         type="button"
-                        onClick={() => dispatch(openCartAction(false))}
+                        onClick={() => dispatch(closeCart())}
                         className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
                       >
                         <XMarkIcon className="w-6 h-6 text-pink-600" aria-hidden="true" />
@@ -143,7 +143,7 @@ export default function RightSlideCart() {
                       or{' '}
                       <button
                         type="button"
-                        onClick={() => dispatch(openCartAction(false))}
+                        onClick={() => dispatch(closeCart())}
                         className="font-medium text-pink-600 hover:text-pink-500"
                       >
                         Continue Shopping

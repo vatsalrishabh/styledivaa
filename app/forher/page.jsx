@@ -1,9 +1,16 @@
+"use client"
 import React from 'react'
+import Footer from '../components/Footer'
+import RightSlideCart from '../components/RightSlideCart'
+import ForHer from '../components/ForHer'
+
 
 const page = () => {
   return (
-    <div>
-      For her
+    <div className='Contact-us '>
+     <ForHer/>
+  
+      <Footer/> 
     </div>
   )
 }
