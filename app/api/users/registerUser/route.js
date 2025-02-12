@@ -31,15 +31,14 @@ export async function POST(request) {
             createdAt: new Date(),
         };
         const otpExists = await Otp.find({email:dataa?.email});
-        if(!otpExists){
-            await emailRegistration(dataa?.email, otp, "StyleDivaa OTP Verification"); 
-            await Otp.create(otpData);
-            return NextResponse.json({ message: "User Created and OTP Sent" }, { status: 201 });
+        if(otpExists.length>0){
+            await emailRegistration(dataa?.email, otpExists.otp, "StyleDivaa OTP Verification"); 
+            console.log("OTP created:", otp);
         }
-        await emailRegistration(dataa?.email, otpExists.otp, "StyleDivaa OTP Verification"); 
-       
-        console.log("OTP created:", otp);
-
+        
+        await emailRegistration(dataa?.email, otp, "StyleDivaa OTP Verification"); 
+        await Otp.create(otpData);
+        return NextResponse.json({ message: "User Created and OTP Sent" }, { status: 201 });
 
     
         

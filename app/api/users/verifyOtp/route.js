@@ -13,10 +13,7 @@ export async function POST(request) {
     console.log("Received Data:", dataa);
 
     // Ensure DB is connected
-    await connectDB().catch((err) => {
-      console.log("Database connection failed:", err);
-      return NextResponse.json({ message: "Database Error" }, { status: 500 });
-    });
+    await connectDB();
 
     // Convert OTP to Number
     const otpNumber = Number(dataa.otp);
@@ -32,9 +29,18 @@ export async function POST(request) {
 
     // Create new user
     const { email, name, mobile } = dataa;
-    const newUser = await User.create({ email, name, mobileNumber: mobile });
+    const userCount = await User.countDocuments();
+    const userId = `USR${String(userCount + 1).padStart(4, "0")}`; // Generates 'USR0001', 'USR0010', etc.
 
-    // Remove OTP after successful verification
+    let newUser;
+    try {
+      newUser = await User.create({ userId, email, name, mobileNumber: mobile });
+    } catch (error) {
+      console.log("Error creating user:", error);
+      return NextResponse.json({ message: "Failed to create user" }, { status: 500 });
+    }
+
+    // ✅ Delete OTP only if user creation is successful
     await Otp.deleteOne({ email: dataa.email });
 
     // Generate JWT Token
