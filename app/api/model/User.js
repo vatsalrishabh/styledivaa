@@ -20,7 +20,7 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     dpUrl: String, // Profile picture URL
     addresses: [addressSchema], // Array of addresses
-    mobileNumber: String,
+    mobileNumber: { type: String, required: true },
     typeOfUser: String, // E.g., "Customer", "Admin", "Vendor"
 }, { timestamps: true });
 

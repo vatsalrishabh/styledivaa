@@ -74,6 +74,7 @@ const Navbar = () => {
     { name: "About Us", href: "/aboutus" },
     { name: "Gallery", href: "/gallery" },
     { name: "Contact Us", href: "/contactus" },
+ 
   ];
 
   // Extracted common styles
@@ -127,6 +128,15 @@ const Navbar = () => {
       </p>
     </Link>
   ))}
+
+<Link href="/enroll">
+  <p className="bg-pink-700 px-4 py-2 rounded-md text-center text-white text-lg font-bold cursor-pointer animate-flash hover:bg-pink-800 hover:scale-105 transition-all duration-300">
+    Enroll Now
+  </p>
+</Link>
+
+
+
 </div>
 
 
@@ -148,7 +158,9 @@ const Navbar = () => {
             </div>
 
             <div className={iconContainerStyles}>
+      {/* This has Model login form */}
             <LogInUserDetail/>
+      {/* This has Model ends  */}
               <div className="icons flex space-x-4 items-center">
                 <Search
                   className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink"
@@ -208,17 +220,17 @@ const Navbar = () => {
   {/* Left Side - Text Section */}
   <div className="w-full md:w-2/5 bg-custombg flex text-black animate__animated animate__slideInLeft flex-col justify-center items-center h-[70vh] px-4">
     <h1
-   className="text-5xl md:text-7xl font-display text-pink-600 italic mb-6"
+   className="lg:text-[110px] text-5xl md:text-7xl font-display text-pink-600 italic mb-6"
    style={{ fontFamily: "'Merriweather', serif" }}
     >
       STYLE
     </h1>
 
     <h1
-      className="text-5xl md:text-7xl font-display text-pink-600 italic mb-6"
+      className="lg:text-[110px] text-5xl  md:text-7xl font-display text-pink-600 italic mb-6"
       style={{ fontFamily: "'Merriweather', serif" }}
     >
-      DIVAA
+    & BEAUTY
     </h1>
   </div>
 

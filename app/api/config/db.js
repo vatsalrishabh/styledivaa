@@ -1,21 +1,33 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const connectDb = (handler) => async (req, res) => {
-  if (mongoose.connections[0].readyState) {
-    return handler(req, res); // If already connected, proceed
+const DATABASE_URL = "mongodb+srv://vatsal00:StyleDiva2025@cluster0.cvuh3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0StyleDivaa";
+
+if (!DATABASE_URL) {
+  throw new Error("Please define the DATABASE_URL environment variable inside .env.local");
+}
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(DATABASE_URL, opts).then((mongoose) => {
+      return mongoose;
     });
-    console.log('MongoDB connected');
-    return handler(req, res); // Proceed once connected
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    res.status(500).json({ message: 'Database connection failed' });
   }
-};
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
 
-export default connectDb;
+export default connectDB;
