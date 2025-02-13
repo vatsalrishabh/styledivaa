@@ -11,16 +11,12 @@ export async function GET() {
   try {
     // Establish the database connection
     await connectDB();
-    const newUser = new User({
-      name: "John Doe",
-      email: "johndoe@example.com",
-      password: "hashedpassword123", // Ideally, hash the password before saving
-    });
+   
 
     // Save the user to the database
-    await newUser.save();
+  
 
-    return NextResponse.json({ message: "User saved successfully", user: newUser });
+    return NextResponse.json({ message: "User saved successfully"});
 
 
   } catch (error) {
