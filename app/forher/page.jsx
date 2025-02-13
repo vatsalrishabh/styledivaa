@@ -9,7 +9,7 @@ const page = () => {
   return (
     <div className='Contact-us '>
      <ForHer/>
-  
+  <RightSlideCart/>
       <Footer/> 
     </div>
   )

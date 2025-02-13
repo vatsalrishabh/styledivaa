@@ -5,6 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import Link from 'next/link';
+import LogInUserDetail from './LogInUserDetail';
 
 const AnNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,6 +79,11 @@ const AnNavbar = () => {
             <Link href="/contact-us" className="text-lg text-customText hover:text-brightPink cursor-pointer">
               Contact Us
             </Link>
+          </div>
+          <div className="relative group">
+    {/* login button for smartphone  */}
+           <LogInUserDetail/>
+     {/* login button smartphone */}
           </div>
         </div>
       )}

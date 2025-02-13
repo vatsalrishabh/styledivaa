@@ -85,7 +85,7 @@ const BeforeLogin = ({ openLoginModal }) => {
   };
 
   return (
-    <div className="Before-Login text-center p-5">
+    <div className="Before-Login text-center lg:p-5">
       <Button
         variant="contained"
         style={{ backgroundColor: "#e91e63", color: "white", padding: "10px 20px", fontSize: "16px", fontWeight: "bold" }}

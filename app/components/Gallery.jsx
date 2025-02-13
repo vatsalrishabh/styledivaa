@@ -1,7 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import Badge from "@mui/material/Badge";
 import { Search, ShoppingCart, Close } from "@mui/icons-material";
@@ -11,8 +9,13 @@ import AnNavbar from "./AnNavbar"; //for smartphone
 import Link from "next/link";
 import "animate.css";
 import BreadCrumbs from "./BreadCrumbs";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleCart, updateNumOfItems } from "../../redux/cart/openCartSlice";
+import LogInUserDetail from "./LogInUserDetail";
 
 const Gallery = () => {
+  const dispatch = useDispatch();
+  const { numOfItems } = useSelector((state) => state.openCart);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
@@ -20,6 +23,11 @@ const Gallery = () => {
   const [cartItems, setCartItems] = useState(4); // Example: Cart item count
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search bar
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Function to handle the cart icon click
+  const handleCartClick = () => {
+    dispatch(toggleCart()); // Toggle the cart open/close
+  };
 
   // Handle scroll event
   useEffect(() => {
@@ -143,27 +151,33 @@ const Gallery = () => {
             </div>
 
             <div className={iconContainerStyles}>
+              {/* This has Model login form */}
+              <LogInUserDetail />
+              {/* This has Model ends  */}
               <div className="icons flex space-x-4 items-center">
                 <Search
                   className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink"
                   onClick={toggleSearch}
                 />
-                <Badge
-                  badgeContent={cartItems}
-                  color="secondary"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "rgb(239, 83, 80)", // Bright pink for emphasis
-                      color: "white", // Text color inside the badge
-                      fontWeight: "bold",
-                      fontSize: "0.8rem",
-                      minWidth: "20px",
-                      height: "20px",
-                    },
-                  }}
-                >
-                  <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
-                </Badge>
+
+                <div className="OpneCart" onClick={handleCartClick}>
+                  <Badge
+                    badgeContent={numOfItems}
+                    color="secondary"
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "rgb(239, 83, 80)", // Bright pink for emphasis
+                        color: "white", // Text color inside the badge
+                        fontWeight: "bold",
+                        fontSize: "0.8rem",
+                        minWidth: "20px",
+                        height: "20px",
+                      },
+                    }}
+                  >
+                    <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                  </Badge>
+                </div>
               </div>
             </div>
           </div>
