@@ -27,25 +27,38 @@ export async function POST(request) {
       return NextResponse.json({ message: "Invalid or Expired OTP" }, { status: 400 });
     }
 
-    // Create new user
-    const { email, name, mobile } = dataa;
-    const userCount = await User.countDocuments();
-    const userId = `USR${String(userCount + 1).padStart(4, "0")}`; // Generates 'USR0001', 'USR0010', etc.
+    // Extract data from request
+    const { email, name, mobile, password } = dataa; // Now includes password
 
+    if (!password) {
+      return NextResponse.json({ message: "Password is required" }, { status: 400 });
+    }
+
+    // Generate a unique user ID
+    const userCount = await User.countDocuments();
+    const userId = `USR${String(userCount + 1).padStart(4, "0")}`;
+
+    // Create new user
     let newUser;
     try {
-      newUser = await User.create({ userId, email, name, mobileNumber: mobile });
+      newUser = await User.create({ userId, email, name, mobileNumber: mobile, password });
     } catch (error) {
       console.log("Error creating user:", error);
       return NextResponse.json({ message: "Failed to create user" }, { status: 500 });
     }
 
-    // ✅ Delete OTP only if user creation is successful
+    // Delete OTP entry after successful verification
     await Otp.deleteOne({ email: dataa.email });
 
     // Generate JWT Token
-    const token = generateToken({ email: newUser.email, name: newUser.name, mobile: newUser.mobileNumber, isLoggedIn: true });
-
+    const token = generateToken({
+      email: newUser.email,
+      name: newUser.name,
+      mobile: newUser.mobileNumber,
+      isLoggedIn: true
+    });
+    
+    delete newUser.password;
     return NextResponse.json(
       { message: "User created successfully", token, user: newUser },
       { status: 201 }

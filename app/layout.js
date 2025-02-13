@@ -9,6 +9,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* Add meta tags, title, etc. here */}
+        
       </head>
       <body className="antialiased">
         <Auth0Provider

@@ -12,30 +12,28 @@ import {
 } from "@mui/material";
 import {
   AlternateEmail as AlternateEmailIcon,
-  Person,
-  InstallMobile as InstallMobileIcon,
   Cancel as CancelIcon,
+  Password as PasswordIcon,
 } from "@mui/icons-material";
 import axios from "axios";
-import SnackBar from "../SnackBar"
 
-const BeforeLogin = () => {
+
+const BeforeLogin = ({ openLoginModal }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [otpModal, setOtpModal] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", mobile: "" });
-  const [errors, setErrors] = useState({ name: "", email: "", mobile: "" });
-  const [otp, setOtp] = useState();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => {
     setOpenModal(false);
-    setErrors({ name: "", email: "", mobile: "" });
-  };
-
-  const handleOtpClose = () => {
-    setOtpModal(false);
-    setOtp("");
+    setErrors({ email: "", password: "" });
   };
 
   const handleChange = (e) => {
@@ -43,82 +41,54 @@ const BeforeLogin = () => {
   };
 
   const validateForm = () => {
-    let newErrors = { name: "", email: "", mobile: "" };
+    let newErrors = { email: "", password: "" };
     let valid = true;
-    if (formData.name.length < 4) {
-      newErrors.name = "Name must be at least 4 characters long.";
-      valid = false;
-    }
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Enter a valid email address.";
       valid = false;
     }
-    if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
-      newErrors.mobile = "Enter a valid 10-digit Indian mobile number.";
+    if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long.";
       valid = false;
     }
+
     setErrors(newErrors);
     return valid;
   };
 
   const handleSubmit = async () => {
-    if (validateForm()) {
-      setLoading(true);
-      try {
-        const response = await axios.post("/api/users/registerUser", formData);
-        if (response.status === 201) {
-          setOtpModal(true);
-          setOpenModal(false);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
+    if (!validateForm()) return;
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/users/loginUser", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.status === 200) {
+      
+        setOpenModal(false);
+        // console.log(response.data.token)
+        // console.log(response.data.user)
+        localStorage.setItem("userDetails", JSON.stringify({ token: response.data.token }));
+        console.log({ token: response.data.token })
+      } else {
+        alert(response.data.message || "Login failed");
       }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(error.response?.data?.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const verifyOtp = () => {
-    axios
-      .post("/api/users/verifyOtp", {
-        email: formData.email,
-        name: formData.name,
-        mobile: formData.mobile,
-        otp,
-      })
-      .then((response) => {
-        if (response.status === 201) {
-          alert("User created successfully!");
-          setOtpModal(false); // Close the OTP modal
-          console.log(response.token);
-          console.log(response.user);
-        } else {
-          alert("Invalid OTP. Please try again.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error verifying OTP:", error);
-        alert("Something went wrong. Please try again.");
-      });
-  };
-  
-
   return (
     <div className="Before-Login text-center p-5">
-      <SnackBar 
-        message=""
-        statusCode="" 
-        colorCode=""
-      />
       <Button
         variant="contained"
-        style={{
-          backgroundColor: "#e91e63",
-          color: "white",
-          padding: "10px 20px",
-          fontSize: "16px",
-          fontWeight: "bold",
-        }}
+        style={{ backgroundColor: "#e91e63", color: "white", padding: "10px 20px", fontSize: "16px", fontWeight: "bold" }}
         onClick={handleOpen}
         className="hover:bg-pink-700 transition"
       >
@@ -130,24 +100,13 @@ const BeforeLogin = () => {
           <IconButton className="absolute top-2 right-2" onClick={handleClose}>
             <CancelIcon />
           </IconButton>
-          <DialogTitle className="text-center text-xl font-semibold">
-            Enter Your Details
-          </DialogTitle>
+          <DialogTitle className="text-center text-xl font-semibold">Login Form</DialogTitle>
+
+          <div className="text-right text-sm flex justify-end">
+            Not Registered ? - <button className="text-blue-500" onClick={openLoginModal} >Register here</button>
+          </div>
+
           <DialogContent className="flex flex-col gap-4 mt-4">
-            <div className="flex items-center bg-gray-100 p-3 rounded-xl">
-              <Person className="mr-3 text-custom-maroon" />
-              <TextField
-                name="name"
-                placeholder="Your Name"
-                fullWidth
-                variant="standard"
-                InputProps={{ disableUnderline: true }}
-                value={formData.name}
-                onChange={handleChange}
-                error={!!errors.name}
-                helperText={errors.name}
-              />
-            </div>
             <div className="flex items-center bg-gray-100 p-3 rounded-xl">
               <AlternateEmailIcon className="mr-3 text-custom-maroon" />
               <TextField
@@ -163,64 +122,28 @@ const BeforeLogin = () => {
               />
             </div>
             <div className="flex items-center bg-gray-100 p-3 rounded-xl">
-              <InstallMobileIcon className="mr-3 text-custom-maroon" />
+              <PasswordIcon className="mr-3 text-custom-maroon" />
               <TextField
-                name="mobile"
-                placeholder="Mobile Number"
+                name="password"
+                type="password"
+                placeholder="Your Password"
                 fullWidth
                 variant="standard"
                 InputProps={{ disableUnderline: true }}
-                value={formData.mobile}
+                value={formData.password}
                 onChange={handleChange}
-                error={!!errors.mobile}
-                helperText={errors.mobile}
+                error={!!errors.password}
+                helperText={errors.password}
               />
             </div>
+
             <Button
               fullWidth
               className="mt-4 py-3 bg-pink-500 text-white hover:bg-pink-700 transition"
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                "Submit"
-              )}
-            </Button>
-          </DialogContent>
-        </div>
-      </Dialog>
-
-      <Dialog open={otpModal} onClose={handleOtpClose} fullWidth maxWidth="xs">
-        <div className="p-6 bg-white rounded-2xl shadow-xl relative">
-          <IconButton className="absolute top-2 right-2" onClick={handleOtpClose}>
-            <CancelIcon />
-          </IconButton>
-          <DialogTitle className="text-center text-xl font-semibold">Enter OTP</DialogTitle>
-          <DialogContent className="flex flex-col items-center gap-4 mt-4">
-            <TextField
-              value={otp}
-              onChange={(e) => {
-                const input = e.target.value;
-                if (/^\d{0,6}$/.test(input)) {
-                  setOtp(input);
-                }
-              }}
-              variant="outlined"
-              size="small"
-              type="text"
-              inputProps={{
-                maxLength: 6,
-                style: { textAlign: "center", fontSize: "20px", width: "240px" },
-              }}
-            />
-            <Button
-              fullWidth
-              className="mt-4 py-3 bg-pink-500 text-white hover:bg-pink-700 transition"
-              onClick={verifyOtp}
-            >
-              Verify OTP
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
             </Button>
           </DialogContent>
         </div>

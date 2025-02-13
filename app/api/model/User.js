@@ -18,6 +18,7 @@ const userSchema = new Schema({
     userId: { type: String, required: true, unique: true }, // Changed to userId
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    password:{type: String, required: true },
     dpUrl: String, // Profile picture URL
     addresses: [addressSchema], // Array of addresses
     mobileNumber: { type: String, required: true },
