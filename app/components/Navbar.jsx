@@ -110,7 +110,9 @@ const Navbar = () => {
 
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
-
+ const gotoHome =()=>{
+    router.push("/"); //push to home when clicked on StyleDiva Icon
+  }
 
   return (
     <div className="w-full h-[30vh] bg-custombg text-white">
@@ -123,8 +125,7 @@ const Navbar = () => {
         <div></div>
         <div className={whiteBoxStyles}>
           {/* Logo Section */}
-        <Link href="/" >
-        <div className="logo w-1/6 flex justify-center items-center" >
+          <div className="logo w-1/6 flex justify-center items-center" onClick={gotoHome} >
             <Image
               src={logo}
               alt="Logo"
@@ -133,8 +134,6 @@ const Navbar = () => {
               className="rounded-full"
             />
           </div>
-        </Link>
-       
 
           {/* Tabs Section */}
           <div className="w-4/6">
