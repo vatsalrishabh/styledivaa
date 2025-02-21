@@ -1,34 +1,32 @@
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Menu as MenuIcon, Close as CloseIcon, ExpandMore, ExpandLess,   ArrowDropDown,
+  ArrowDropUp } from "@mui/icons-material";
+import LogInUserDetail from "./LogInUserDetail";
 import logo from "../../public/assets/styledivaalogo.png";
-import logowbg from "../../public/assets/styledivaawbg.png"; 
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import Image from 'next/image';
-import Link from 'next/link';
-import LogInUserDetail from './LogInUserDetail';
+import logowbg from "../../public/assets/styledivaawbg.png";
 
 const AnNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
-  // Toggle the menu on and off
   const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleDropdown = (index) => {
+    setOpenDropdown(openDropdown === index ? null : index);
+  };
 
-  // Navigation links data
   const navLinks = [
     {
-      title: "For Her",
-      href: "/forher",
+      title: "Shop Here",
+      href: "#",
+
       subLinks: [
-        { title: "Beauty", href: "/forher/beauty" },
-        { title: "Fashion", href: "/forher/fashion" },
-      ],
-    },
-    {
-      title: "For Him",
-      href: "/forhim",
-      subLinks: [
-        { title: "Technology", href: "/forhim/technology" },
-        { title: "Grooming", href: "/forhim/grooming" },
+        { title: "Dress Materials", href: "/dressmaterial" },
+        { title: "Readymade Kurtas", href: "/kurtas" },
+        { title: "Readymade Dress", href: "/readymadedress" },
+        { title: "Western Dress", href: "/westerndress" },
       ],
     },
     { title: "About Us", href: "/aboutus" },
@@ -42,13 +40,7 @@ const AnNavbar = () => {
       <div className="w-full flex justify-between items-center p-4">
         {/* Logo */}
         <div className="w-3/5 flex">
-          <Image
-            src={logowbg}
-            alt="Logo"
-            width={150}
-            height={150}
-            className="rounded-full"
-          />
+          <Image src={logowbg} alt="Logo" width={150} height={150} className="rounded-full" />
         </div>
 
         {/* Menu Icon */}
@@ -67,21 +59,28 @@ const AnNavbar = () => {
       {isOpen && (
         <div className="w-full bg-white p-4 flex flex-col items-center space-y-4 shadow-lg">
           {navLinks.map((link, index) => (
-            <div key={index} className="relative group w-full text-center">
-              <Link
-                href={link.href}
-                className="text-lg text-customText hover:text-brightPink cursor-pointer transition-colors"
+            <div key={index} className="w-full text-center">
+              <div
+                onClick={() => link.subLinks && toggleDropdown(index)}
+                className="flex justify-center items-center text-lg text-customText hover:text-brightPink cursor-pointer transition-colors"
               >
-                {link.title}
-              </Link>
+                <Link href={link.href}>{link.title} </Link>
+                {link.subLinks && (
+                  openDropdown === index ? (
+                    <ExpandLess className="ml-2 text-brightPink" />
+                  ) : (
+                    <ExpandMore className="ml-2 text-customText" />
+                  )
+                )}
+              </div>
               {/* Submenu */}
-              {link.subLinks && (
-                <div className="absolute hidden group-hover:block bg-white shadow-lg p-4 w-40 space-y-2 rounded-lg">
+              {link.subLinks && openDropdown === index && (
+                <div className="mt-2 bg-white shadow-md rounded-lg p-2 w-48 mx-auto">
                   {link.subLinks.map((subLink, subIndex) => (
                     <Link
                       key={subIndex}
                       href={subLink.href}
-                      className="block text-customText hover:text-brightPink transition-colors"
+                      className="block px-4 py-2 text-customText hover:bg-brightPink hover:text-white transition-colors rounded"
                     >
                       {subLink.title}
                     </Link>

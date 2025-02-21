@@ -115,7 +115,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="w-full h-[30vh] bg-custombg text-white">
+    <div className="w-full lg:h-[25vh] bg-custombg text-white">
       {/* the right sidec slide cart starts */}
       <RightSlideCart />
       {/* the rigt side slide cart ends */}
