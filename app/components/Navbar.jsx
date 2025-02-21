@@ -1,22 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import Badge from "@mui/material/Badge";
-import { Search, ShoppingCart, Close } from "@mui/icons-material";
+import { Search, ShoppingCart, Close, ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
-import heromodel from "../../public/assets/heromodel.png"
+import heromodel from "../../public/assets/heromodel.png";
 import AnNavbar from "./AnNavbar";
 import Link from "next/link";
-import 'animate.css';
+import "animate.css";
 import LogInUserDetail from "./LogInUserDetail";
-import { useSelector , useDispatch} from "react-redux";
-import { toggleCart ,updateNumOfItems } from "../../redux/cart/openCartSlice"; 
+import { useSelector, useDispatch } from "react-redux";
+import { toggleCart, updateNumOfItems } from "../../redux/cart/openCartSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const {  numOfItems } = useSelector((state) => state.openCart);
+  const { numOfItems } = useSelector((state) => state.openCart);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
@@ -24,12 +22,13 @@ const Navbar = () => {
   const [cartItems, setCartItems] = useState(4); // Example: Cart item count
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search bar
   const [searchQuery, setSearchQuery] = useState("");
+  const [dropSubNav , setDropSub] = useState(false);
 
 
-    // Function to handle the cart icon click
-    const handleCartClick = () => {
-      dispatch(toggleCart()); // Toggle the cart open/close
-    };
+  // Function to handle the cart icon click
+  const handleCartClick = () => {
+    dispatch(toggleCart()); // Toggle the cart open/close
+  };
 
   // Handle scroll event
   useEffect(() => {
@@ -69,12 +68,10 @@ const Navbar = () => {
   }
 
   const tabs = [
-    { name: "For Her", href: "/forher" },
-    { name: "For Him", href: "/forhim" },
-    { name: "About Us", href: "/aboutus" },
-    { name: "Gallery", href: "/gallery" },
-    { name: "Contact Us", href: "/contactus" },
- 
+    { name: "Shop Here", href: "/forher", dropdown:true },
+    { name: "About Us", href: "/aboutus", dropdown:false  },
+    { name: "Gallery", href: "/gallery" , dropdown:false },
+    { name: "Contact Us", href: "/contactus", dropdown:false  },
   ];
 
   // Extracted common styles
@@ -90,15 +87,17 @@ const Navbar = () => {
     ? "bg-white h-full flex justify-end px-8 items-center"
     : "bg-[#F7F7F7] h-full w-[216px] flex justify-end px-8 items-center translate-y-2 ";
 
+  const dropTheList = dropSubNav
+    ? "hidden"
+    : " "; //to hide and display dropdown
+
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <div className="w-full h-screen bg-custombg text-white">
+    <div className="w-full h-[30vh] bg-custombg text-white">
       {/* Laptop/Desktop Navigation */}
       <div className={navbarStyles}>
-        <div>
-          
-        </div>
+        <div></div>
         <div className={whiteBoxStyles}>
           {/* Logo Section */}
           <div className="logo w-1/6 flex justify-center items-center">
@@ -113,44 +112,66 @@ const Navbar = () => {
 
           {/* Tabs Section */}
           <div className="w-4/6">
-          <div className="tabs w-4/6 flex justify-between text-lg">
-  {tabs.map((tab) => (
-    <Link key={tab.name} href={tab.href}>
-      <p
-        onClick={() => setActiveTab(tab.name)} // Update the active tab
-        className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
-          activeTab === tab.name
-            ? "bg-brightPink text-white shadow-lg scale-110"
-            : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
-        }`}
-      >
-        {tab.name}
-      </p>
-    </Link>
-  ))}
+            <div className="tabs w-4/6 flex justify-between text-base">
+              {tabs.map((tab) => (
+                <Link key={tab.name} href={tab.dropdown?"#":tab.href} 
+                onClick={tab.dropdown ? (e) => {
+                  e.preventDefault(); // Prevent navigation when clicking dropdown
+                  setDropSub((prev) => !prev); // Toggle dropdown state
+                } : undefined}
+                
+                >
+                  <p
+                    onClick={() => setActiveTab(tab.name)} // Update the active tab
+                    className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
+                      activeTab === tab.name
+                        ? "bg-brightPink text-white shadow-lg scale-110"
+                        : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
+                    }`}
+                  >
+                    {tab.name} {tab.dropdown&&<>{!dropSubNav?<ArrowDropDown/>:<ArrowDropUp/>}</>}
+                  </p>
+                  {
+                    tab.dropdown?
+                    <div
+                    className={`absolute ${dropSubNav ? "block" : "hidden"} bg-white shadow-lg p-3 rounded-lg w-48 border border-gray-200`}
+                    style={{ top: "100%", left: "23%", zIndex: 10 }}
+                  >
+                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Dress Materials</div>
+                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Readymade Kurtas</div>
+                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Readymade Dresses</div>
+                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Western Dress</div>
+                  </div>
+                  
+                    :<></>
+                  }
+                </Link>
+              ))}
 
-<Link href="/enroll">
-  <p className="bg-pink-700 px-4 py-2 rounded-md text-center text-white text-lg font-bold cursor-pointer animate-flash hover:bg-pink-800 hover:scale-105 transition-all duration-300">
-    Enroll Now
-  </p>
-</Link>
-
-
-
-</div>
-
-
-
+              <Link href="/enroll">
+                <p className="bg-pink-700 px-4 py-2 rounded-md text-center text-white text-lg font-bold cursor-pointer animate-flash hover:bg-pink-800 hover:scale-105 transition-all duration-300">
+                  Enroll Now
+                </p>
+              </Link>
+            </div>
           </div>
 
           {/* Icons Section */}
-          <div className={scrollNum ? "w-1/6 h-full flex" : "w-1/6 h-full flex bg-custombg"}>
+          <div
+            className={
+              scrollNum ? "w-1/6 h-full flex" : "w-1/6 h-full flex bg-custombg"
+            }
+          >
             <div className="breakerHol w-[8px] h-[108%]">
               <div
                 className="w-[8px] bg-gray-200 h-[4%]"
                 style={{ clipPath: "polygon(0 1%, 0% 100%, 100% 100%)" }}
               ></div>
-              <div className={scrollNum ? "w-[8px] bg-white" : "w-[8px] bg-gray-200 h-[92%]"}></div>
+              <div
+                className={
+                  scrollNum ? "w-[8px] bg-white" : "w-[8px] bg-gray-200 h-[92%]"
+                }
+              ></div>
               <div
                 className="w-[8px] bg-gray-200 h-[4%]"
                 style={{ clipPath: "polygon(0 1%, 100% 0, 100% 100%)" }}
@@ -158,33 +179,33 @@ const Navbar = () => {
             </div>
 
             <div className={iconContainerStyles}>
-      {/* This has Model login form */}
-            <LogInUserDetail/>
-      {/* This has Model ends  */}
+              {/* This has Model login form */}
+              <LogInUserDetail />
+              {/* This has Model ends  */}
               <div className="icons flex space-x-4 items-center">
                 <Search
                   className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink"
                   onClick={toggleSearch}
                 />
+
                 <div className="OpneCart" onClick={handleCartClick}>
-                <Badge
-                  badgeContent={numOfItems}
-                  color="secondary"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "rgb(239, 83, 80)", // Bright pink for emphasis
-                      color: "white", // Text color inside the badge
-                      fontWeight: "bold",
-                      fontSize: "0.8rem",
-                      minWidth: "20px",
-                      height: "20px",
-                    },
-                  }}
-                >
-                  <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
-                </Badge>
+                  <Badge
+                    badgeContent={numOfItems}
+                    color="secondary"
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "rgb(239, 83, 80)", // Bright pink for emphasis
+                        color: "white", // Text color inside the badge
+                        fontWeight: "bold",
+                        fontSize: "0.8rem",
+                        minWidth: "20px",
+                        height: "20px",
+                      },
+                    }}
+                  >
+                    <ShoppingCart className="cursor-pointer hover:scale-110 transition-all duration-300 text-customIcon hover:text-brightPink" />
+                  </Badge>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -216,36 +237,7 @@ const Navbar = () => {
 
       {/* The left slideIn Images and text start */}
 
-      <div className="absolute top-[200px] w-full flex justify-center items-center bg-custombg">
-  {/* Left Side - Text Section */}
-  <div className="w-full md:w-2/5 bg-custombg flex text-black animate__animated animate__slideInLeft flex-col justify-center items-center h-[70vh] px-4">
-    <h1
-   className="lg:text-[110px] text-5xl md:text-7xl font-display text-pink-600 italic mb-6"
-   style={{ fontFamily: "'Merriweather', serif" }}
-    >
-      STYLE
-    </h1>
-
-    <h1
-      className="lg:text-[110px] text-5xl  md:text-7xl font-display text-pink-600 italic mb-6"
-      style={{ fontFamily: "'Merriweather', serif" }}
-    >
-    & BEAUTY
-    </h1>
-  </div>
-
-  {/* Right Side - Image Section */}
-  <div className="w-full md:w-3/5 flex justify-center items-center animate__animated animate__slideInLeft">
-    <Image
-      src={heromodel}
-      alt="Hero Image"
-      width={1600} // Increased image width for larger screens
-      height={1200} // Increased image height for larger screens
-      className="object-cover rounded-lg "
-    />
-  </div>
-</div>
-
+  
     </div>
   );
 };

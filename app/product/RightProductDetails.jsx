@@ -95,22 +95,35 @@ const RightProductDetails = () => {
         </div>
 
         {showDetails && (
-          <div className="mt-2 text-gray-700 transition-all duration-300"> {/* Added transition */}
-            <p><span className="font-medium">PRODUCT ID:</span> {productDetails.productId}</p>
-            <p><span className="font-medium">Colour:</span> {productDetails.color}</p>
-            <p><span className="font-medium">Print:</span> {productDetails.print}</p>
-            <p><span className="font-medium">Neck:</span> {productDetails.neck}</p>
-            <p><span className="font-medium">Pockets:</span> {productDetails.pockets}</p>
-            <p><span className="font-medium">Sleeves:</span> {productDetails.sleeves}</p>
-            <p><span className="font-medium">Shape:</span> {productDetails.shape}</p>
-            <p><span className="font-medium">Length:</span> {productDetails.length}</p>
-            <p><span className="font-medium">Material:</span> {productDetails.material}</p>
-            <div className="mt-2">
-              <span className="font-medium">Size & Fit:</span>
-              <p>{productDetails.modelFit}</p>
-            </div>
-          </div>
-        )}
+  <div className="mt-2 text-gray-700 transition-all duration-300 bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg">
+    <table className="w-full border-collapse">
+      <tbody className="text-left">
+        {[
+          ["PRODUCT ID", productDetails.productId],
+          ["Colour", productDetails.color],
+          ["Print", productDetails.print],
+          ["Neck", productDetails.neck],
+          ["Pockets", productDetails.pockets],
+          ["Sleeves", productDetails.sleeves],
+          ["Shape", productDetails.shape],
+          ["Length", productDetails.length],
+          ["Material", productDetails.material],
+          ["Size & Fit", productDetails.modelFit]
+        ].map(([label, value], index) => (
+          <tr
+            key={index}
+            className="border-b border-gray-300 hover:bg-gray-200 transition-all duration-200"
+          >
+            <td className="py-2 px-3 font-medium">{label}:</td>
+            <td className="py-2 px-3">{value}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+
       </div>
     </div>
   );

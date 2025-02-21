@@ -4,38 +4,38 @@ import Image from "next/image";
 import Badge from "@mui/material/Badge";
 import { Search, ShoppingCart, Close } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
-import heromodel from "../../public/assets/contactusbg.png";
 import AnNavbar from "./AnNavbar"; //for smartphone
 import Link from "next/link";
 import "animate.css";
-import BreadCrumbs from "./BreadCrumbs";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleCart, updateNumOfItems } from "../../redux/cart/openCartSlice";
 import LogInUserDetail from "./LogInUserDetail";
 
-const ForHer = () => {
+
+const ForHer = ({tabs}) => {
   const dispatch = useDispatch();
   const { numOfItems } = useSelector((state) => state.openCart);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
-  const [scrollNum, setScroll] = useState(false);
-  const [cartItems, setCartItems] = useState(4); // Example: Cart item count
+  const [scrollNum, setScroll] = useState(false); // responsible for navbar scroll desing 
+  const [cartItems, setCartItems] = useState(0); // Example: Cart item count
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search bar
   const [searchQuery, setSearchQuery] = useState("");
 
   // Function to handle the cart icon click
   const handleCartClick = () => {
-    dispatch(toggleCart()); // Toggle the cart open/close
+    dispatch(toggleCart()); // Toggle the right side cart open/close
   };
 
   // Handle scroll event
   useEffect(() => {
-    const handleScroll = () => setScroll(window.scrollY > 55);
+    const handleScroll = () => setScroll(window.scrollY > 55); // a function which sets scrollNum to true if the vertical Y is more than 55px
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll); //the above function is called when the screen is scrolled
+    return () => window.removeEventListener("scroll", handleScroll); // when navbar - is removed to prevent memory leak event listenser is removed
   }, []);
+
 
   // Load user details
   useEffect(() => {
@@ -58,6 +58,7 @@ const ForHer = () => {
     loadUser();
   }, []);
 
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -66,13 +67,7 @@ const ForHer = () => {
     );
   }
 
-  const tabs = [
-    { name: "For Her", href: "/forher" },
-    { name: "For Him", href: "/forhim" },
-    { name: "About Us", href: "/aboutus" },
-    { name: "Gallery", href: "/gallery" },
-    { name: "Contact Us", href: "/contactus" },
-  ];
+  
 
   // Extracted common styles
   const navbarStyles = scrollNum
@@ -90,13 +85,12 @@ const ForHer = () => {
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <div className="w-full h-screen  bg-custombg text-white">
+    <div className="w-full lg:h-[30vh]  bg-custombg text-white">
       {/* Laptop/Desktop Navigation */}
       <div className={navbarStyles}>
-        <div></div>
         <div className={whiteBoxStyles}>
           {/* Logo Section */}
-          <div className="logo w-1/6 flex justify-center items-center">
+          <div className=" w-1/6 flex justify-center items-center">
           <Link href="/">
           <Image
               src={logo}
@@ -121,8 +115,8 @@ const ForHer = () => {
                         : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
                     }`}
                   >
-                    {tab.name}
-                  </p>
+                    {tab.name} 
+                  </p> 
                 </Link>
               ))}
             </div>
@@ -209,27 +203,7 @@ const ForHer = () => {
 
       {/* The left slideIn Images and text start */}
 
-      <div className="absolute lg:top-[200px] w-full bg-custombg">
-        <div className="theLeft-Text-Right-Image w-full lg:flex justify-center items-center bg-custombg">
-          {/* Left Side - Text Section */}
-          <div className="w-full md:w-2/5 bg-custombg  text-black  flex-col  lg:h-[70vh] sm:h-[20vh] px-4">
-            {/* the breadcrumb starts */}
-              <BreadCrumbs one="Home" oneLink="/" two="For Her"  twoLink="/forher"/>
-            {/* breadcrumb ends  */}
-          </div>
-
-          {/* Right Side - Image Section */}
-          <div className="w-full md:w-3/5 flex justify-center items-center animate__animated animate__slideInLeft">
-            <Image
-              src={heromodel}
-              alt="Hero Image"
-              width={1600} // Increased image width for larger screens
-              height={1200} // Increased image height for larger screens
-              className="object-cover rounded-lg "
-            />
-          </div>
-        </div>
-      </div>
+   
     </div>
   );
 };

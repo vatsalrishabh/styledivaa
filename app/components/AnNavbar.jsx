@@ -13,11 +13,35 @@ const AnNavbar = () => {
   // Toggle the menu on and off
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  // Navigation links data
+  const navLinks = [
+    {
+      title: "For Her",
+      href: "/forher",
+      subLinks: [
+        { title: "Beauty", href: "/forher/beauty" },
+        { title: "Fashion", href: "/forher/fashion" },
+      ],
+    },
+    {
+      title: "For Him",
+      href: "/forhim",
+      subLinks: [
+        { title: "Technology", href: "/forhim/technology" },
+        { title: "Grooming", href: "/forhim/grooming" },
+      ],
+    },
+    { title: "About Us", href: "/aboutus" },
+    { title: "Gallery", href: "/gallery" },
+    { title: "Contact Us", href: "/contactus" },
+  ];
+
   return (
-    <div className="w-full bg-custombg">
+    <div className="w-full bg-custombg shadow-md">
       {/* Top Navigation */}
       <div className="w-full flex justify-between items-center p-4">
-        <div className="w-3/5 flex ">
+        {/* Logo */}
+        <div className="w-3/5 flex">
           <Image
             src={logowbg}
             alt="Logo"
@@ -31,9 +55,9 @@ const AnNavbar = () => {
         <div className="w-1/5 flex justify-end">
           <div onClick={toggleMenu} className="cursor-pointer">
             {isOpen ? (
-              <CloseIcon className="text-white text-3xl" />
+              <CloseIcon className="text-white text-3xl hover:text-brightPink transition-colors" />
             ) : (
-              <MenuIcon className="text-white text-3xl" />
+              <MenuIcon className="text-white text-3xl hover:text-brightPink transition-colors" />
             )}
           </div>
         </div>
@@ -41,49 +65,34 @@ const AnNavbar = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="w-full bg-white p-4 flex flex-col items-center space-y-4 ">
-          {/* Main Menu Items */}
-          <div className="relative group">
-            <Link href="/for-her" className="text-lg text-customText hover:text-brightPink cursor-pointer">
-              For Her
-            </Link>
-            <div className="absolute hidden group-hover:block bg-white shadow-lg p-4 w-40">
-              <Link href="/for-her/beauty" className="block text-customText hover:text-brightPink">Beauty</Link>
-              <Link href="/for-her/fashion" className="block text-customText hover:text-brightPink">Fashion</Link>
+        <div className="w-full bg-white p-4 flex flex-col items-center space-y-4 shadow-lg">
+          {navLinks.map((link, index) => (
+            <div key={index} className="relative group w-full text-center">
+              <Link
+                href={link.href}
+                className="text-lg text-customText hover:text-brightPink cursor-pointer transition-colors"
+              >
+                {link.title}
+              </Link>
+              {/* Submenu */}
+              {link.subLinks && (
+                <div className="absolute hidden group-hover:block bg-white shadow-lg p-4 w-40 space-y-2 rounded-lg">
+                  {link.subLinks.map((subLink, subIndex) => (
+                    <Link
+                      key={subIndex}
+                      href={subLink.href}
+                      className="block text-customText hover:text-brightPink transition-colors"
+                    >
+                      {subLink.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-
-          <div className="relative group">
-            <Link href="/for-him" className="text-lg text-customText hover:text-brightPink cursor-pointer">
-              For Him
-            </Link>
-            <div className="absolute hidden group-hover:block bg-white shadow-lg p-4 w-40">
-              <Link href="/for-him/technology" className="block text-customText hover:text-brightPink">Technology</Link>
-              <Link href="/for-him/grooming" className="block text-customText hover:text-brightPink">Grooming</Link>
-            </div>
-          </div>
-
-          <div className="relative group">
-            <Link href="/about-us" className="text-lg text-customText hover:text-brightPink cursor-pointer">
-              About Us
-            </Link>
-          </div>
-
-          <div className="relative group">
-            <Link href="/gallery" className="text-lg text-customText hover:text-brightPink cursor-pointer">
-              Gallery
-            </Link>
-          </div>
-
-          <div className="relative group">
-            <Link href="/contact-us" className="text-lg text-customText hover:text-brightPink cursor-pointer">
-              Contact Us
-            </Link>
-          </div>
-          <div className="relative group">
-    {/* login button for smartphone  */}
-           <LogInUserDetail/>
-     {/* login button smartphone */}
+          ))}
+          {/* Login Button */}
+          <div className="w-full text-center">
+            <LogInUserDetail />
           </div>
         </div>
       )}

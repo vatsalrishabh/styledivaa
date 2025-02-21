@@ -90,7 +90,7 @@ const Gallery = () => {
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <div className="w-full h-screen  bg-custombg text-white">
+    <div className="w-full lg:h-[30vh]  bg-custombg text-white">
       {/* Laptop/Desktop Navigation */}
       <div className={navbarStyles}>
         <div></div>
@@ -209,27 +209,7 @@ const Gallery = () => {
 
       {/* The left slideIn Images and text start */}
 
-      <div className="absolute lg:top-[200px] w-full bg-custombg">
-        <div className="theLeft-Text-Right-Image w-full lg:flex justify-center items-center bg-custombg">
-          {/* Left Side - Text Section */}
-          <div className="w-full md:w-2/5 bg-custombg  text-black  flex-col  lg:h-[70vh] sm:h-[20vh] px-4">
-            {/* the breadcrumb starts */}
-              <BreadCrumbs one="Home" oneLink="/" two="Gallery"  twoLink="/gallery"/>
-            {/* breadcrumb ends  */}
-          </div>
-
-          {/* Right Side - Image Section */}
-          <div className="w-full md:w-3/5 flex justify-center items-center animate__animated animate__slideInLeft">
-            <Image
-              src={heromodel}
-              alt="Hero Image"
-              width={1600} // Increased image width for larger screens
-              height={1200} // Increased image height for larger screens
-              className="object-cover rounded-lg "
-            />
-          </div>
-        </div>
-      </div>
+  
     </div>
   );
 };
