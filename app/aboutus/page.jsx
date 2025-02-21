@@ -1,17 +1,16 @@
 "use client"
 import React from 'react'
 import Footer from '../components/Footer'
-import RightSlideCart from '../components/RightSlideCart'
-import AboutUs from '../components/AboutUs'
 import FirstAbout from './FirstAbout'
 import CountingAbout from './CountingAbout'
+import Navbar from '../components/Navbar'
 
 
 
 const page = () => {
   return (
     <div className='Contact-us '>
-<AboutUs/>
+<Navbar/>
   <FirstAbout/>
   <CountingAbout/>
       <Footer/> 

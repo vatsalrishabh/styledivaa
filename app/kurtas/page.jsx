@@ -10,6 +10,7 @@ const page = () => {
     <div className='Contact-us '>
   
        <Navbar/>
+       Kurtass 
       <Footer/> 
     </div>
   )

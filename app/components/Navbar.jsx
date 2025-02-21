@@ -2,7 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Badge from "@mui/material/Badge";
-import { Search, ShoppingCart, Close, ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
+import {
+  Search,
+  ShoppingCart,
+  Close,
+  ArrowDropDown,
+  ArrowDropUp,
+} from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
 import AnNavbar from "./AnNavbar";
 import Link from "next/link";
@@ -11,6 +17,8 @@ import LogInUserDetail from "./LogInUserDetail";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleCart, updateNumOfItems } from "../../redux/cart/openCartSlice";
 import RightSlideCart from "./RightSlideCart";
+import { useRouter } from "next/navigation";
+
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -22,7 +30,8 @@ const Navbar = () => {
   const [cartItems, setCartItems] = useState(4); // Example: Cart item count
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search bar
   const [searchQuery, setSearchQuery] = useState("");
-  const [dropSubNav , setDropSub] = useState(false);
+  const [dropSubNav, setDropSub] = useState(false);
+  const router = useRouter();
 
 
   // Function to handle the cart icon click
@@ -68,10 +77,20 @@ const Navbar = () => {
   }
 
   const tabs = [
-    { name: "Shop Here", href: "/forher", dropdown:true , subNav:[{name: "Dress Materials", href: "/dressmat",} ,{name: "Readymade Kurtas", href: "/kurtas",},{name: "Readymade Dress", href: "/readymade",},{name: "Western Dress", href: "/western",}] },
-    { name: "About Us", href: "/aboutus", dropdown:false  },
-    { name: "Gallery", href: "/gallery" , dropdown:false },
-    { name: "Contact Us", href: "/contactus", dropdown:false  },
+    {
+      name: "Shop Here",
+      href: "/forher",
+      dropdown: true,
+      subNav: [
+        { name: "Dress Materials", href: "/dressmaterial" },
+        { name: "Readymade Kurtas", href: "/kurtas" },
+        { name: "Readymade Dress", href: "/readymadedress" },
+        { name: "Western Dress", href: "/westerndress" },
+      ],
+    },
+    { name: "About Us", href: "/aboutus", dropdown: false },
+    { name: "Gallery", href: "/gallery", dropdown: false },
+    { name: "Contact Us", href: "/contactus", dropdown: false },
   ];
 
   // Extracted common styles
@@ -87,25 +106,25 @@ const Navbar = () => {
     ? "bg-white h-full flex justify-end px-8 items-center"
     : "bg-[#F7F7F7] h-full w-[216px] flex justify-end px-8 items-center translate-y-2 ";
 
-  const dropTheList = dropSubNav
-    ? "hidden"
-    : " "; //to hide and display dropdown
+ 
 
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
+
+
   return (
     <div className="w-full h-[30vh] bg-custombg text-white">
-  {/* the right sidec slide cart starts */}
-      <RightSlideCart/> 
-  {/* the rigt side slide cart ends */}
-
+      {/* the right sidec slide cart starts */}
+      <RightSlideCart />
+      {/* the rigt side slide cart ends */}
 
       {/* Laptop/Desktop Navigation */}
       <div className={navbarStyles}>
         <div></div>
         <div className={whiteBoxStyles}>
           {/* Logo Section */}
-          <div className="logo w-1/6 flex justify-center items-center">
+        <Link href="/" >
+        <div className="logo w-1/6 flex justify-center items-center" >
             <Image
               src={logo}
               alt="Logo"
@@ -114,44 +133,50 @@ const Navbar = () => {
               className="rounded-full"
             />
           </div>
+        </Link>
+       
 
           {/* Tabs Section */}
           <div className="w-4/6">
             <div className="tabs w-4/6 flex justify-between text-base">
-            {tabs.map((tab) => (
-  <div key={tab.name} className="relative">
-    <p
-      onClick={() => {
-        if (tab.dropdown) {
-          setDropSub((prev) => !prev);
-        } else {
-          setActiveTab(tab.name);
-        }
-      }}
-      className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
-        activeTab === tab.name
-          ? "bg-brightPink text-white shadow-lg scale-110"
-          : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
-      }`}
-    >
-      {tab.name} {tab.dropdown && (!dropSubNav ? <ArrowDropDown /> : <ArrowDropUp />)}
-    </p>
+              {tabs.map((tab) => (
+                <div key={tab.name} className="relative">
+                  <p
+                    onClick={() => {
+                      if (tab.dropdown) {
+                        setDropSub((prev) => !prev);
+                      } else {
+                        setActiveTab(tab.name);
+                        router.push(tab.href);
+                      }
+                    }}
+                    className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
+                      activeTab === tab.name
+                        ? "bg-brightPink text-white shadow-lg scale-110"
+                        : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
+                    }`}
+                  >
+                    {tab.name}{" "}
+                    {tab.dropdown &&
+                      (!dropSubNav ? <ArrowDropDown /> : <ArrowDropUp />)}
+                  </p>
 
-    {tab.dropdown && dropSubNav && (
-      <div className="absolute bg-white shadow-lg p-3 rounded-lg w-48 border border-gray-200" 
-        style={{ top: "100%", left: "23%", zIndex: 10 }}>
-        {tab.subNav.map((single, index) => (
-          <Link key={index} href={single.href} className="block">
-            <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">
-              {single.name}
-            </div>
-          </Link>
-        ))}
-      </div>
-    )}
-  </div>
-))}
-
+                  {tab.dropdown && dropSubNav && (
+                    <div
+                      className="absolute bg-white shadow-lg p-3 rounded-lg w-48 border border-gray-200"
+                      style={{ top: "100%", left: "23%", zIndex: 10 }}
+                    >
+                      {tab.subNav.map((single, index) => (
+                        <Link key={index} href={single.href} className="block">
+                          <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">
+                            {single.name}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
 
               <Link href="/enroll">
                 <p className="bg-pink-700 px-4 py-2 rounded-md text-center text-white text-lg font-bold cursor-pointer animate-flash hover:bg-pink-800 hover:scale-105 transition-all duration-300">
@@ -241,8 +266,6 @@ const Navbar = () => {
       </div>
 
       {/* The left slideIn Images and text start */}
-
-  
     </div>
   );
 };
