@@ -4,13 +4,13 @@ import Image from "next/image";
 import Badge from "@mui/material/Badge";
 import { Search, ShoppingCart, Close, ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import logo from "../../public/assets/styledivaalogo.png";
-import heromodel from "../../public/assets/heromodel.png";
 import AnNavbar from "./AnNavbar";
 import Link from "next/link";
 import "animate.css";
 import LogInUserDetail from "./LogInUserDetail";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleCart, updateNumOfItems } from "../../redux/cart/openCartSlice";
+import RightSlideCart from "./RightSlideCart";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -68,7 +68,7 @@ const Navbar = () => {
   }
 
   const tabs = [
-    { name: "Shop Here", href: "/forher", dropdown:true },
+    { name: "Shop Here", href: "/forher", dropdown:true , subNav:[{name: "Dress Materials", href: "/dressmat",} ,{name: "Readymade Kurtas", href: "/kurtas",},{name: "Readymade Dress", href: "/readymade",},{name: "Western Dress", href: "/western",}] },
     { name: "About Us", href: "/aboutus", dropdown:false  },
     { name: "Gallery", href: "/gallery" , dropdown:false },
     { name: "Contact Us", href: "/contactus", dropdown:false  },
@@ -95,6 +95,11 @@ const Navbar = () => {
 
   return (
     <div className="w-full h-[30vh] bg-custombg text-white">
+  {/* the right sidec slide cart starts */}
+      <RightSlideCart/> 
+  {/* the rigt side slide cart ends */}
+
+
       {/* Laptop/Desktop Navigation */}
       <div className={navbarStyles}>
         <div></div>
@@ -113,40 +118,40 @@ const Navbar = () => {
           {/* Tabs Section */}
           <div className="w-4/6">
             <div className="tabs w-4/6 flex justify-between text-base">
-              {tabs.map((tab) => (
-                <Link key={tab.name} href={tab.dropdown?"#":tab.href} 
-                onClick={tab.dropdown ? (e) => {
-                  e.preventDefault(); // Prevent navigation when clicking dropdown
-                  setDropSub((prev) => !prev); // Toggle dropdown state
-                } : undefined}
-                
-                >
-                  <p
-                    onClick={() => setActiveTab(tab.name)} // Update the active tab
-                    className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
-                      activeTab === tab.name
-                        ? "bg-brightPink text-white shadow-lg scale-110"
-                        : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
-                    }`}
-                  >
-                    {tab.name} {tab.dropdown&&<>{!dropSubNav?<ArrowDropDown/>:<ArrowDropUp/>}</>}
-                  </p>
-                  {
-                    tab.dropdown?
-                    <div
-                    className={`absolute ${dropSubNav ? "block" : "hidden"} bg-white shadow-lg p-3 rounded-lg w-48 border border-gray-200`}
-                    style={{ top: "100%", left: "23%", zIndex: 10 }}
-                  >
-                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Dress Materials</div>
-                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Readymade Kurtas</div>
-                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Readymade Dresses</div>
-                    <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">Western Dress</div>
-                  </div>
-                  
-                    :<></>
-                  }
-                </Link>
-              ))}
+            {tabs.map((tab) => (
+  <div key={tab.name} className="relative">
+    <p
+      onClick={() => {
+        if (tab.dropdown) {
+          setDropSub((prev) => !prev);
+        } else {
+          setActiveTab(tab.name);
+        }
+      }}
+      className={`cursor-pointer px-2 py-2 rounded-lg transition-all duration-300 ease-in-out ${
+        activeTab === tab.name
+          ? "bg-brightPink text-white shadow-lg scale-110"
+          : "hover:bg-lightPink hover:text-brightPink hover:scale-110 text-customText"
+      }`}
+    >
+      {tab.name} {tab.dropdown && (!dropSubNav ? <ArrowDropDown /> : <ArrowDropUp />)}
+    </p>
+
+    {tab.dropdown && dropSubNav && (
+      <div className="absolute bg-white shadow-lg p-3 rounded-lg w-48 border border-gray-200" 
+        style={{ top: "100%", left: "23%", zIndex: 10 }}>
+        {tab.subNav.map((single, index) => (
+          <Link key={index} href={single.href} className="block">
+            <div className="text-black px-4 py-2 hover:bg-gray-100 cursor-pointer rounded">
+              {single.name}
+            </div>
+          </Link>
+        ))}
+      </div>
+    )}
+  </div>
+))}
+
 
               <Link href="/enroll">
                 <p className="bg-pink-700 px-4 py-2 rounded-md text-center text-white text-lg font-bold cursor-pointer animate-flash hover:bg-pink-800 hover:scale-105 transition-all duration-300">

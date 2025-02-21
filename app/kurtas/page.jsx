@@ -1,15 +1,15 @@
 "use client"
 import React from 'react'
 import Footer from '../components/Footer'
-import RightSlideCart from '../components/RightSlideCart'
-import ForHim from '../components/ForHim'
+import Navbar from '../components/Navbar'
+
 
 
 const page = () => {
   return (
     <div className='Contact-us '>
-     <ForHim/>
   
+       <Navbar/>
       <Footer/> 
     </div>
   )
