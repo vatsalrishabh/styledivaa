@@ -3,8 +3,10 @@ import DashboardCard from './DashboardCard'
 
 const RLaptopSideNav = () => {
   return (
-    <div className='w-2/3'>
+    <div className='w-2/3 absolute right-0 h-[100vh] '>
+    
       <DashboardCard />
+      
     </div>
   )
 }
