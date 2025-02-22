@@ -2,9 +2,14 @@ import React from 'react';
 import BreadCrumbs from '@/app/components/BreadCrumbs';
 import LeftImgProduct from '../LeftImgProduct';
 import RightProductDetails from '../RightProductDetails';
+import Navbar from '@/app/components/Navbar';
 
 const Page = () => {
   return (
+
+    <>
+    <Navbar/>
+
     <div className='w-full'>
       <div className="px-4 pt-4">
         <BreadCrumbs one="Home" oneLink="/" two="Product" twoLink="/product" />
@@ -21,6 +26,8 @@ const Page = () => {
         </div>
       </div>
     </div>
+    </>
+    
   );
 };
 
