@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import FirstAbout from './FirstAbout'
 import CountingAbout from './CountingAbout'
 import Navbar from '../components/Navbar'
+import RightIconSmartphone from '../components/SmartphoneCartIcon/RightIconSmartphone'
 
 
 
@@ -13,6 +14,7 @@ const page = () => {
 <Navbar/>
   <FirstAbout/>
   <CountingAbout/>
+  <RightIconSmartphone />    {/* this component has static cart icon in left, right slideshow */}
       <Footer/> 
     </div>
   )

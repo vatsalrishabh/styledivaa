@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import ContactUsForm from './ContactUsForm'
 import PageTitle from './PageTitle'
 import Navbar from '../components/Navbar'
+import RightIconSmartphone from '../components/SmartphoneCartIcon/RightIconSmartphone'
 
 
 const page = () => {
@@ -12,6 +13,7 @@ const page = () => {
       <Navbar/>
       <PageTitle pagetitle="Contact Us" />
       <ContactUsForm/>
+      <RightIconSmartphone />    {/* this component has static cart icon in left, right slideshow */}
       <Footer/> 
     </div>
   )

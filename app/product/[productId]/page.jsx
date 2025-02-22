@@ -3,13 +3,14 @@ import BreadCrumbs from '@/app/components/BreadCrumbs';
 import LeftImgProduct from '../LeftImgProduct';
 import RightProductDetails from '../RightProductDetails';
 import Navbar from '@/app/components/Navbar';
+import RightIconSmartphone from '@/app/components/SmartphoneCartIcon/RightIconSmartphone';
 
 const Page = () => {
   return (
 
     <>
     <Navbar/>
-
+    <RightIconSmartphone />    {/* this component has static cart icon in left, right slideshow */}
     <div className='w-full'>
       <div className="px-4 pt-4">
         <BreadCrumbs one="Home" oneLink="/" two="Product" twoLink="/product" />

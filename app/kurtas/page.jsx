@@ -2,6 +2,7 @@
 import React from 'react'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
+import RightIconSmartphone from '../components/SmartphoneCartIcon/RightIconSmartphone'
 
 
 
@@ -11,6 +12,7 @@ const page = () => {
   
        <Navbar/>
        Kurtass 
+       <RightIconSmartphone />    {/* this component has static cart icon in left, right slideshow */}
       <Footer/> 
     </div>
   )
