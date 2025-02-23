@@ -2,12 +2,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import Link from "next/link";
+import ModalToAdd from "./ModalToAdd";
+import DeleteProduct from "./DeleteProduct";
 
 const AdminGalleryOne = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState({ productId: "", instagramLink: "" });
 
   useEffect(() => {
     const getInstagramPosts = async () => {
@@ -21,15 +25,6 @@ const AdminGalleryOne = () => {
       } catch (error) {
         console.error("Error fetching Instagram posts:", error);
         setError("Failed to load posts");
-        setPosts([
-          { instagramLink: "https://www.instagram.com/p/C3KHOW8x-Gy/", productId: "product1" },
-          { instagramLink: "https://www.instagram.com/p/DGSqSruvCUE", productId: "product2" },
-          { instagramLink: "https://www.instagram.com/p/C-zFuKESvBY/", productId: "product3" },
-          { instagramLink: "https://www.instagram.com/p/C94t02Py9En/", productId: "product4" },
-          { instagramLink: "https://www.instagram.com/p/C8VxMkoI83_/", productId: "product5" },
-          { instagramLink: "https://www.instagram.com/p/C7jCwMhykKQ/", productId: "product6" },
-          { instagramLink: "https://www.instagram.com/reel/C4VnGqqyuvg/", productId: "product7" },
-        ]);
       } finally {
         setLoading(false);
       }
@@ -57,9 +52,47 @@ const AdminGalleryOne = () => {
     };
   }, [posts]);
 
+  const handleEditClick = (post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = (post) => {
+    setSelectedPost(post);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await axios.delete(`/api/gallery/${selectedPost.productId}`);
+      setPosts(posts.filter((p) => p.productId !== selectedPost.productId));
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-center text-2xl font-bold my-4 text-gray-600">Our Gallery</h1>
+
+      {isModalOpen && (
+        <ModalToAdd
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          productId={selectedPost.productId}
+          instagramLink={selectedPost.instagramLink}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteProduct
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onDelete={handleDeleteConfirm}
+        />
+      )}
 
       {loading ? (
         <p className="text-center text-gray-500">Loading posts...</p>
@@ -70,7 +103,6 @@ const AdminGalleryOne = () => {
           {posts.length > 0 ? (
             posts.map((post, index) => (
               <div key={index} className="p-3">
-                {/* Instagram Embed */}
                 <blockquote
                   className="instagram-media"
                   data-instgrm-permalink={post.instagramLink}
@@ -88,23 +120,21 @@ const AdminGalleryOne = () => {
                   }}
                 ></blockquote>
 
-                {/* Buttons Section */}
                 <div className="flex justify-center gap-4 mt-4">
-                  {/* Buy Now Button */}
-                  <Link href={`/product/${post.productId}`}>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 transition-all">
-                      < FaEdit/>
-                     Edit 
-                    </button>
-                  </Link>
+                  <button
+                    className="flex items-center gap-2 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 transition-all"
+                    onClick={() => handleEditClick(post)}
+                  >
+                    <FaEdit />
+                    Edit
+                  </button>
 
-                  {/* Wishlist Button */}
                   <button
                     className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition-all"
-                    onClick={() => alert("Added to Wishlist!")}
+                    onClick={() => handleDeleteClick(post)}
                   >
                     <FaTrash />
-                  Delete
+                    Delete
                   </button>
                 </div>
               </div>
