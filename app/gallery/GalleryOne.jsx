@@ -1,82 +1,54 @@
-"use client";
-import React, { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const GalleryOne = () => {
-  const images = [
-    "https://m.media-amazon.com/images/I/91C7JjVhvxL._AC_UY1100_.jpg",
-    "https://assets.ajio.com/medias/sys_master/root/20230808/za8L/64d170b4eebac147fcb12c5c/-473Wx593H-466431051-navy-MODEL.jpg",
-    "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/1/51f3766DR011543_1.jpg?rnd=20200526195200&tr=w-512",
-    "https://m.media-amazon.com/images/I/91C7JjVhvxL._AC_UY1100_.jpg",
-    "https://assets.ajio.com/medias/sys_master/root/20230808/za8L/64d170b4eebac147fcb12c5c/-473Wx593H-466431051-navy-MODEL.jpg",
-    "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/1/51f3766DR011543_1.jpg?rnd=20200526195200&tr=w-512",
-    "https://m.media-amazon.com/images/I/91C7JjVhvxL._AC_UY1100_.jpg",
-    "https://assets.ajio.com/medias/sys_master/root/20230808/za8L/64d170b4eebac147fcb12c5c/-473Wx593H-466431051-navy-MODEL.jpg",
-    "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/5/1/51f3766DR011543_1.jpg?rnd=20200526195200&tr=w-512",
-  ];
+  const [posts, setPosts] = useState([ "https://www.instagram.com/p/C3KHOW8x-Gy/",
+    "https://www.instagram.com/p/DGSqSruvCUE",
+    "https://www.instagram.com/p/C-zFuKESvBY/",
+    "https://www.instagram.com/reel/DGaY4AENiXX/?igsh=Ympuamp4enVvd2do"
+    ])
 
-  const [modalImage, setModalImage] = useState(null);
 
-  const openModalWithMoreInfo = (image) => {
-    setModalImage(image);
-  };
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://www.instagram.com/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
 
-  const closeModal = () => {
-    setModalImage(null);
-  };
+    script.onload = () => {
+      if (window.instgrm) {
+        window.instgrm.Embeds.process();
+      }
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []); // Runs only once when component mounts
 
   return (
-    <div className="gallery flex justify-center items-center flex-col p-5">
-      <h1 className="text-2xl font-bold text-center mb-5">StyleDivaa Gallery</h1>
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
-        {images.map((image, index) => (
-          <div
+    <div>
+      <h1 className="text-center text-2xl font-bold my-4 text-gray-600">Our Gallery</h1>
+      <div className="flex flex-wrap justify-center gap-4">
+        {posts.map((post, index) => (
+          <blockquote
             key={index}
-            className="photocard relative overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105"
-          >
-            <Image
-              src={image}
-              alt={`Gallery Image ${index + 1}`}
-              width={300}
-              height={400}
-              className="w-full h-auto object-cover rounded-lg"
-            />
-            <div
-              className="readMore absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-transparent to-transparent text-white text-center py-2 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-              onClick={() => openModalWithMoreInfo(image)}
-            >
-              Read More
-            </div>
-          </div>
+            className="instagram-media"
+            data-instgrm-permalink={post}
+            data-instgrm-version="14"
+            style={{
+              background: "#FFF",
+              border: "0",
+              borderRadius: "3px",
+              boxShadow: "0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)",
+              margin: "1px",
+              maxWidth: "540px",
+              minWidth: "326px",
+              padding: "0",
+              width: "99.375%",
+            }}
+          ></blockquote>
         ))}
       </div>
-
-      {/* Modal */}
-      {modalImage && (
-        <div
-          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex justify-center items-center z-50"
-          onClick={closeModal}
-        >
-          <div
-            className="relative bg-white p-5 rounded-lg shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="absolute top-2 right-2 text-black text-xl font-bold"
-              onClick={closeModal}
-            >
-              ×
-            </button>
-            <Image
-              src={modalImage}
-              alt="Modal Image"
-              width={500}
-              height={600}
-              className="w-full h-auto object-cover rounded-lg"
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

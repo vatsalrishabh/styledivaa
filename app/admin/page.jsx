@@ -11,8 +11,8 @@ const page = () => {
       </div>
 
       <div className="flex">
-        <LeftLaptoSideNav />{" "}
-        {/* left side admin panel which changes right side component */}
+        <LeftLaptoSideNav />{" "}{/* left side admin panel which changes right side component */}
+Keep changing 
         <RLaptopSideNav />
       </div>
     </div>
