@@ -4,7 +4,10 @@ const GalleryOne = () => {
   const [posts, setPosts] = useState([ "https://www.instagram.com/p/C3KHOW8x-Gy/",
     "https://www.instagram.com/p/DGSqSruvCUE",
     "https://www.instagram.com/p/C-zFuKESvBY/",
-    "https://www.instagram.com/reel/DGaY4AENiXX/?igsh=Ympuamp4enVvd2do"
+    "https://www.instagram.com/p/C94t02Py9En/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+    "https://www.instagram.com/p/C8VxMkoI83_/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+    "https://www.instagram.com/p/C7jCwMhykKQ/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+    "https://www.instagram.com/reel/C4VnGqqyuvg/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
     ])
 
 
