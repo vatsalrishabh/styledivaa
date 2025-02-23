@@ -1,10 +1,10 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FaShoppingCart, FaHeart } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 
-const GalleryOne = () => {
+const AdminGalleryOne = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -93,18 +93,18 @@ const GalleryOne = () => {
                   {/* Buy Now Button */}
                   <Link href={`/product/${post.productId}`}>
                     <button className="flex items-center gap-2 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 transition-all">
-                      <FaShoppingCart />
-                      Buy Now
+                      < FaEdit/>
+                     Edit 
                     </button>
                   </Link>
 
                   {/* Wishlist Button */}
                   <button
-                    className="flex items-center gap-2 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-700 transition-all"
+                    className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition-all"
                     onClick={() => alert("Added to Wishlist!")}
                   >
-                    <FaHeart />
-                    Wishlist
+                    <FaTrash />
+                  Delete
                   </button>
                 </div>
               </div>
@@ -118,4 +118,4 @@ const GalleryOne = () => {
   );
 };
 
-export default GalleryOne;
+export default AdminGalleryOne;

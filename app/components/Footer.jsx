@@ -75,7 +75,7 @@ const Footer = () => {
               <Link href="https://facebook.com">Facebook</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              <Link href="https://instagram.com">Instagram</Link>
+              <Link href="https://www.instagram.com/style_diva33/">Instagram</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
               <Link href="https://twitter.com">Twitter</Link>
