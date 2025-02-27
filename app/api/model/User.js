@@ -1,4 +1,3 @@
-// models/User.js
 import mongoose, { Schema } from 'mongoose';
 
 const addressSchema = new Schema({
@@ -15,14 +14,14 @@ const addressSchema = new Schema({
 });
 
 const userSchema = new Schema({
-    userId: { type: String, required: true, unique: true }, // Changed to userId
+    userId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password:{type: String, required: true },
+    password: { type: String, required: true },
     dpUrl: String, // Profile picture URL
     addresses: [addressSchema], // Array of addresses
     mobileNumber: { type: String, required: true },
-    typeOfUser: String, // E.g., "Customer", "Admin", "Vendor"
+    typeOfUser: { type: String, default: "Customer" }, // Set default value
 }, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
