@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "../config/db";
-import Product from "../model/Product";
+import Product from "../models/Product";
 
 
 // @api - api/products/

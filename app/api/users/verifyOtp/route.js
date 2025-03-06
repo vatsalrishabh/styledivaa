@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import Otp from "../../model/Otp";
-import User from "../../model/User";
+import Otp from "../../models/Otp";
+import User from "../../models/User";
 import connectDB from "../../config/db";
 import { generateToken } from "../../config/jwtGenerator";
 

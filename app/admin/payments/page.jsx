@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import LeftLaptoSideNav from "../LeftLaptoSideNav";
 import MobileAdminNav from "../MobileAdminNav";

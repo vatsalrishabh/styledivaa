@@ -12,7 +12,7 @@ export default function Home() {
             
             <Navbar />
             <ForHerHome/>
-            <RightIconSmartphone/>
+            <RightIconSmartphone/>    {/* this component has static cart icon in left, right slideshow */}
             <Footer/>
         </div>
     );

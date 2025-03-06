@@ -1,20 +1,66 @@
 import { NextResponse } from "next/server";
-import Gallery from "@/app/api/model/Gallery";
+import Product from "../../../models/Product";
+import path from "path";
+import fs from "fs/promises";
 
-// Handle POST request
+export const config = { api: { bodyParser: false } }; // Disable default body parser
+
 export async function POST(request) {
   try {
-    const { productId, imageUrls } = await request.json();
+    const req = await request.formData();
 
-    if (!productId || !Array.isArray(imageUrls)) {
-      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    // Ensure the uploads directory exists
+    const uploadDir = path.join(process.cwd(), "public/uploads");
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    // Parse form data
+    const files = [];
+    const fields = {};
+
+    for (const [key, value] of req.entries()) {
+      if (value instanceof Blob) {
+        const buffer = Buffer.from(await value.arrayBuffer());
+        const safeFilename = value.name.replace(/\s+/g, "_");
+        const tempPath = path.join(uploadDir, safeFilename);
+
+        await fs.writeFile(tempPath, buffer);
+        files.push(`/uploads/${safeFilename}`);
+      } else {
+        fields[key] = value;
+      }
     }
 
-    const newGalleryItem = new Gallery({ productId, imageUrls });
-    await newGalleryItem.save();
+    // Validate required fields
+    if (!fields.productId || !fields.name || !fields.price || !fields.category ) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
 
-    return NextResponse.json({ message: "Gallery item added successfully" }, { status: 201 });
+    // Parse sizes
+    const sizes = Object.keys(fields)
+      .filter(key => key.startsWith("sizes["))
+      .map(key => ({
+        size: key.match(/\[(.*?)\]/)[1], // Extract size name
+        quantity: parseInt(fields[key], 10),
+      }));
+
+    // Create and save product
+    const newProduct = new Product({
+      productId: fields.productId,
+      name: fields.name,
+      imageUrls: files, // Store uploaded image URLs
+      price: parseFloat(fields.price),
+      discount: fields.discount ? parseFloat(fields.discount) : 0,
+      details: fields.description || "",
+      category: fields.category,
+      gender: fields.gender,
+      sizes: sizes,
+    });
+
+    await newProduct.save();
+
+    return NextResponse.json({ message: "Product added successfully", product: newProduct }, { status: 201 });
   } catch (error) {
+    console.error("Error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

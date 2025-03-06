@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../config/db";
-import ContactUs from "../../model/ContactUs"; // Import the ContactUs model
+import ContactUs from "../../models/ContactUs"; // Import the ContactUs model
 import crypto from "crypto";
 import { sendAdminNotification, sendUserConfirmation } from "../../utils/contactUs"; // Import email functions
 

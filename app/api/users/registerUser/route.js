@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../config/db";
 import { emailRegistration } from "../../utils/emailRegistration";
-import Otp from "../../model/Otp";
-import User from "../../model/User";
+import Otp from "../../models/Otp";
+import User from "../../models/User";
 
 
 // @api - api/users/registerUser
