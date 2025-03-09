@@ -67,12 +67,12 @@ export default function RightSlideCart() {
                   <div className="mt-8">
                     <div className="flow-root">
                       <ul role="list" className="-my-6 divide-y divide-gray-200">
-                        {cartItems.map((product) => (
-                          <li key={product.id} className="flex py-6">
+                        {cartItems.map((product,index) => (
+                          <li key={index} className="flex py-6">
                             <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                               <img
-                                alt={product.imageAlt}
-                                src={product.imageSrc}
+                                alt={product.imageOne}
+                                src={product.imageOne}
                                 className="size-full object-cover"
                               />
                             </div>

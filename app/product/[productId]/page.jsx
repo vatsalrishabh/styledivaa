@@ -1,39 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // ✅ Correct import
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { setProducts } from "@/redux/cart/allProductSlice";
 import Navbar from "@/app/components/Navbar";
 import RightIconSmartphone from "@/app/components/SmartphoneCartIcon/RightIconSmartphone";
 import BreadCrumbs from "@/app/components/BreadCrumbs";
 import LeftImgProduct from "../LeftImgProduct";
 import RightProductDetails from "../RightProductDetails";
 
-const page = () => {
-  const { productId } = useParams(); // ✅ Fetch product ID from URL
-  const [specificProduct, setSpecificProduct] = useState(null);
-
+const Page = () => {
+  const { productId } = useParams();
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.allProducts?.products || []);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await axios.get(`/api/products/${productId}`); // ✅ Pass ID dynamically
-        console.log(response);
-        // setSpecificProduct(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    if (productId) {
-      fetchProduct(); // ✅ Only fetch when ID is available
+    if (products.length === 0) {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get("/api/products");
+          dispatch(setProducts(response.data));
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
+      fetchProducts();
     }
-  }, [productId]);
+  }, [dispatch, products.length]);
+
+  // Find the product using productId
+  const specificProduct = products.find((product) => product?.productId === productId);
+  console.log(specificProduct);
 
   return (
     <>
       <Navbar />
-      <RightIconSmartphone /> {/* Static cart icon */}
+      <RightIconSmartphone />
       <div className="w-full">
         <div className="px-4 pt-4">
           <BreadCrumbs one="Home" oneLink="/" two="Product" twoLink="/product" />
@@ -53,4 +57,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

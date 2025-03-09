@@ -11,9 +11,11 @@ const ProductCard = ({ productId, img, discount, name, rate, description, price 
     router.push(`/product/${productId}`);
   };
 
+  console.log(img)
+
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl">
-      {/* ✅ Fix: Only render Image if img is valid, else show a placeholder */}
+      {/* ✅ Safe Image Handling */}
       {img ? (
         <Image 
           src={img} 
@@ -31,7 +33,7 @@ const ProductCard = ({ productId, img, discount, name, rate, description, price 
       <div className="p-4 flex flex-col">
         <h3 className="font-semibold text-lg text-gray-900">{name}</h3>
         <p className="text-gray-600 text-sm truncate">{description}</p>
-        <p className="text-red-500 font-bold mt-2">{discount} OFF</p>
+        <p className="text-red-500 font-bold mt-2">{discount}</p>
         <p className="text-gray-700 font-semibold">Price: ₹{price}</p>
         <p className="text-gray-500 text-sm">Rating: {rate} ⭐</p>
 
