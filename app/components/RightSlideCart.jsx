@@ -5,8 +5,8 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
 import { addItem, removeItem, updateQuantity, clearCart } from "../../redux/cart/cartSlice";
-import { openCart as openCartAction, closeCart } from "../../redux/cart/openCartSlice";
-import { updateNumOfItems } from "../../redux/cart/openCartSlice"; // Import the updateNumOfItems action
+import { openCart as openCartAction, closeCart, updateNumOfItems } from "../../redux/cart/openCartSlice";  // Import the updateNumOfItems action
+import Link from 'next/link';
 
 export default function RightSlideCart() {
   const dispatch = useDispatch();
@@ -131,12 +131,12 @@ export default function RightSlideCart() {
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                   <div className="mt-6">
-                    <a
-                      href="#"
+                    <Link
+                      href="/checkout"
                       className="flex items-center justify-center rounded-md border border-transparent bg-pink-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-pink-700"
                     >
                       Checkout
-                    </a>
+                    </Link>
                   </div>
                   <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                     <p>

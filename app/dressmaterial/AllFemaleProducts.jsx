@@ -14,7 +14,7 @@ const AllFemaleProducts = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/api/products");
-        dispatch(setProducts(response.data)); // ✅ Correct Redux action
+        dispatch(setProducts(response.data)); // store all the products to react-redux later fileter out and display 
       } catch (error) {
         console.error("Error fetching products:", error);
       }
