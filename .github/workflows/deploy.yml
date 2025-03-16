@@ -3,7 +3,7 @@ name: Deploy StyleDivaa
 on:
   push:
     branches:
-      - main  # Adjust branch if needed
+      - main
 
 jobs:
   deploy:
@@ -21,10 +21,10 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd /var/www/styledivaa  # Adjust path if needed
+            cd /home/styledivaauser/public_html || exit 1
             git pull origin main
             npm install
-            npm run build  # Remove if not needed
+            npm run build
             pm2 restart styledivaa || pm2 start npm --name "styledivaa" -- run start
             pm2 save
           EOF
