@@ -22,16 +22,17 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             if [ ! -d "/home/styledivaauser/public_html/.git" ]; then
-                git clone "https://github.com/vatsalrishabh/styledivaa.git" /home/styledivaauser/public_html
+                rm -rf /home/styledivaauser/public_html  # Ensure the folder is empty
+                git clone --depth=1 "https://github.com/vatsalrishabh/styledivaa.git" /home/styledivaauser/public_html
             else
                 cd /home/styledivaauser/public_html || exit 1
                 git fetch --all
                 git reset --hard origin/main
             fi
             cd /home/styledivaauser/public_html || exit 1
-            npm install
+            chown -R styledivaauser:styledivaauser /home/styledivaauser/public_html  # Fix ownership
+            npm install --force  # Force install in case of partial downloads
             npm run build
             pm2 restart styledivaa || pm2 start npm --name "styledivaa" -- run start
             pm2 save
           EOF
- 
