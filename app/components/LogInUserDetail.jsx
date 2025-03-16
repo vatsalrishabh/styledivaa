@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import AfterLogin from "./LoginUser/AfterLogin";
 import LoginRegistration from "./LoginUser/LoginRegistration";
 import { jwtDecode } from "jwt-decode"; //to decode jwt comimg from server
+import SnackBar from "./SnackBar";
 
 const LogInUserDetail = () => {
   const [loggedInUser, setLoggedInUser] = useState({
@@ -62,6 +63,7 @@ const LogInUserDetail = () => {
 
   return (
     <div className="Login-User-Details">
+      <SnackBar/>
       {loggedInUser.isLoggedIn ? (
         <AfterLogin
           userName={loggedInUser.userName}

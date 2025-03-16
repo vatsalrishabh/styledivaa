@@ -1,0 +1,30 @@
+name: Deploy StyleDivaa
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch if needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd /var/www/styledivaa  # Adjust path if needed
+            git pull origin main
+            npm install
+            npm run build  # Remove if not needed
+            pm2 restart styledivaa || pm2 start npm --name "styledivaa" -- run start
+            pm2 save
+          EOF
