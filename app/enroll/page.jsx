@@ -7,8 +7,6 @@ import RightIconSmartphone from '../components/SmartphoneCartIcon/RightIconSmart
 
 const page = () => {
 
- 
-
   return (
     <div className='Enroll-Now'>
       <Navbar/>
