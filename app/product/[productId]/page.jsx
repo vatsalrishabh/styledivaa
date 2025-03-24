@@ -12,9 +12,9 @@ import LeftImgProduct from "../LeftImgProduct";
 import RightProductDetails from "../RightProductDetails";
 
 const Page = () => {
-  const { productId } = useParams();
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.allProducts?.products || []);
+  const { productId } = useParams(); // getting the productId
+  const dispatch = useDispatch();// store all the products(shop) to react-redux 
+  const products = useSelector((state) => state.allProducts?.products || []); // get all the products in the shop
 
   useEffect(() => {
     if (products.length === 0) {
@@ -22,6 +22,7 @@ const Page = () => {
         try {
           const response = await axios.get("/api/products");
           dispatch(setProducts(response.data));
+       
         } catch (error) {
           console.error("Error fetching products:", error);
         }
@@ -32,7 +33,7 @@ const Page = () => {
 
   // Find the product using productId
   const specificProduct = products.find((product) => product?.productId === productId);
-  console.log(specificProduct);
+  // console.log(specificProduct);
 
   return (
     <>

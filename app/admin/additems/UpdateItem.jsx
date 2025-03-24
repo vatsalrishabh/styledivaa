@@ -1,15 +1,33 @@
-import { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import ProductUpdateCard from "./ProductUpdateCard";
 
-const UpdateItem = ({ isOpen, onClose }) => {
+const UpdateItem = ({ isOpen, onClose, products }) => {
   const { register, handleSubmit, reset, setValue } = useForm();
   const [previewImages, setPreviewImages] = useState({});
   const [productId, setProductId] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Handles file selection & sets preview
+  // Auto-fill form when valid product ID is entered
+  useEffect(() => {
+    console.log(products)
+    if (productId.length === 7) {
+      const foundProduct = products.find((p) => p.id === productId);
+      if (foundProduct) {
+        setSelectedProduct(foundProduct);
+        Object.keys(foundProduct).forEach((key) => setValue(key, foundProduct[key]));
+      } else {
+        setSelectedProduct(null);
+      }
+    } else {
+      setSelectedProduct(null);
+    }
+  }, [productId, products, setValue]);
+
+  // Handles file selection & preview
   const handleFileChange = (e, imageField) => {
     const file = e.target.files[0];
     if (file) {
@@ -18,15 +36,15 @@ const UpdateItem = ({ isOpen, onClose }) => {
     }
   };
 
-  // Handles form submission
+  // Form submission handler
   const onSubmit = async (data) => {
-    if (!productId) {
+    if (!selectedProduct) {
       alert("Please enter a valid Product ID!");
       return;
     }
 
     const formData = new FormData();
-    formData.append("productId", productId); // Ensure productId is sent
+    formData.append("productId", productId);
     Object.keys(data).forEach((key) => {
       if (data[key] instanceof File) {
         formData.append(key, data[key], `${Date.now()}-${data[key].name}`);
@@ -42,7 +60,8 @@ const UpdateItem = ({ isOpen, onClose }) => {
       alert("Product updated successfully!");
       reset();
       setPreviewImages({});
-      setProductId(""); // Clear productId after update
+      setProductId("");
+      setSelectedProduct(null);
     } catch (error) {
       console.error("Error updating product:", error);
       alert("Failed to update product!");
@@ -56,19 +75,21 @@ const UpdateItem = ({ isOpen, onClose }) => {
       <div className="max-w-3xl w-full bg-white p-6 rounded-lg shadow-md overflow-auto h-[90vh]">
         <div className="flex justify-between">
           <h2 className="text-2xl font-bold mb-4">Update Product</h2>
-          <button onClick={onClose} className="text-gray-600 hover:text-black"><CloseIcon /></button>
+          <button onClick={onClose} className="text-gray-600 hover:text-black">
+            <CloseIcon />
+          </button>
         </div>
 
         {/* Search Box for Product ID */}
-        <input 
-          type="text" 
-          placeholder="Enter Product ID" 
-          value={productId} 
-          onChange={(e) => setProductId(e.target.value)} 
+        <input
+          type="text"
+          placeholder="Enter Product ID"
+          value={productId}
+          onChange={(e) => setProductId(e.target.value)}
           className="border p-2 rounded w-full mb-4"
         />
 
-        {productId.length === 7 ? (
+        {selectedProduct ? (
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
             <input {...register("name")} placeholder="Product Name" className="border p-2 rounded" required />
             <input {...register("rating")} type="number" step="0.1" min="0" max="5" placeholder="Rating (0-5)" className="border p-2 rounded" />
@@ -85,11 +106,11 @@ const UpdateItem = ({ isOpen, onClose }) => {
             <input {...register("length")} placeholder="Length & Hem" className="border p-2 rounded" />
             <input {...register("material")} placeholder="Material Type" className="border p-2 rounded" />
             <input {...register("fit")} placeholder="Model Fit" className="border p-2 rounded" />
-            
+
             {/* Stock Inputs */}
             <div className="col-span-2 grid grid-cols-3 gap-2">
               {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-                <input key={size} {...register(`stock[${size}]`)} type="number" placeholder={`Stock (${size})`} className="border p-2 rounded" />
+                <input key={size} {...register(`stock.${size}`)} type="number" placeholder={`Stock (${size})`} className="border p-2 rounded" />
               ))}
             </div>
 
@@ -107,9 +128,11 @@ const UpdateItem = ({ isOpen, onClose }) => {
               Update Product
             </button>
           </form>
-        ):(<div className="overflow-y-auto ">
-        <ProductUpdateCard setProductId={setProductId} />
-        </div>)}
+        ) : (
+          <div className="overflow-y-auto">
+            <ProductUpdateCard setProductId={setProductId} />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -3,53 +3,31 @@ import React, { useEffect, useState } from "react";
 import { Box, TextField, Modal, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ProductCard from "./ProductCard";
+import { useSelector, useDispatch } from "react-redux";
+import { setProducts } from "@/redux/cart/allProductSlice";
+import axios from "axios";
 
-const DeleteItem = ({ isOpen, onClose }) => {
+const DeleteItem = ({ isOpen, onClose,products }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [allProducts, setAllProducts] = useState([
-    {
-      productId: "P001",
-      name: "Wireless Mouse",
-      imageOne: "https://via.placeholder.com/150",
-      price: 25.99,
-      category: "Electronics",
-      description: "Ergonomic wireless mouse with high precision."
-    },
-    {
-      productId: "P002",
-      name: "Mechanical Keyboard",
-      imageOne: "https://via.placeholder.com/150",
-      price: 79.99,
-      category: "Electronics",
-      description: "RGB mechanical keyboard with blue switches."
-    },
-    {
-      productId: "P003",
-      name: "Gaming Headset",
-      imageOne: "https://via.placeholder.com/150",
-      price: 49.99,
-      category: "Accessories",
-      description: "Noise-canceling gaming headset with surround sound."
-    },
-    {
-      productId: "P004",
-      name: "Smartphone Stand",
-      imageOne: "https://via.placeholder.com/150",
-      price: 15.99,
-      category: "Accessories",
-      description: "Adjustable smartphone stand for desk setup."
-    },
-    {
-      productId: "P005",
-      name: "Portable Charger",
-      imageOne: "https://via.placeholder.com/150",
-      price: 29.99,
-      category: "Electronics",
-      description: "Fast-charging 10,000mAh power bank."
-    }
-  ]);
-  const [filteredProducts, setFilteredProducts] = useState(allProducts);
+  const sss = useSelector((state)=>state.allProducts.products);
+  console.log(sss+"ssss")
+  const [allProducts, setAllProducts] = useState(products);
+  const dispatch = useDispatch();
+    useEffect(() => {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get("/api/products");
+          dispatch(setProducts(response.data)); // store all the products to react-redux later fileter out and display 
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
+  
+      fetchProducts();
+    }, [dispatch]);
 
+  // the below content is used when we have to search and display a single product 
+  const [filteredProducts, setFilteredProducts] = useState(allProducts);
   useEffect(() => {
     if (!searchQuery.trim()) {
       setFilteredProducts(allProducts);
@@ -64,6 +42,8 @@ const DeleteItem = ({ isOpen, onClose }) => {
 
     setFilteredProducts(filtered);
   }, [searchQuery, allProducts]);
+  // the above content is used when we have to search and display a single product 
+
 
   return (
     <Modal open={isOpen} onClose={onClose}>

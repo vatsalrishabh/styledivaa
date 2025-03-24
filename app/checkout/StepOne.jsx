@@ -7,27 +7,54 @@ import {
   CreditCardIcon 
 } from "@heroicons/react/24/solid";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import { toggleCart } from "@/redux/cart/openCartSlice";
 import AddressModal from "../components/AddressModal";
-import LoginModal from "../components/LoginUser/LoginModal";
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation"; // Correct for Next.js App Router
+
 
 const StepOne = ({ gotoNextStep }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { numOfItems } = useSelector((state) => state.openCart);
+  // const { numOfItems } = useSelector((state) => state.openCart);
   const cartItems = useSelector((state) => state.cart); // List and details of the items in the cart
   const [isOpen, setIsOpen] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState({}); // user details
+  const [allAddress , setAllAddress] = useState([]);
 
-  const [loggedInUser, setLoggedInUser] = useState({});
   useEffect(()=>{
     const loadUserDetails = async ()=>{
       const userDetails = localStorage.getItem('userDetails');
       if(userDetails){
         const data = JSON.parse(userDetails);
         setLoggedInUser(data);
+        console.log(jwtDecode(data.token));
+        setLoggedInUser(jwtDecode(data.token));
+      }else{
+        router.push("/home");
       }
     }
     loadUserDetails();
   },[]);
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const response = await axios.post(`/api/users/getAddress`, { email: loggedInUser.email });
+        setAllAddress(response.data.addresses); // Fix: Extract 'addresses' array
+        console.log(response.data.addresses);
+        console.log(response.data)
+      } catch (error) {
+        console.error("Error fetching address:", error);
+      }
+    };
+  
+    if (loggedInUser.email) {
+      fetchAddress();
+    }
+  }, [loggedInUser.email]);
+  
 
   // Calculate total price
   const totalPrice = cartItems.reduce((total, product) => total + product.price * product.quantity, 0);
@@ -36,7 +63,15 @@ const StepOne = ({ gotoNextStep }) => {
     dispatch(toggleCart()); // Toggle the cart open/close
   };
 
-
+  const today = new Date();
+  const deliveryDate = new Date();
+  deliveryDate.setDate(today.getDate() + 5); // Add 5 days for estimated delivery
+  
+  // Format the date manually
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+  const formattedDate = `${days[deliveryDate.getDay()]}, ${deliveryDate.getDate()} ${months[deliveryDate.getMonth()]}`;
 
   return (
     <div className="bg-pink-50 h-full w-full flex flex-col md:flex-row justify-between items-start p-6 rounded-lg shadow-lg">
@@ -47,8 +82,8 @@ const StepOne = ({ gotoNextStep }) => {
           Product Details
         </h2>
         <p className="text-gray-600">
-          Estimated Delivery by <b>Tuesday, 18th Mar</b>
-        </p>
+  Estimated Delivery by <b>{formattedDate}</b>
+</p>
 
         {/* Product List */}
         {cartItems.map((product, index) => (
@@ -78,27 +113,54 @@ const StepOne = ({ gotoNextStep }) => {
         ))}
 
         {/* Address Section */}
-        {
-          true?    <div className="hide-when not loggedIn">
-          <h3 className="text-gray-800 font-semibold mt-6 flex items-center gap-2">
-                <HomeIcon className="h-6 w-6 text-pink-500" />
-                Delivery Address
-              </h3>
-              <p className="text-gray-600">Dimple</p>
-              <p className="text-gray-600">
-                1556/1 Gurushatha Nilaya, MCC B Block 12th main Near Bhavani floor mill, 
-                Davangere, Karnataka - 577004
-              </p>
-              <p className="text-gray-600">📞 9844998888</p>
-      
-              <button 
-                className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition" 
-                onClick={() => setIsOpen(true)}
-              >
-                <PencilSquareIcon className="h-5 w-5" /> EDIT
-              </button>
-          </div>:  <LoginModal/>
-        }
+        {/* User Details Section */}
+<div className="mt-6">
+  <h3 className="text-gray-800 font-semibold flex items-center gap-2">
+    <HomeIcon className="h-6 w-6 text-pink-500" />
+    User Details
+  </h3>
+
+  <div className="bg-white p-4 rounded-lg shadow mt-4">
+    <p className="text-gray-800 font-bold">{loggedInUser.name}</p>
+    <p className="text-gray-600">{loggedInUser.email}</p>
+    <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
+  </div>
+</div>
+
+        {/* Address Section */}
+{allAddress.length > 0 ? (
+  <div className="mt-6">
+    <h3 className="text-gray-800 font-semibold flex items-center gap-2">
+      <HomeIcon className="h-6 w-6 text-pink-500" />
+      Delivery Address
+    </h3>
+
+    {allAddress.map((address, index) => (
+      <div key={index} className="bg-white p-4 rounded-lg shadow mt-4">
+        <p className="text-gray-600 font-bold">{address.streetAddress}</p>
+        <p className="text-gray-600">
+          {address.roomNumber}, {address.city}, {address.state} - {address.zipcode}
+        </p>
+        <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
+
+        <button 
+          className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition" 
+          onClick={() => setIsOpen(true)}
+        >
+          <PencilSquareIcon className="h-5 w-5" /> EDIT
+        </button>
+      </div>
+    ))}
+  </div>
+) : (
+  <button 
+    className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition" 
+    onClick={() => setIsOpen(true)}
+  >
+    <PencilSquareIcon className="h-5 w-5" /> Add Shipping Address
+  </button>
+)}
+
       </div>
 
 

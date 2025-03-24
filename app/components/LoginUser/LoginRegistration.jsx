@@ -7,7 +7,7 @@ import { Dialog } from '@mui/material'
 
 const LoginRegistration = () => {
     const [showLogin , setShowLogin] = useState(true);
-      const [openModall, setOpenModal] = useState(false);
+    const [openModall, setOpenModal] = useState(false);
 
     const openLoginModal =()=>{
         setShowLogin(false); // hover to regis

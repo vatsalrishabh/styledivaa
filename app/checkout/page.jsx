@@ -9,6 +9,8 @@ import { FaCheck } from "react-icons/fa";
 import RightSlideCart from "../components/RightSlideCart";
 import RightIconSmartphone from "../components/SmartphoneCartIcon/RightIconSmartphone";
 
+
+
 const Page = () => {
   const [step, setStep] = useState(1);
 

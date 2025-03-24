@@ -30,12 +30,7 @@ const ProductCard = ({ productId, productImg, productName }) => {
 
       {/* Card Footer (Delete Button) */}
       <div className="p-4 border-t flex justify-end">
-        <Button
-          variant="contained"
-          color="error"
-          startIcon={<DeleteIcon />}
-          onClick={deleteProduct}
-        >
+        <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={deleteProduct}>
           Delete
         </Button>
       </div>

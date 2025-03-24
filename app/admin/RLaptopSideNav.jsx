@@ -8,8 +8,10 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import AdminBreadCrumbs from "../components/Admin/AdminBreadCrumbs";
+// import { useSelector } from "react-redux";
 
 // Data Array for Cards
+
 const cardData = [
   { heading: "Manage Orders", number: 1250, Icon: ListAltIcon, bgColor: "#4A90E2", link:"admin/manageorder" },
   { heading: "Add Items", number: 320, Icon: AddCircleOutlineIcon, bgColor: "#16a34a", link:"admin/additems" },
@@ -22,6 +24,8 @@ const breadcrumbLinks = [
     // { label: "Manage Orders", href: "/admin/manageorder" },
   ];
 const RLaptopSideNav = () => {
+  // const products = useSelector((state) => state.allProducts.products);
+  // console.log(products);
   return (
     <div className="lg:w-[83%] w-full absolute right-0 h-[100vh] bg-slate-200 p-6">
       {/* Grid Layout: 3 Columns on Large Screens, 1 Column on Small Screens */}
