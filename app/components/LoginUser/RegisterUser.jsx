@@ -108,7 +108,7 @@ const RegisterUser = ({openRegisterModal , openModall}) => {
 
   return (
     <div className="Before-Login text-center p-5">
-      {/* <SnackBar 
+      {/* <SnackBarr 
         message="Success!"
         statusCode="200" 
         colorCode="green"

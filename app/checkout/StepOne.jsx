@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { 
-  PencilSquareIcon, 
-  ShoppingCartIcon, 
-  HomeIcon, 
-  CreditCardIcon 
+import {
+  PencilSquareIcon,
+  ShoppingCartIcon,
+  HomeIcon,
+  CreditCardIcon,
 } from "@heroicons/react/24/solid";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -13,7 +13,6 @@ import AddressModal from "../components/AddressModal";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation"; // Correct for Next.js App Router
 
-
 const StepOne = ({ gotoNextStep }) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -21,43 +20,47 @@ const StepOne = ({ gotoNextStep }) => {
   const cartItems = useSelector((state) => state.cart); // List and details of the items in the cart
   const [isOpen, setIsOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState({}); // user details
-  const [allAddress , setAllAddress] = useState([]);
+  const [allAddress, setAllAddress] = useState([]);
 
-  useEffect(()=>{
-    const loadUserDetails = async ()=>{
-      const userDetails = localStorage.getItem('userDetails');
-      if(userDetails){
+  useEffect(() => {
+    const loadUserDetails = async () => {
+      const userDetails = localStorage.getItem("userDetails");
+      if (userDetails) {
         const data = JSON.parse(userDetails);
         setLoggedInUser(data);
         console.log(jwtDecode(data.token));
         setLoggedInUser(jwtDecode(data.token));
-      }else{
+      } else {
         router.push("/home");
       }
-    }
+    };
     loadUserDetails();
-  },[]);
+  }, []);
 
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await axios.post(`/api/users/getAddress`, { email: loggedInUser.email });
+        const response = await axios.post(`/api/users/getAddress`, {
+          email: loggedInUser.email,
+        });
         setAllAddress(response.data.addresses); // Fix: Extract 'addresses' array
         console.log(response.data.addresses);
-        console.log(response.data)
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching address:", error);
       }
     };
-  
+
     if (loggedInUser.email) {
       fetchAddress();
     }
   }, [loggedInUser.email]);
-  
 
   // Calculate total price
-  const totalPrice = cartItems.reduce((total, product) => total + product.price * product.quantity, 0);
+  const totalPrice = cartItems.reduce(
+    (total, product) => total + product.price * product.quantity,
+    0
+  );
 
   const handleCartClick = () => {
     dispatch(toggleCart()); // Toggle the cart open/close
@@ -66,12 +69,44 @@ const StepOne = ({ gotoNextStep }) => {
   const today = new Date();
   const deliveryDate = new Date();
   deliveryDate.setDate(today.getDate() + 5); // Add 5 days for estimated delivery
-  
+
   // Format the date manually
-  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  
-  const formattedDate = `${days[deliveryDate.getDay()]}, ${deliveryDate.getDate()} ${months[deliveryDate.getMonth()]}`;
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const formattedDate = `${
+    days[deliveryDate.getDay()]
+  }, ${deliveryDate.getDate()} ${months[deliveryDate.getMonth()]}`;
+
+  // creating a final cart with all the details to hit the payment gateway api in next component
+  useEffect(() => {
+    localStorage.setItem(
+      "finalCart",
+      JSON.stringify({ loggedInUser, allAddress, cartItems })
+    );
+  }, [loggedInUser, allAddress, cartItems]); // Runs whenever any of these change
+  // creating a final cart with all the details to hit the payment gateway api in next component
 
   return (
     <div className="bg-pink-50 h-full w-full flex flex-col md:flex-row justify-between items-start p-6 rounded-lg shadow-lg">
@@ -82,12 +117,15 @@ const StepOne = ({ gotoNextStep }) => {
           Product Details
         </h2>
         <p className="text-gray-600">
-  Estimated Delivery by <b>{formattedDate}</b>
-</p>
+          Estimated Delivery by <b>{formattedDate}</b>
+        </p>
 
         {/* Product List */}
         {cartItems.map((product, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow mt-4 transition transform hover:scale-105">
+          <div
+            key={index}
+            className="bg-white p-4 rounded-lg shadow mt-4 transition transform hover:scale-105"
+          >
             <h3 className="text-gray-800 font-semibold">{product.name}</h3>
             <p className="text-gray-700 mt-1 font-bold">₹{product.price}</p>
             <p className="text-green-600 text-sm">All issue easy returns</p>
@@ -103,8 +141,8 @@ const StepOne = ({ gotoNextStep }) => {
               </p>
             </div>
 
-            <button 
-              className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition" 
+            <button
+              className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition"
               onClick={handleCartClick}
             >
               <PencilSquareIcon className="h-5 w-5" /> EDIT
@@ -114,55 +152,56 @@ const StepOne = ({ gotoNextStep }) => {
 
         {/* Address Section */}
         {/* User Details Section */}
-<div className="mt-6">
-  <h3 className="text-gray-800 font-semibold flex items-center gap-2">
-    <HomeIcon className="h-6 w-6 text-pink-500" />
-    User Details
-  </h3>
+        <div className="mt-6">
+          <h3 className="text-gray-800 font-semibold flex items-center gap-2">
+            <HomeIcon className="h-6 w-6 text-pink-500" />
+            User Details
+          </h3>
 
-  <div className="bg-white p-4 rounded-lg shadow mt-4">
-    <p className="text-gray-800 font-bold">{loggedInUser.name}</p>
-    <p className="text-gray-600">{loggedInUser.email}</p>
-    <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
-  </div>
-</div>
+          <div className="bg-white p-4 rounded-lg shadow mt-4">
+            <p className="text-gray-800 font-bold">{loggedInUser.name}</p>
+            <p className="text-gray-600">{loggedInUser.email}</p>
+            <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
+          </div>
+        </div>
 
         {/* Address Section */}
-{allAddress.length > 0 ? (
-  <div className="mt-6">
-    <h3 className="text-gray-800 font-semibold flex items-center gap-2">
-      <HomeIcon className="h-6 w-6 text-pink-500" />
-      Delivery Address
-    </h3>
+        {allAddress.length > 0 ? (
+          <div className="mt-6">
+            <h3 className="text-gray-800 font-semibold flex items-center gap-2">
+              <HomeIcon className="h-6 w-6 text-pink-500" />
+              Delivery Address
+            </h3>
 
-    {allAddress.map((address, index) => (
-      <div key={index} className="bg-white p-4 rounded-lg shadow mt-4">
-        <p className="text-gray-600 font-bold">{address.streetAddress}</p>
-        <p className="text-gray-600">
-          {address.roomNumber}, {address.city}, {address.state} - {address.zipcode}
-        </p>
-        <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
+            {allAddress.map((address, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg shadow mt-4">
+                <p className="text-gray-600 font-bold">
+                  {address.streetAddress}
+                </p>
+                <p className="text-gray-600">
+                  {address.roomNumber}, {address.city}, {address.state} -{" "}
+                  {address.zipcode}
+                </p>
+                <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
 
-        <button 
-          className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition" 
-          onClick={() => setIsOpen(true)}
-        >
-          <PencilSquareIcon className="h-5 w-5" /> EDIT
-        </button>
+                <button
+                  className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <PencilSquareIcon className="h-5 w-5" /> EDIT
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <button
+            className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition"
+            onClick={() => setIsOpen(true)}
+          >
+            <PencilSquareIcon className="h-5 w-5" /> Add Shipping Address
+          </button>
+        )}
       </div>
-    ))}
-  </div>
-) : (
-  <button 
-    className="text-pink-500 mt-2 flex items-center gap-1 hover:text-pink-700 transition" 
-    onClick={() => setIsOpen(true)}
-  >
-    <PencilSquareIcon className="h-5 w-5" /> Add Shipping Address
-  </button>
-)}
-
-      </div>
-
 
       {/* Right Section - Price Details & Continue */}
       <div className="w-full md:w-1/2 p-4">
@@ -185,9 +224,19 @@ const StepOne = ({ gotoNextStep }) => {
             Clicking 'Continue' will not deduct any money
           </p>
 
-          <button 
-            onClick={gotoNextStep} 
-            className="mt-4 w-full bg-pink-500 text-white px-6 py-3 rounded hover:bg-pink-700 transition transform hover:scale-105"
+          <button
+            onClick={gotoNextStep}
+            disabled={
+              !loggedInUser.name ||
+              allAddress.length === 0 ||
+              cartItems.length === 0
+            }
+            className={`mt-4 w-full px-6 py-3 rounded transition transform hover:scale-105 
+    ${
+      !loggedInUser.name || allAddress.length === 0 || cartItems.length === 0
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-pink-500 text-white hover:bg-pink-700"
+    }`}
           >
             Continue →
           </button>

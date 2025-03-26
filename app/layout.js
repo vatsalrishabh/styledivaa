@@ -1,8 +1,9 @@
 'use client';
 import "./globals.css";
 import { Provider } from "react-redux";
-import { Auth0Provider } from '@auth0/auth0-react';
 import { store } from "../redux/store";
+import { Auth0Provider } from '@auth0/auth0-react';
+
 
 export default function RootLayout({ children }) {
   return (

@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import "animate.css";
 
-const SnackBar = ({ message = "Hi, welcome to StyleDivaa", statusCode, colorCode }) => {
-  const [open, setOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false); // Ensure it only renders on client
+const SnackBarr = ({ message, statusCode, showSnackBar }) => { 
+  const [open, setOpen] = useState(showSnackBar || false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Set to true after mounting (Fixes SSR mismatch)
+    setIsClient(true);
     setOpen(true);
     const timer = setTimeout(() => setOpen(false), 3000);
     return () => clearTimeout(timer);
@@ -17,16 +17,15 @@ const SnackBar = ({ message = "Hi, welcome to StyleDivaa", statusCode, colorCode
   const handleClose = () => setOpen(false);
 
   const getColor = () => {
-    if (colorCode) return colorCode;
     switch (statusCode) {
-      case 200: return '#4CAF50';
-      case 400: return '#FF9800';
-      case 500: return '#F44336';
-      default: return '#E91E63';
+      case 200: return '#4CAF50';  // Green - Success
+      case 400: return '#FF9800';  // Orange - Warning
+      case 500: return '#F44336';  // Red - Error
+      default: return '#E91E63';   // Pink - Default
     }
   };
 
-  if (!isClient || !open) return null; // Prevent SSR rendering issues
+  if (!isClient || !open) return null;
 
   return (
     <div
@@ -61,4 +60,4 @@ const SnackBar = ({ message = "Hi, welcome to StyleDivaa", statusCode, colorCode
   );
 };
 
-export default SnackBar;
+export default SnackBarr;
