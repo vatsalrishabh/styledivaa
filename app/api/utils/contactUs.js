@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 export const sendAdminNotification = async (name, number, subject, message) => {
     const mailOptions = {
         from: process.env.Nodemailer_Email,
-        to: process.env.Admin_Email, // Admin email address
+        to: "rathnastylediva19@gmail.com", // Admin email address
         subject: `New Contact Request - ${subject}`,
         text: `New contact request received:\n\nName: ${name}\nNumber: ${number}\nSubject: ${subject}\nMessage: ${message}`,
         html: `<p><strong>Name:</strong> ${name}</p>

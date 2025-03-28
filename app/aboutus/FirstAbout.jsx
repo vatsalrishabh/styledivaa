@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import aboutimg from "../../public/assets/aboutpg.jpg"
 
 const FirstAbout = () => {
   return (
@@ -17,7 +18,7 @@ const FirstAbout = () => {
         {/* Image Section */}
         <div className="image-container relative group">
           <Image
-            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhhC8JtJ5T2XgBccqXsEmJt3uhXw9_2JjdZwG3ktecZFhN_Lchodm4QmTjFO7MQ3jXMOraH6BLjcD77cfmS8IDaTEJZB6Nn7WmO4zQDzR7Eih_sLaykunQI8rFvCmwWHcMv7ESQQB0SF14/s862/pink+street+style+fashion.jpg"
+            src={aboutimg}
             alt="Pink Street Style Fashion"
             width={500}
             height={500}
