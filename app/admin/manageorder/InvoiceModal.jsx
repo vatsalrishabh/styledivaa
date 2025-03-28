@@ -46,9 +46,11 @@ const InvoiceModal = ({ open, onClose, invoice }) => {
               Customer Information
             </Typography>
             <Typography>Name: {invoice.memberName ?? 'N/A'}</Typography>
-            <Typography>Email: {invoice.memberEmail ?? 'N/A'}</Typography>
-            <Typography>Phone: {invoice.memberPhone ?? 'N/A'}</Typography>
-            <Typography>Address: {invoice.memberAddress ?? 'N/A'}</Typography>
+            <Typography>Email: {invoice.email ?? 'N/A'}</Typography>
+            <Typography>Phone: {invoice.mobileNumber ?? 'N/A'}</Typography>
+            <Typography>
+              Address: {`${invoice.houseNumber}, ${invoice.streetAddress}, ${invoice.floor}, ${invoice.roomNumber}, ${invoice.state} - ${invoice.zipcode}` ?? 'N/A'}
+            </Typography>
           </Grid>
 
           <Divider sx={{ my: 2, width: '100%' }} />
@@ -60,34 +62,18 @@ const InvoiceModal = ({ open, onClose, invoice }) => {
               Product Details
             </Typography>
             <List>
-              {invoice.products?.map((product, index) => (
-                <ListItem key={index} alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar
-                      variant="square"
-                      src={product.imageUrl ?? ''}
-                      alt={product.name ?? 'Product Image'}
-                      sx={{ width: 56, height: 56, mr: 2 }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={product.name ?? 'Unnamed Product'}
-                    secondary={
-                      <>
-                        <Typography component="span" variant="body2" color="text.primary">
-                          Price: ₹{product.price ?? 'N/A'}
-                        </Typography>
-                        <br />
-                        <Typography component="span" variant="body2" color="text.primary">
-                          Quantity: {product.quantity ?? 'N/A'}
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-              )) ?? (
-                <Typography>No products available.</Typography>
-              )}
+              <ListItem alignItems="flex-start">
+                <ListItemText
+                  primary={`Product Code: ${invoice.productDescription ?? 'N/A'}`}
+                  secondary={
+                    <>
+                      <Typography component="span" variant="body2" color="text.primary">
+                        Quantity: {invoice.quantity ?? 'N/A'}
+                      </Typography>
+                    </>
+                  }
+                />
+              </ListItem>
             </List>
           </Grid>
 
@@ -102,6 +88,7 @@ const InvoiceModal = ({ open, onClose, invoice }) => {
             <Typography>Status: {invoice.status ?? 'N/A'}</Typography>
             <Typography>Delivery Partner: {invoice.deliveryPartner ?? 'N/A'}</Typography>
             <Typography>Reference Number: {invoice.referenceNumber ?? 'N/A'}</Typography>
+            <Typography>Estimated Delivery Date: {invoice.estimatedDeliveryDate ?? 'N/A'}</Typography>
           </Grid>
         </Grid>
       </DialogContent>

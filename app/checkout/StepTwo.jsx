@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   CreditCardIcon,
-  InformationCircleIcon,
   ShoppingCartIcon,
   CheckCircleIcon,
 } from "@heroicons/react/24/solid";
+import Script from "next/script";
 
 const StepTwo = ({ gotoPrevStep }) => {
   const [paymentMethod, setPaymentMethod] = useState("cod"); // Default: Cash on Delivery
@@ -19,6 +19,7 @@ const StepTwo = ({ gotoPrevStep }) => {
       console.log(cartData?.loggedInUser);
       console.log(cartData?.allAddress?.[0]);
       console.log(cartData?.cartItems);
+      console.log(cartData?.allAddress?.[0]?.city);
     }
   }, []);
 
@@ -27,23 +28,66 @@ const StepTwo = ({ gotoPrevStep }) => {
     if (!finalCart) return;
 
     try {
+      const totalAmount = finalCart?.cartItems?.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+
       const orderData = {
         user: finalCart?.loggedInUser,
         address: finalCart?.allAddress?.[0], // Assuming the first address is selected
         items: finalCart?.cartItems,
         paymentMethod,
-        totalAmount: paymentMethod === "online" ? 231 : 246,
+        totalAmount,
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/orders",
+        "/api/orders/createOrder",
         orderData
       );
       console.log("Order Response:", response.data);
-
       // Clear cart after order placement
-      localStorage.removeItem("finalCart");
-      alert("Order placed successfully!");
+
+
+      const options = {
+        key: 'rzp_test_l0gnUnaG8U4VmM',
+        amount: totalAmount * 100,
+        currency: "INR",
+        name: 'Styledivaa Fashion Boutique',
+        description: 'Product Purchase',
+        order_id: response.data.id,  // Ensure `order.id` exists
+        callback_url: `api/orders/paymentSuccess`,
+        prefill: {
+          name: finalCart?.loggedInUser?.name,
+          email: finalCart?.loggedInUser?.email,
+          contact: finalCart?.loggedInUser?.mobile,
+        },
+        theme: {
+          color: '#a32121',
+        },
+        handler: async function (response) {
+          try {
+            const verificationResponse = await axios.post(`/api/orders/verifyPayment`, {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (verificationResponse.data.status === 'ok') {
+              window.location.href = '/'; // take to donate page
+            } else {
+              console.error('Payment verification failed');
+            }
+          } catch (error) {
+            console.error('Error verifying payment:', error);
+          }
+        }
+      };
+
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+      // localStorage.removeItem("finalCart");
     } catch (error) {
       console.error("Error placing order:", error);
       alert("Failed to place order. Try again.");
@@ -51,7 +95,16 @@ const StepTwo = ({ gotoPrevStep }) => {
   };
 
   return (
-    <div className="bg-pink-50 min-h-screen w-full flex flex-col md:flex-row justify-center items-center p-12">
+<>
+
+{/* razorpay script starts */}
+<Script
+        id="razorpay-checkout-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      />
+{/* razorpay script ends */}    
+
+<div className="bg-pink-50 min-h-screen w-full flex flex-col md:flex-row justify-center items-center p-12">
       {/* Left Section - Payment Options */}
       <div className="w-full md:w-1/2 bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:scale-105">
         <h2 className="text-pink-600 text-3xl font-bold flex items-center gap-2 mb-6">
@@ -77,7 +130,7 @@ const StepTwo = ({ gotoPrevStep }) => {
               readOnly
             />
           </label>
-          <p className="text-gray-500 text-sm mt-2">Pay ₹246 on delivery.</p>
+          <p className="text-gray-500 text-sm mt-2">Pay on delivery.</p>
         </div>
 
         {/* Online Payment */}
@@ -117,7 +170,15 @@ const StepTwo = ({ gotoPrevStep }) => {
                 User: {finalCart?.loggedInUser?.name || "N/A"}
               </span>
               <span className="block">
-                Address: {finalCart?.allAddress?.[0]?.fullAddress || "N/A"}
+                Address: { 
+                  `${finalCart?.allAddress?.[0]?.roomNumber || ""} 
+                  ${finalCart?.allAddress?.[0]?.houseNumber || ""}, 
+                  ${finalCart?.allAddress?.[0]?.floor || ""}, 
+                  ${finalCart?.allAddress?.[0]?.streetAddress || ""}, 
+                  ${finalCart?.allAddress?.[0]?.city || ""}, 
+                  ${finalCart?.allAddress?.[0]?.state || ""} - 
+                  ${finalCart?.allAddress?.[0]?.zipcode || "N/A"}`.trim()
+                }
               </span>
             </p>
             <hr className="my-4 border-gray-300" />
@@ -138,7 +199,12 @@ const StepTwo = ({ gotoPrevStep }) => {
             {/* Order Total */}
             <p className="flex justify-between text-gray-800 font-bold text-xl">
               <span>Order Total</span>
-              <span>₹{paymentMethod === "online" ? 231 : 246}</span>
+              <span>
+                ₹{finalCart?.cartItems?.reduce(
+                  (total, item) => total + item.price * item.quantity,
+                  0
+                )}
+              </span>
             </p>
           </div>
         ) : (
@@ -174,6 +240,10 @@ const StepTwo = ({ gotoPrevStep }) => {
         </div>
       </div>
     </div>
+
+
+</>
+
   );
 };
 

@@ -1,6 +1,6 @@
 // AllPayments.jsx
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button, TextField, IconButton, MenuItem, Select } from "@mui/material";
 import { Search, FilterList, Visibility, ArrowUpward, ArrowDownward } from "@mui/icons-material";
@@ -8,11 +8,16 @@ import TransactionModal from "./TransactionModal";
 
 const AllPayments = ({ allTransactions }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredTransactions, setFilteredTransactions] = useState(allTransactions);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [sortField, setSortField] = useState("date");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 🔹 Ensure filteredTransactions updates when new transactions arrive
+  useEffect(() => {
+    setFilteredTransactions(allTransactions);
+  }, [allTransactions]);
 
   const getStatusColor = (status) => {
     switch (status) {

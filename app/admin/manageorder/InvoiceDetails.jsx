@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button, TextField, IconButton, MenuItem, Select } from "@mui/material";
 import { Search, FilterList, Visibility, ArrowUpward, ArrowDownward } from "@mui/icons-material";
@@ -12,6 +12,11 @@ const InvoiceDetails = ({ allInvoices }) => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Sync filtered invoices with `allInvoices` when it updates
+  useEffect(() => {
+    setFilteredInvoices(allInvoices);
+  }, [allInvoices]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -27,30 +32,29 @@ const InvoiceDetails = ({ allInvoices }) => {
   };
 
   const handleSearch = (e) => {
-    const query = e.target.value;
+    const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-    const filtered = allInvoices.filter((invoice) =>
-      invoice.invoiceId.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredInvoices(filtered);
+    setFilteredInvoices(allInvoices.filter((invoice) => invoice.invoiceId.toLowerCase().includes(query)));
   };
 
   const handleSort = (field) => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortField(field);
     setSortOrder(newOrder);
-    const sortedData = [...filteredInvoices].sort((a, b) => {
+ 
+
+    setFilteredInvoices(prevInvoices => [...prevInvoices].sort((a, b) => {
       if (field === "orderDate" || field === "shippedDate") {
         return newOrder === "asc" ? new Date(a[field]) - new Date(b[field]) : new Date(b[field]) - new Date(a[field]);
       } else if (field === "invoiceId" || field === "memberName") {
         return newOrder === "asc" ? a[field].localeCompare(b[field]) : b[field].localeCompare(a[field]);
       }
       return 0;
-    });
-    setFilteredInvoices(sortedData);
+    }));
   };
 
   const openModal = (invoice) => {
+    // console.log(invoice)
     setSelectedInvoice(invoice);
     setIsModalOpen(true);
   };
@@ -59,6 +63,8 @@ const InvoiceDetails = ({ allInvoices }) => {
     setIsModalOpen(false);
     setSelectedInvoice(null);
   };
+
+  // console.log(selectedInvoice+"selected invoce ")
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -99,17 +105,11 @@ const InvoiceDetails = ({ allInvoices }) => {
                   <td className="py-3 px-4">
                     <span className={`px-2 py-1 rounded-md text-sm ${getStatusColor(invoice.status)}`}>{invoice.status}</span>
                   </td>
-                  <td className="py-3 px-4">
-                    <IconButton className="text-custom-green hover:text-green-700 transition-all" onClick={() => openModal(invoice)}>
-                      <Visibility />
-                    </IconButton>
-                  </td>
+                  <td className="py-3 px-4"><IconButton onClick={() => openModal(invoice)}><Visibility /></IconButton></td>
                 </motion.tr>
               ))
             ) : (
-              <tr>
-                <td colSpan="8" className="text-center py-4 text-gray-500">No invoices found.</td>
-              </tr>
+              <tr><td colSpan="8" className="text-center py-4 text-gray-500">No invoices found.</td></tr>
             )}
           </tbody>
         </table>

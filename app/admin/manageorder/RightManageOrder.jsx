@@ -1,59 +1,52 @@
-import React from 'react';
+"use client";
+import React, { useEffect, useState } from 'react';
 import AdminBreadCrumbs from '@/app/components/Admin/AdminBreadCrumbs';
 import InvoiceDetails from './InvoiceDetails';
-
+import axios from 'axios';
 
 const RightManageOrder = () => {
-  const breadcrumbLinks = [
-    { label: "Admin", href: "/admin" },
-  ];
-  const invoiceData = [
-    {
-      invoiceId: "INV-001",
-      orderDate: "2024-02-20",
-      shippedDate: "2024-02-25",
-      memberName: "John Doe",
-      productDescription: "Wireless Headphones - Noise Cancelling",
-      status: "Shipped",
-    },
-    {
-      invoiceId: "INV-002",
-      orderDate: "2024-02-18",
-      shippedDate: "2024-02-22",
-      memberName: "Alice Johnson",
-      productDescription: "Smartphone - 128GB, Midnight Black",
-      status: "Delivered",
-    },
-    {
-      invoiceId: "INV-003",
-      orderDate: "2024-02-21",
-      shippedDate: "2024-02-26",
-      memberName: "Michael Smith",
-      productDescription: "Gaming Laptop - RTX 4060, 16GB RAM",
-      status: "Processing",
-    },
-    {
-      invoiceId: "INV-004",
-      orderDate: "2024-02-15",
-      shippedDate: "2024-02-20",
-      memberName: "Emma Brown",
-      productDescription: "Smartwatch - Fitness Tracker, GPS",
-      status: "Delivered",
-    },
-    {
-      invoiceId: "INV-005",
-      orderDate: "2024-02-22",
-      shippedDate: "2024-02-27",
-      memberName: "David Wilson",
-      productDescription: "Bluetooth Speaker - Waterproof",
-      status: "Pending",
-    },
-  ];
+  const [allOrders, setAllOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchAllOrders = async () => {
+      try {
+        const response = await axios.post(`/api/admin/getOrders`);
+        if (response.data.orders) {
+          setAllOrders(response.data.orders);
+        } else {
+          console.warn("No orders found.");
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchAllOrders();
+  }, []);
+
+  const invoiceData = allOrders.map(order => ({
+    invoiceId: order.razorpayId || "N/A",
+    orderDate: order.createdAt ? new Date(order.createdAt).toISOString().split("T")[0] : "N/A",
+    shippedDate: order.createdAt ? new Date(order.createdAt).toISOString().split("T")[0] : "N/A",
+    memberName: order.name || "N/A",
+    productDescription: order.productId || "N/A",
+    status: order.deliveryStatus || "Pending",
+    roomNumber: order.roomNumber || "N/A",
+    state: order.state || "N/A",
+    streetAddress: order.streetAddress || "N/A",
+    zipcode: order.zipcode || "N/A",
+    quantity: order.quantity || 1,
+    mobileNumber: order.mobileNumber || "N/A",
+    email: order.email || "N/A",
+    floor: order.floor || "N/A",
+    house: order.house || "N/A",
+    houseNumber: order.houseNumber || "N/A",
+  }));
 
   return (
-    <div className='lg:w-[83%] w-full absolute right-0 h-[100vh] bg-slate-200 p-6'>
+    <div className="lg:w-[83%] w-full absolute right-0 h-[100vh] bg-slate-200 p-6">
       <div className="p-4">
-        <AdminBreadCrumbs links={breadcrumbLinks} name="Manage Order" />
+        <AdminBreadCrumbs links={[{ label: "Admin", href: "/admin" }]} name="Manage Order" />
       </div>
       <InvoiceDetails allInvoices={invoiceData} />
     </div>
