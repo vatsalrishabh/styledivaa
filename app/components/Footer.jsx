@@ -48,16 +48,16 @@ const Footer = () => {
           </h1>
           <ul className="space-y-2">
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              <Link href="/">Terms & Conditions</Link>
+              <Link href="/terms">Terms & Conditions</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              <Link href="/aboutus">Privacy Policy</Link>
+              <Link href="/privacypolicy">Privacy Policy</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              <Link href="/contactus">Cancellation & Refund</Link>
+              <Link href="/cancelrefund">Cancellation & Refund</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
-              <Link href="/gallery">Shipping & Delivery</Link>
+              <Link href="/shipping">Shipping & Delivery</Link>
             </li>
             <li className="hover:text-lightPink transition-all duration-300 cursor-pointer">
               <Link href="/faqs">FAQs</Link>
