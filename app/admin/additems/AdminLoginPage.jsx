@@ -24,6 +24,7 @@ const AdminLoginPage = () => {
     setSnackMessage(message);
     setStatusCode(status);
     setShowSnackBar(true);
+    setTimeout(() => setShowSnackBar(false), 3000); // Auto-close after 3 seconds
   };
 
   const handleSubmit = async () => {
@@ -56,7 +57,7 @@ const AdminLoginPage = () => {
           handleSnackBar("OTP verified successfully!", 200);
           setStep(3);
         } else {
-          await axios.post("/api/admin/reset-password", {
+          await axios.post("/api/admin/resetpassword", {
             email: formData.email,
             newPassword: formData.newPassword,
           });
@@ -86,22 +87,17 @@ const AdminLoginPage = () => {
             : "Admin Login"}
         </h2>
         <div className="mt-6 space-y-4">
-          {/* Common Email Input Field */}
           <TextField
             name="email"
             type="email"
             label="Admin Email"
             fullWidth
             value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             InputProps={{ style: { color: "white" } }}
             className="bg-gray-800 text-white"
           />
-
-          {/* Login Section */}
-          <div className={!changeTheForm ? "block" : "hidden"}>
+          {!changeTheForm && (
             <TextField
               name="password"
               type="password"
@@ -114,10 +110,8 @@ const AdminLoginPage = () => {
               InputProps={{ style: { color: "white" } }}
               className="bg-gray-800 text-white"
             />
-          </div>
-
-          {/* OTP Section */}
-          <div className={changeTheForm && step === 2 ? "block" : "hidden"}>
+          )}
+          {changeTheForm && step === 2 && (
             <TextField
               name="otp"
               type="text"
@@ -130,40 +124,35 @@ const AdminLoginPage = () => {
               InputProps={{ style: { color: "white" } }}
               className="bg-gray-800 text-white"
             />
-          </div>
-
-          {/* Reset Password Section */}
-          <div className={"hidden"}>
-            <TextField
-              name="newPassword"
-              type="password"
-              label="New Password"
-              fullWidth
-              value={formData.newPassword}
-              onChange={(e) =>
-                setFormData({ ...formData, newPassword: e.target.value })
-              }
-              InputProps={{ style: { color: "white" } }}
-              className="bg-gray-800 text-white"
-            />
-            <TextField
-              name="confirmPassword"
-              type="password"
-              label="Confirm New Password"
-              fullWidth
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  confirmPassword: e.target.value,
-                })
-              }
-              InputProps={{ style: { color: "white" } }}
-              className="bg-gray-800 text-white"
-            />
-          </div>
-
-          {/* Submit Button */}
+          )}
+          {changeTheForm && step === 3 && (
+            <>
+              <TextField
+                name="newPassword"
+                type="password"
+                label="New Password"
+                fullWidth
+                value={formData.newPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, newPassword: e.target.value })
+                }
+                InputProps={{ style: { color: "white" } }}
+                className="bg-gray-800 text-white"
+              />
+              <TextField
+                name="confirmPassword"
+                type="password"
+                label="Confirm New Password"
+                fullWidth
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, confirmPassword: e.target.value })
+                }
+                InputProps={{ style: { color: "white" } }}
+                className="bg-gray-800 text-white"
+              />
+            </>
+          )}
           <Button
             variant="contained"
             fullWidth
@@ -171,20 +160,8 @@ const AdminLoginPage = () => {
             onClick={handleSubmit}
             disabled={loading}
           >
-            {loading ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : changeTheForm ? (
-              step === 3 ? (
-                "Reset Password"
-              ) : (
-                "Send OTP"
-              )
-            ) : (
-              "Login"
-            )}
+            {loading ? <CircularProgress size={24} color="inherit" /> : step === 3 ? "Reset Password" : changeTheForm ? "Send OTP" : "Login"}
           </Button>
-
-          {/* Forgot Password / Back to Login */}
           <p
             className="mt-4 text-blue-400 hover:underline cursor-pointer"
             onClick={() => {
@@ -196,12 +173,9 @@ const AdminLoginPage = () => {
           </p>
         </div>
       </div>
-      <SnackBarr
-        message={snackMessage}
-        status={statusCode}
-        show={showSnackBar}
-        setShow={setShowSnackBar}
-      />
+      {showSnackBar && (
+        <SnackBarr message={snackMessage} statusCode={statusCode} showSnackBar={showSnackBar} />
+      )}
     </div>
   );
 };

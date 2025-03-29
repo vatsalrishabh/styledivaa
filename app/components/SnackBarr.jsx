@@ -1,104 +1,96 @@
 "use client";
-import React, { useState } from "react";
-import SnackBarr from "./SnackBarr"; // Import Snackbar component
+import React, { useEffect, useState } from "react";
+import { IoClose } from "react-icons/io5";
+import "animate.css";
 
-const AdminLoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showSnackBar, setShowSnackBar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [statusCode, setStatusCode] = useState(null);
-  const [isForgotPassword, setIsForgotPassword] = useState(false); // Controls which form is visible
 
-  console.log("isForgotPassword State:", isForgotPassword); // Debugging to check state changes
+const SnackBarr = ({ message, statusCode, showSnackBar }) => { 
+  const [open, setOpen] = useState(showSnackBar || false); // initially bhi false hai
+  const [isClient, setIsClient] = useState(false);
 
-  const triggerSnackBar = (message, code) => {
-    setSnackbarMessage(message);
-    setStatusCode(code);
-    setShowSnackBar(true);
-    setTimeout(() => {
-      setShowSnackBar(false);
-    }, 3000);
+
+   // Function to get user details from localStorage
+    const getUserDetails = () => {
+      let storedUser = localStorage.getItem("userDetails");
+  
+      if (storedUser) {
+        try {
+          storedUser = JSON.parse(storedUser);
+          const decodedToken = jwtDecode(storedUser.token);
+  
+          // Check if token is expired
+          if (decodedToken.exp * 1000 < Date.now()) {
+            console.log("Session expired. Logging out...");
+            logoutUser();
+          } else {
+            setLoggedInUser({
+              isLoggedIn: true,
+              token: storedUser.token,
+              userName: decodedToken.name,
+              userEmail: decodedToken.email,
+              userNumber: decodedToken.mobile, // Changed to userNumber
+            });
+          }
+        } catch (error) {
+          console.error("Invalid token:", error);
+          logoutUser();
+        }
+      }
+    };
+
+  useEffect(() => {
+    if (showSnackBar) {
+      setIsClient(true);
+      setOpen(true);
+      const timer = setTimeout(() => setOpen(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSnackBar]);
+  
+
+  const handleClose = () => setOpen(false); // cross icon click krne pe bhi false krdo
+
+  const getColor = () => {
+    if (statusCode >= 200 && statusCode < 300) return "#4CAF50";  // Green - Success
+    if (statusCode >= 300 && statusCode < 400) return "#2196F3";  // Blue - Redirect
+    if (statusCode >= 400 && statusCode < 500) return "#FF9800";  // Orange - Client Error
+    if (statusCode >= 500 && statusCode < 600) return "#F44336";  // Red - Server Error
+    return "#E91E63";  // Pink - Default
   };
 
+  if (!isClient || !open) return null;
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      {/* Forgot Password Form */}
-      <div className={isForgotPassword ? "w-80" : "hidden"}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!email) {
-              triggerSnackBar("Please enter your email", 400);
-              return;
-            }
-            triggerSnackBar("Reset link sent to your email", 200);
-          }}
-          className="bg-white p-6 rounded-lg shadow-md"
-        >
-          <h2 className="text-xl font-semibold mb-4 text-center">Reset Password</h2>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 w-full mb-3 rounded"
-          />
-          <button type="submit" className="bg-green-500 text-white p-2 w-full rounded">
-            Send Reset Link
-          </button>
-          <p
-            className="text-blue-600 text-sm mt-2 cursor-pointer text-center"
-            onClick={() => setIsForgotPassword(false)}
-          >
-            ⬅ Back to Login
-          </p>
-        </form>
-      </div>
-
-      {/* Login Form */}
-      <div className={!isForgotPassword ? "w-80" : "hidden"}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!email || !password) {
-              triggerSnackBar("Please fill in all fields", 400);
-              return;
-            }
-            triggerSnackBar("Login Successful", 200);
-          }}
-          className="bg-white p-6 rounded-lg shadow-md"
-        >
-          <h2 className="text-xl font-semibold mb-4 text-center">Admin Login</h2>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 w-full mb-3 rounded"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 w-full mb-3 rounded"
-          />
-          <button type="submit" className="bg-blue-500 text-white p-2 w-full rounded">
-            Login
-          </button>
-          <p
-            className="text-blue-600 text-sm mt-2 cursor-pointer text-center"
-            onClick={() => setIsForgotPassword(true)}
-          >
-            Forgot Password?
-          </p>
-        </form>
-      </div>
-
-      {showSnackBar && <SnackBarr message={snackbarMessage} statusCode={statusCode} showSnackBar />}
+    <div
+      className="animate__animated animate__fadeInDown"
+      style={{
+        position: 'fixed',
+        top: '40px',
+        right: '10px',
+        transform: 'translateX(-50%)',
+        backgroundColor: getColor(),
+        color: 'white',
+        padding: '8px 15px',
+        borderRadius: '6px',
+        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+        fontSize: '14px',
+        fontWeight: '500',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        minWidth: '250px',
+        maxWidth: '400px',
+        zIndex: 1000,
+      }}
+    >
+      {message}
+      <IoClose 
+        size={18} 
+        style={{ cursor: 'pointer', marginLeft: 'auto' }} 
+        onClick={handleClose} 
+      />
     </div>
   );
 };
 
-export default AdminLoginPage;
+export default SnackBarr;
