@@ -17,7 +17,7 @@ const MobileAdminNav = () => {
   // Logout function
   const adminLogout = () => {
     localStorage.removeItem("adminDetails"); // Clear admin details
-    router.push("/admin"); // Redirect to home page
+    window.location.reload();// Redirect to home page
   };
 
   return (
