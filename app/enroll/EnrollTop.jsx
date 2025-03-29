@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import enroll from "../../public/assets/enroll.jpg";
+import axios from "axios";
+import SnackBarr from "../components/SnackBarr";
 
 const EnrollTop = () => {
   const [formData, setFormData] = useState({
@@ -11,14 +14,38 @@ const EnrollTop = () => {
     course: "",
   });
 
+  const [showSnackBar, setShowSnackBar] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState("");  // Used for Snackbar message
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission logic (e.g., API call)
+    setIsSubmitting(true);
+
+    try {
+      const response = await axios.post("/api/courses/enrollNow", formData);
+
+      if (response.status === 200) {
+        setSnackBarMessage("Enrollment successful! We will contact you soon.");
+        setShowSnackBar(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          course: "",
+        });  // Reset form after success
+      }
+    } catch (error) {
+      setSnackBarMessage("Oops! Something went wrong. Please try again.");
+      setShowSnackBar(true);
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -31,7 +58,7 @@ const EnrollTop = () => {
         transition={{ duration: 0.6 }}
       >
         <Image
-          src="/img/wal.jpg"
+          src={enroll}
           alt="Enrollment"
           width={300}
           height={200}
@@ -85,11 +112,22 @@ const EnrollTop = () => {
             placeholder="Course of Interest (optional)"
             className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-400"
           />
-          <button type="submit" className="w-full p-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 transition">
-            Submit
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full p-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 transition"
+          >
+            {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </form>
       </motion.div>
+
+      {/* Show the Snackbar with the response message */}
+      <SnackBarr
+        open={showSnackBar}
+        message={snackBarMessage}  // Pass the message to Snackbar
+        onClose={() => setShowSnackBar(false)}  // Close the Snackbar when clicked
+      />
     </div>
   );
 };

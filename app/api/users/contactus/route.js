@@ -8,7 +8,7 @@ export async function POST(request) {
     try {
         const body = await request.json();
         const { name, number, subject, message, email } = body;
-
+        console.log()
         await connectDB(); 
 
         const ticketId = "TID-" + crypto.randomBytes(3).toString("hex").toUpperCase();

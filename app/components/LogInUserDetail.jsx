@@ -63,7 +63,7 @@ const LogInUserDetail = () => {
 
   return (
     <div className="Login-User-Details">
-      <SnackBarr/>
+     
       {loggedInUser.isLoggedIn ? (
         <AfterLogin
           userName={loggedInUser.userName}

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import {
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
@@ -16,9 +15,9 @@ import {
   Password as PasswordIcon,
 } from "@mui/icons-material";
 import axios from "axios";
-import SnackBarr from "../SnackBarr";
+import SnackBarr from "../components/SnackBarr";
 
-const BeforeLogin = ({ openLoginModal }) => {
+const AdminLogin = () => {
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -64,26 +63,33 @@ const BeforeLogin = ({ openLoginModal }) => {
     if (!validateForm()) return;
     setLoading(true);
     try {
-      const response = await axios.post("/api/users/loginUser", {
+      const response = await axios.post("/api/admin/login", {
         email: formData.email,
         password: formData.password,
+        role: "admin",
       });
 
       if (response.status === 200) {
         setOpenModal(false);
-        localStorage.setItem("userDetails", JSON.stringify({ token: response.data.token }));
-        setSnackMessage("Login successful!");
+        localStorage.setItem("adminDetails", JSON.stringify({
+          token: response.data.token,
+          name: response.data.user.name,
+          email: response.data.user.email,
+          mobile: response.data.user.mobile,
+          userId: response.data.user.userId,
+        }));
+
+        setSnackMessage("Admin login successful!");
         setStatusCode(response.status);
         setShowSnackBar(true);
-        window.location.reload();  // This will reload the entire page
-
+        window.location.reload();
       } else {
         setSnackMessage(response.data.message || "Login failed");
         setStatusCode(response.status);
         setShowSnackBar(true);
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Admin login error:", error);
       setSnackMessage(error.response?.data?.message || "Something went wrong.");
       setStatusCode(error.response?.status || 500);
       setShowSnackBar(true);
@@ -93,14 +99,14 @@ const BeforeLogin = ({ openLoginModal }) => {
   };
 
   return (
-    <div className="Before-Login text-center lg:p-5">
+    <div className="Admin-Login text-center lg:p-5">
       <Button
         variant="contained"
         style={{ backgroundColor: "#e91e63", color: "white", padding: "10px 20px", fontSize: "16px", fontWeight: "bold" }}
         onClick={handleOpen}
         className="hover:bg-pink-700 transition"
       >
-        Login
+        Admin Login
       </Button>
 
       <Dialog open={openModal} onClose={handleClose} fullWidth maxWidth="xs">
@@ -108,18 +114,14 @@ const BeforeLogin = ({ openLoginModal }) => {
           <IconButton className="absolute top-2 right-2" onClick={handleClose}>
             <CancelIcon />
           </IconButton>
-          <DialogTitle className="text-center text-xl font-semibold">Login Form</DialogTitle>
-
-          <div className="text-right text-sm flex justify-end">
-            Not Registered ? - <button className="text-blue-500" onClick={openLoginModal}>Register here</button>
-          </div>
+          <DialogTitle className="text-center text-xl font-semibold">Admin Login</DialogTitle>
 
           <DialogContent className="flex flex-col gap-4 mt-4">
             <div className="flex items-center bg-gray-100 p-3 rounded-xl">
               <AlternateEmailIcon className="mr-3 text-custom-maroon" />
               <TextField
                 name="email"
-                placeholder="Email Address"
+                placeholder="Admin Email"
                 fullWidth
                 variant="standard"
                 InputProps={{ disableUnderline: true }}
@@ -134,7 +136,7 @@ const BeforeLogin = ({ openLoginModal }) => {
               <TextField
                 name="password"
                 type="password"
-                placeholder="Your Password"
+                placeholder="Admin Password"
                 fullWidth
                 variant="standard"
                 InputProps={{ disableUnderline: true }}
@@ -151,7 +153,7 @@ const BeforeLogin = ({ openLoginModal }) => {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
             </Button>
           </DialogContent>
         </div>
@@ -166,4 +168,4 @@ const BeforeLogin = ({ openLoginModal }) => {
   );
 };
 
-export default BeforeLogin;
+export default AdminLogin;

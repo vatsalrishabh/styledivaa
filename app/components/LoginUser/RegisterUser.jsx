@@ -18,16 +18,20 @@ import {
   Password
 } from "@mui/icons-material";
 import axios from "axios";
+import SnackBarr from "../SnackBarr";
 
-
-const RegisterUser = ({openRegisterModal , openModall}) => {
+const RegisterUser = ({ openRegisterModal, openModall }) => {
   const [openModal, setOpenModal] = useState(openModall);
   const [otpModal, setOtpModal] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", mobile: "", password:"" });
-  const [errors, setErrors] = useState({ name: "", email: "", mobile: "", password:"" });
+  const [formData, setFormData] = useState({ name: "", email: "", mobile: "", password: "" });
+  const [errors, setErrors] = useState({ name: "", email: "", mobile: "", password: "" });
   const [otp, setOtp] = useState();
   const [loading, setLoading] = useState(false);
-  
+  const [snackbar, setSnackbar] = useState({
+    message: "",
+    statusCode: null,
+    show: false,
+  });
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => {
@@ -71,9 +75,13 @@ const RegisterUser = ({openRegisterModal , openModall}) => {
         if (response.status === 201) {
           setOtpModal(true);
           setOpenModal(false);
+          setSnackbar({ message: "Registration successful! Please verify OTP.", statusCode: 201, show: true });
+        } else {
+          setSnackbar({ message: "Something went wrong, please try again.", statusCode: response.status, show: true });
         }
       } catch (error) {
         console.error("Error:", error);
+        setSnackbar({ message: "Error during registration, please try again.", statusCode: 500, show: true });
       } finally {
         setLoading(false);
       }
@@ -86,33 +94,30 @@ const RegisterUser = ({openRegisterModal , openModall}) => {
         email: formData.email,
         name: formData.name,
         mobile: formData.mobile,
-        password:formData.password,
+        password: formData.password,
         otp,
       })
       .then((response) => {
         if (response.status === 201) {
-          alert("User created successfully!");
-          setOtpModal(false); // Close the OTP modal
-          console.log(response.token);
-          console.log(response);
+          setSnackbar({ message: "User created successfully!", statusCode: 201, show: true });
+          setOtpModal(false); // Close OTP modal
         } else {
-          alert("Invalid OTP. Please try again.");
+          setSnackbar({ message: "Invalid OTP. Please try again.", statusCode: 400, show: true });
         }
       })
       .catch((error) => {
         console.error("Error verifying OTP:", error);
-        alert("Something went wrong. Please try again.");
+        setSnackbar({ message: "Error verifying OTP. Please try again.", statusCode: 500, show: true });
       });
   };
-  
 
   return (
     <div className="Before-Login text-center p-5">
-      {/* <SnackBarr 
-        message="Success!"
-        statusCode="200" 
-        colorCode="green"
-      /> */}
+      <SnackBarr 
+        message={snackbar.message} 
+        statusCode={snackbar.statusCode} 
+        showSnackBar={snackbar.show} 
+      />
       <Button
         variant="contained"
         style={{
@@ -137,9 +142,9 @@ const RegisterUser = ({openRegisterModal , openModall}) => {
             Registration Form
           </DialogTitle>
           <div className="text-right text-sm flex justify-end">
-            Alredy Registered ? - <button className="text-blue-500" onClick={openRegisterModal} >Login here</button>
+            Already Registered? - <button className="text-blue-500" onClick={openRegisterModal}>Login here</button>
           </div>
-        
+
           <DialogContent className="flex flex-col gap-4 mt-4">
             <div className="flex items-center bg-gray-100 p-3 rounded-xl">
               <Person className="mr-3 text-custom-maroon" />

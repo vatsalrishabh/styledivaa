@@ -1,8 +1,12 @@
 import Razorpay from 'razorpay';
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import connectDB from "../../config/db";
 import Order from "../../models/Order";
 
+
+//Access - Public
+//Method - POST
+//API - api/orders/createOrder
 export async function POST(req) {
   try {
     // Connect to the database

@@ -32,18 +32,18 @@ const AfterLogin = ({ userName, userEmail, userId, userMobile, onLogout }) => {
     router.push(path); // Navigate to the selected page
   };
 
+  // Function to get the first letter of the user's name or email
+  const getInitial = (nameOrEmail) => {
+    return nameOrEmail?.charAt(0).toUpperCase() || "U"; // Default to "U" if no name is provided
+  };
+
   return (
     <div className="AfterLogin lg:pr-8">
-      {/* Avatar */}
+      {/* Avatar with the first letter of the user's name */}
       <div onClick={handleClick} style={{ cursor: "pointer" }}>
-        <Avatar
-          alt={userName || "User"}
-          src={
-            userEmail?.includes("@")
-              ? "https://photosbulk.com/wp-content/uploads/2024/08/hijab-girl-pic_108.webp"
-              : undefined
-          }
-        />
+        <Avatar>
+          {getInitial(userName || userEmail)} {/* Display first letter */}
+        </Avatar>
       </div>
 
       {/* Dropdown Menu */}

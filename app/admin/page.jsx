@@ -9,13 +9,23 @@ const Page = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const adminToken = localStorage.getItem("adminDetails");
-    setIsAuthenticated(!!adminToken);
+    const checkAuth = () => {
+      const adminDetails = localStorage.getItem("adminDetails");
+      setIsAuthenticated(!!adminDetails);
+    };
+
+    checkAuth();
+
+    // Listen for storage changes (logout)
+    window.addEventListener("storage", checkAuth);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+    };
   }, []);
 
   return (
     <div>
-      {!isAuthenticated ? (
+      {isAuthenticated ? (
         <>
           <MobileAdminNav />
           <div className="flex">
