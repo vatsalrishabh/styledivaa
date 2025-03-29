@@ -19,13 +19,13 @@ const RightProductDetails = ({ product }) => {
 
   // Open login modal
   const openLoginModal = () => {
-    setShowLogin(true);  // Ensure login form is shown
+    setShowLogin(true);
     setOpenModal(true);
   };
 
   // Open register modal
   const openRegisterModal = () => {
-    setShowLogin(false); // Ensure register form is shown
+    setShowLogin(false);
     setOpenModal(true);
   };
 
@@ -88,13 +88,14 @@ const RightProductDetails = ({ product }) => {
             <div
               key={size}
               onClick={() => quantity > 0 && setSelectedSize(size)}
-              className={`rounded-full border-2 p-2 text-center w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-200 ${
-                quantity > 0
-                  ? selectedSize === size
-                    ? "border-pink-600 bg-pink-100 text-pink-600"
-                    : "border-pink-500 text-pink-500 hover:bg-pink-100 hover:border-pink-600 hover:text-pink-600"
-                  : "border-gray-300 text-gray-300 cursor-not-allowed opacity-50"
-              }`}
+              className={`rounded-full border-2 p-2 text-center w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-200 
+                ${
+                  quantity > 0
+                    ? selectedSize === size
+                      ? "border-pink-600 bg-pink-100 text-pink-600" // Selected size
+                      : "border-pink-500 text-pink-500 hover:bg-pink-100 hover:border-pink-600 hover:text-pink-600" // Available size
+                    : "border-gray-300 text-gray-300 cursor-not-allowed opacity-50" // Out of stock
+                }`}
             >
               {size}
             </div>
@@ -104,7 +105,12 @@ const RightProductDetails = ({ product }) => {
 
       <button
         onClick={handleCartAction}
-        className="w-full bg-pink-500 text-white py-3 rounded-lg hover:bg-pink-700 transition"
+        disabled={!selectedSize} // Disable button if no size selected
+        className={`w-full py-3 rounded-lg transition text-white ${
+          selectedSize
+            ? "bg-pink-500 hover:bg-pink-700 cursor-pointer" // Active button
+            : "bg-gray-300 cursor-not-allowed" // Disabled button
+        }`}
       >
         {isInCart ? "Go to Checkout" : "Add to Cart"}
       </button>

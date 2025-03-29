@@ -49,7 +49,7 @@ const AllFemaleProducts = ({ category }) => {
   if (!categorySpecific.length) {
     return (
       <p className="text-center text-pink-500 text-lg">
-        No products available in this category.
+     
       </p>
     );
   }
@@ -62,16 +62,16 @@ const AllFemaleProducts = ({ category }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {categorySpecific.map((product, index) => (
          <ProductCard
-         key={product?._id || index}
-         productId={product?.productId}
-         img={product?.imageOne || "/default.jpg"}
-         mrp={product?.mrp || "N/A"}
-         price={product?.price || "N/A"}
-         discount={product?.discount || "No Discount"}
-         name={product?.name || "Unknown Product"}
-         rate={product?.rating || "No Rating"}
-         description={`A stylish ${product?.color} ${product?.category} made of ${product?.material}. Features a ${product?.neck} neckline and ${product?.sleeves} sleeves for a ${product?.fit} fit.`}
-       />
+              key={product?._id || index}
+              productId={product?.productId}
+              img={product?.imageOne || "/default.jpg"}
+              mrp={product?.mrp || "N/A"}
+              price={product?.price || "N/A"}
+              discount={product?.discount || "No Discount"}
+              name={product?.name || "Unknown Product"}
+              rate={product?.rating || "No Rating"}
+              description={`A stylish ${product?.color} ${product?.category} made of ${product?.material}. Features a ${product?.neck} neckline and ${product?.sleeves} sleeves for a ${product?.fit} fit.`}
+            />
         ))}
       </div>
     </div>

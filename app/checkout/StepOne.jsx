@@ -12,6 +12,7 @@ import { toggleCart } from "@/redux/cart/openCartSlice";
 import AddressModal from "../components/AddressModal";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation"; // Correct for Next.js App Router
+import SnackBarr from "../components/SnackBarr";
 
 const StepOne = ({ gotoNextStep }) => {
   const router = useRouter();
@@ -21,6 +22,9 @@ const StepOne = ({ gotoNextStep }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState({}); // user details
   const [allAddress, setAllAddress] = useState([]);
+     const [snackMessage, setSnackMessage] = useState("");
+      const [statusCode, setStatusCode] = useState(null);
+      const [showSnackBar, setShowSnackBar] = useState(false);
 
   useEffect(() => {
     const loadUserDetails = async () => {
@@ -225,26 +229,39 @@ const StepOne = ({ gotoNextStep }) => {
           </p>
 
           <button
-            onClick={gotoNextStep}
-            disabled={
-              !loggedInUser.name ||
-              allAddress.length === 0 ||
-              cartItems.length === 0
-            }
-            className={`mt-4 w-full px-6 py-3 rounded transition transform hover:scale-105 
+  onClick={() => {
+    if (!loggedInUser.name) {
+      setSnackMessage("User details are missing!");
+      setStatusCode(400);
+      setShowSnackBar(true);
+    } else if (allAddress.length === 0) {
+      setSnackMessage("Please add a shipping address!");
+      setStatusCode(400);
+      setShowSnackBar(true);
+    } else if (cartItems.length === 0) {
+      setSnackMessage("Your cart is empty!");
+      setStatusCode(400);
+      setShowSnackBar(true);
+    } else {
+      gotoNextStep();
+    }
+  }}
+  className={`mt-4 w-full px-6 py-3 rounded transition transform hover:scale-105 
     ${
       !loggedInUser.name || allAddress.length === 0 || cartItems.length === 0
         ? "bg-gray-400 cursor-not-allowed"
         : "bg-pink-500 text-white hover:bg-pink-700"
     }`}
-          >
-            Continue →
-          </button>
+>
+  Continue →
+</button>
+
         </div>
       </div>
 
       {/* Address Modal */}
       <AddressModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />
+         {showSnackBar && <SnackBarr message={snackMessage} statusCode={statusCode} showSnackBar={showSnackBar} />}
     </div>
   );
 };
