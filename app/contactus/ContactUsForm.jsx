@@ -89,12 +89,18 @@ const ContactUsForm = () => {
         </div>
       </div>
 
-      <div className="thebigContact bg-custombg flex justify-center items-center pb-6">
+      <div className="thebigContact bg-custombg flex justify-center items-center pb-6 space-x-6">
         <Link
           href="tel:+919742782429"
           className="text-2xl font-light text-gray-800 hover:text-blue-600"
         >
           Call us +91 9742782429
+        </Link>
+        <Link
+          href="mailto:contact@styledivaa.com"
+          className="text-2xl font-light text-gray-800 hover:text-blue-600"
+        >
+          Email us at contact@styledivaa.com
         </Link>
       </div>
     </>
