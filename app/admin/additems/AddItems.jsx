@@ -1,13 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
 
 const AddItems = ({ isOpen, onClose }) => {
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, watch } = useForm();
   const [previewImages, setPreviewImages] = useState({});
+  const [discount, setDiscount] = useState(0);
 
-  // Handles file selection & sets preview
+  // Watch for real-time changes in price & MRP
+  const price = watch("price", "0");
+  const mrp = watch("mrp", "0");
+
+  // Function to calculate discount with float support
+  const calculateDiscount = (mrp, price) => {
+    const parsedMRP = parseFloat(mrp) || 0;
+    const parsedPrice = parseFloat(price) || 0;
+    if (parsedMRP > 0 && parsedPrice > 0 && parsedPrice <= parsedMRP) {
+      return parseFloat((((parsedMRP - parsedPrice) / parsedMRP) * 100).toFixed(2));
+    }
+    return 0;
+  };
+
+  // Effect to update discount when price or MRP changes
+  useEffect(() => {
+    const newDiscount = calculateDiscount(mrp, price);
+    setDiscount(newDiscount);
+    setValue("discount", newDiscount); // Update discount in the form
+  }, [price, mrp, setValue]);
+
+  // Handles file selection & preview
   const handleFileChange = (e, imageField) => {
     const file = e.target.files[0];
     if (file) {
@@ -16,7 +38,7 @@ const AddItems = ({ isOpen, onClose }) => {
     }
   };
 
-  // Handles form submission
+  // Form Submission
   const onSubmit = async (data) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
@@ -34,6 +56,7 @@ const AddItems = ({ isOpen, onClose }) => {
       alert("Product added successfully!");
       reset();
       setPreviewImages({});
+      setDiscount(0);
     } catch (error) {
       console.error("Error adding product:", error);
       alert("Failed to add product!");
@@ -53,10 +76,20 @@ const AddItems = ({ isOpen, onClose }) => {
           <input {...register("name")} placeholder="Product Name" className="border p-2 rounded" required />
           <input {...register("rating")} type="number" step="0.1" min="0" max="5" placeholder="Rating (0-5)" className="border p-2 rounded" />
           <input {...register("reviews")} placeholder="Reviews Count (e.g., 2.3K)" className="border p-2 rounded" />
-          <input {...register("price")} type="number" placeholder="Price (₹)" className="border p-2 rounded" required />
-          <input {...register("mrp")} type="number" placeholder="MRP (₹)" className="border p-2 rounded" required />
-          <input {...register("discount")} type="number" placeholder="Discount (%)" className="border p-2 rounded" required />
-          <input {...register("category")} placeholder="Category" className="border p-2 rounded" />
+
+          {/* MRP, Price, and Discount Fields */}
+          <input {...register("price")} type="number" step="0.01" placeholder="Price (₹)" className="border p-2 rounded" required />
+          <input {...register("mrp")} type="number" step="0.01" placeholder="MRP (₹)" className="border p-2 rounded" required />
+          <input {...register("discount")} type="number" value={discount} placeholder="Discount (%)" className="border p-2 rounded bg-gray-200" readOnly />
+
+          {/* Category Dropdown */}
+          <select {...register("category")} className="border p-2 rounded" required defaultValue="dressmaterial">
+            <option value="dressmaterial">Dress Material</option>
+            <option value="readymadekurtas">Readymade Kurtas</option>
+            <option value="readymadedress">Readymade Dress</option>
+            <option value="westerndress">Western Dress</option>
+          </select>
+
           <input {...register("color")} placeholder="Color" className="border p-2 rounded" />
           <input {...register("print")} placeholder="Print Type" className="border p-2 rounded" />
           <input {...register("neck")} placeholder="Neck Style" className="border p-2 rounded" />
@@ -65,11 +98,23 @@ const AddItems = ({ isOpen, onClose }) => {
           <input {...register("length")} placeholder="Length & Hem" className="border p-2 rounded" />
           <input {...register("material")} placeholder="Material Type" className="border p-2 rounded" />
           <input {...register("fit")} placeholder="Model Fit" className="border p-2 rounded" />
+
           <div className="col-span-2 grid grid-cols-3 gap-2">
-            {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-              <input key={size} {...register(`stock[${size}]`)} type="number" placeholder={`Stock (${size})`} className="border p-2 rounded" />
-            ))}
-          </div>
+  {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
+    <input 
+      key={size} 
+      {...register(`stock[${size}]`)} 
+      type="number" 
+      min="0" 
+      placeholder={`Stock (${size})`} 
+      className="border p-2 rounded" 
+      onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')} 
+    />
+  ))}
+</div>
+
+
+          {/* Image Uploads */}
           {[1, 2, 3, 4, 5, 6].map((num) => (
             <div key={num} className="flex flex-col items-center">
               <label className="text-sm font-semibold">Image {num}</label>
@@ -77,6 +122,7 @@ const AddItems = ({ isOpen, onClose }) => {
               {previewImages[`image${num}`] && <img src={previewImages[`image${num}`]} alt={`Preview ${num}`} className="w-20 h-20 object-cover mt-2" />}
             </div>
           ))}
+
           <button type="submit" className="col-span-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
             Add Product
           </button>

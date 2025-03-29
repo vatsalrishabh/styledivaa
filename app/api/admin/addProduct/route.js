@@ -11,7 +11,7 @@ export async function POST(request) {
 
   try {
     const req = await request.formData();
-    console.log("Received form data:", req); // Debugging log
+    console.log("Received form data:", Object.fromEntries(req.entries())); // Debugging log
 
     // Ensure the uploads directory exists
     const uploadDir = path.join(process.cwd(), "public/uploads");
@@ -60,14 +60,17 @@ export async function POST(request) {
       imageUrls[key] = `/uploads/${savedFileName}`;
     }
 
-    // Parse stock sizes
-    const stock = {};
-    Object.keys(fields).forEach((key) => {
-      const match = key.match(/^stock\[(.*)\]$/);
-      if (match) {
-        stock[match[1]] = parseInt(fields[key], 10) || 0;
-      }
-    });
+    // Parse stock sizes properly
+    const stock = {
+      XS: parseInt(fields["stock[XS]"] || "0", 10),
+      S: parseInt(fields["stock[S]"] || "0", 10),
+      M: parseInt(fields["stock[M]"] || "0", 10),
+      L: parseInt(fields["stock[L]"] || "0", 10),
+      XL: parseInt(fields["stock[XL]"] || "0", 10),
+      XXL: parseInt(fields["stock[XXL]"] || "0", 10),
+    };
+
+    console.log("Parsed Stock Data:", stock); // Debugging log
 
     // Create and save product
     const newProduct = new Product({
@@ -76,23 +79,23 @@ export async function POST(request) {
       rating: fields.rating ? parseFloat(fields.rating) : 0,
       reviews: fields.reviews || "0",
       price: parseFloat(fields.price),
-      mrp: parseFloat(fields.mrp), // Ensure MRP is included
+      mrp: parseFloat(fields.mrp),
       discount: fields.discount ? parseFloat(fields.discount) : 0,
-      inclusiveOfTaxes: fields.inclusiveOfTaxes === "true", // Convert string to boolean
+      inclusiveOfTaxes: fields.inclusiveOfTaxes === "true",
 
       category: fields.category || "Kurta",
       color: fields.color || "",
       print: fields.print || "",
       neck: fields.neck || "",
-      pockets: fields.pockets === "true", // Convert string to boolean
+      pockets: fields.pockets === "true",
       sleeves: fields.sleeves || "",
       shape: fields.shape || "",
       length: fields.length || "",
       material: fields.material || "",
       fit: fields.fit || "",
 
-      stock,
-      
+      stock, // Updated stock mapping
+
       imageOne: imageUrls.image1 || "",
       imageTwo: imageUrls.image2 || "",
       imageThree: imageUrls.image3 || "",

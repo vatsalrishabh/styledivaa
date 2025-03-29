@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import Order from "../../models/Order";
+import Product from "../../models/Product";
 
 export async function POST(req) {
   try {
@@ -35,6 +36,10 @@ export async function POST(req) {
     if (!updatedOrder) {
       return NextResponse.json({ status: "error", message: "Order not found" }, { status: 404 });
     }
+    // //update the stock in database 
+
+    // const stockData = await Order.findOne({razorpayId:razorpay_order_id});
+    // const await Product.findOneAndUpdate({stockData.productId},{$set:quantiy- stockDta.quanity})
 
     return NextResponse.json({ 
       status: "ok", 
