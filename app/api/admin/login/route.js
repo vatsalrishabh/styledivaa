@@ -10,7 +10,7 @@ import connectDB from "../../config/db";
 export async function POST(request) {
     try {
         await connectDB(); // Ensure database connection
-        
+
         const { email, password, role } = await request.json();
 
         // Only allow admins

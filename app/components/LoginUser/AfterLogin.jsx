@@ -67,19 +67,19 @@ const AfterLogin = ({ userName, userEmail, userId, userMobile, onLogout }) => {
           Orders
         </MenuItem>
 
-        <MenuItem onClick={() => handleNavigate("/wishlist")}>
+        {/* <MenuItem onClick={() => handleNavigate("/wishlist")}>
           <ListItemIcon>
             <FavoriteIcon fontSize="small" className="text-red-500" />
           </ListItemIcon>
           Wishlist
-        </MenuItem>
+        </MenuItem> */}
 
-        <MenuItem onClick={() => handleNavigate("/wallet")}>
+        {/* <MenuItem onClick={() => handleNavigate("/wallet")}>
           <ListItemIcon>
             <AccountBalanceWalletIcon fontSize="small" className="text-green-500" />
           </ListItemIcon>
           Wallet
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem
           onClick={() => {

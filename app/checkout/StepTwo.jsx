@@ -6,10 +6,15 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/solid";
 import Script from "next/script";
+import SnackBarr from "../components/SnackBarr";
 
 const StepTwo = ({ gotoPrevStep }) => {
   const [paymentMethod, setPaymentMethod] = useState("cod"); // Default: Cash on Delivery
   const [finalCart, setFinalCart] = useState(null);
+    const [snackMessage, setSnackMessage] = useState("");
+    const [statusCode, setStatusCode] = useState(null);
+    const [showSnackBar, setShowSnackBar] = useState(false);
+
 
   // Load cart details from localStorage
   useEffect(() => {
@@ -25,6 +30,23 @@ const StepTwo = ({ gotoPrevStep }) => {
 
   // Handle Order Placement
   const placeOrder = async () => {
+    if (!user?.userName || !user?.userEmail || !user?.userNumber) {
+      setSnackMessage("User details missing! Please complete your profile.");
+      setShowSnackBar(true);
+      return;
+    }
+
+    if (!user?.address) {
+      setSnackMessage("Address not found! Please add your shipping address.");
+      setShowSnackBar(true);
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      setSnackMessage("Your cart is empty! Add items before checkout.");
+      setShowSnackBar(true);
+      return;
+    }
     if (!finalCart) return;
 
     try {
@@ -240,7 +262,7 @@ const StepTwo = ({ gotoPrevStep }) => {
         </div>
       </div>
     </div>
-
+    {showSnackBar && <SnackBarr message={snackMessage} statusCode={statusCode} showSnackBar={showSnackBar} />}
 
 </>
 

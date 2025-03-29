@@ -6,11 +6,13 @@ import ProductCard from "../components/ProductCards/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "@/redux/cart/allProductSlice";
 
-const AllFemaleProducts = () => {
+const AllFemaleProducts = ({ category }) => {  
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.allProducts.products);
+  const products = useSelector((state) => state.allProducts.products); 
+  const [categorySpecific, setCategoryProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch all products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -26,6 +28,16 @@ const AllFemaleProducts = () => {
     fetchProducts();
   }, [dispatch]);
 
+  // Filter products by category
+  useEffect(() => {
+    if (products.length > 0) {
+      const filteredProducts = products.filter(
+        (eachProduct) => eachProduct.category === category
+      );
+      setCategoryProducts(filteredProducts);
+    }
+  }, [products, category]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -34,10 +46,10 @@ const AllFemaleProducts = () => {
     );
   }
 
-  if (!products.length) {
+  if (!categorySpecific.length) {
     return (
       <p className="text-center text-pink-500 text-lg">
-        No products available.
+        No products available in this category.
       </p>
     );
   }
@@ -45,20 +57,21 @@ const AllFemaleProducts = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold text-pink-600 text-center my-6">
-        Dress Material
+        {category.toUpperCase()}
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product, index) => (
-          <ProductCard
-            key={product?._id || index}
-            productId={product?.productId}
-            img={product?.imageOne || "/default.jpg"}
-            discount={product?.discount || "No Discount"}
-            name={product?.name || "Unknown Product"}
-            rate={product?.rating || "No Rating"}
-            description={product?.description || "No Description Available"}
-            price={product?.price || "N/A"}
-          />
+        {categorySpecific.map((product, index) => (
+         <ProductCard
+         key={product?._id || index}
+         productId={product?.productId}
+         img={product?.imageOne || "/default.jpg"}
+         mrp={product?.mrp || "N/A"}
+         price={product?.price || "N/A"}
+         discount={product?.discount || "No Discount"}
+         name={product?.name || "Unknown Product"}
+         rate={product?.rating || "No Rating"}
+         description={`A stylish ${product?.color} ${product?.category} made of ${product?.material}. Features a ${product?.neck} neckline and ${product?.sleeves} sleeves for a ${product?.fit} fit.`}
+       />
         ))}
       </div>
     </div>

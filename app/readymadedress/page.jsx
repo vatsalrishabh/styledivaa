@@ -3,6 +3,7 @@ import React from 'react'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import RightIconSmartphone from '../components/SmartphoneCartIcon/RightIconSmartphone'
+import AllFemaleProducts from '../dressmaterial/AllFemaleProducts'
 
 
 
@@ -11,7 +12,7 @@ const page = () => {
     <div className='Contact-us '>
   
        <Navbar/>
-     
+     <AllFemaleProducts/>
        <RightIconSmartphone />    {/* this component has static cart icon in left, right slideshow */}
       <Footer/> 
     </div>

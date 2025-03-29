@@ -11,6 +11,7 @@ const page = () => {
   return (
     <div className='Contact-us '>
       <Navbar/>
+      <AllFemaleProducts category="dressmaterial" />
       <AllFemaleProducts/>
       <RightIconSmartphone />    {/* this , component has static cart icon in left, right slideshow */}
       <Footer/> 

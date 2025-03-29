@@ -4,17 +4,18 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const ProductCard = ({ productId, img, discount, name, rate, description, price }) => {
+const ProductCard = ({ productId, img, discount, name, rate, description, price, mrp }) => {
   const router = useRouter();
 
   const handleSeeDetails = () => {
     router.push(`/product/${productId}`);
   };
 
-  console.log(img)
+  // Calculate discount percentage
+  const discountPercentage = mrp && price ? Math.round(((mrp - price) / mrp) * 100) : 0;
 
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl">
+    <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl border border-gray-200">
       {/* ✅ Safe Image Handling */}
       {img ? (
         <Image 
@@ -31,11 +32,21 @@ const ProductCard = ({ productId, img, discount, name, rate, description, price 
       )}
 
       <div className="p-4 flex flex-col">
-        <h3 className="font-semibold text-lg text-gray-900">{name}</h3>
+        <h3 className="font-semibold text-lg text-gray-900 truncate">{name}</h3>
         <p className="text-gray-600 text-sm truncate">{description}</p>
-        <p className="text-red-500 font-bold mt-2">{discount}</p>
-        <p className="text-gray-700 font-semibold">Price: ₹{price}</p>
-        <p className="text-gray-500 text-sm">Rating: {rate} ⭐</p>
+
+        {/* Pricing Section */}
+        <div className="mt-2 flex items-center space-x-2">
+          <span className="text-gray-500 line-through text-sm">₹{mrp}</span>
+          <span className="text-xl font-bold text-gray-900">₹{price}</span>
+          {discountPercentage > 0 && (
+            <span className="text-green-600 bg-green-100 px-2 py-1 text-xs font-semibold rounded-lg">
+              {discountPercentage}% OFF
+            </span>
+          )}
+        </div>
+
+        <p className="text-gray-500 text-sm mt-1">Rating: {rate} ⭐</p>
 
         <button
           onClick={handleSeeDetails}

@@ -43,7 +43,7 @@ const AdminLoginPage = () => {
           JSON.stringify({ token: response.data.token })
         );
         handleSnackBar("Login successful!", 200);
-        window.location.reload();
+    window.location.reload();
 
       } else {
         if (step === 1) {

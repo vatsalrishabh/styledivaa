@@ -24,6 +24,7 @@ const ForHerHome = () => {
     };
 
     fetchProducts();
+
   }, [dispatch]);
 
   if (loading) {
@@ -33,7 +34,7 @@ const ForHerHome = () => {
       </div>
     );
   }
-
+console.log(products)
   return (
     <div className="ForHerHome p-8 bg-white mt-5">
       {/* Header Section */}
@@ -50,11 +51,12 @@ const ForHerHome = () => {
               key={product?._id || index}
               productId={product?.productId}
               img={product?.imageOne || "/default.jpg"}
+              mrp={product?.mrp || "N/A"}
+              price={product?.price || "N/A"}
               discount={product?.discount || "No Discount"}
               name={product?.name || "Unknown Product"}
               rate={product?.rating || "No Rating"}
-              description={product?.description || "No Description Available"}
-              price={product?.price || "N/A"}
+              description={`A stylish ${product?.color} ${product?.category} made of ${product?.material}. Features a ${product?.neck} neckline and ${product?.sleeves} sleeves for a ${product?.fit} fit.`}
             />
           ))
         ) : (
