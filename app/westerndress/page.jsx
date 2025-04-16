@@ -12,7 +12,7 @@ const page = () => {
     <div className='Contact-us '>
   
        <Navbar/>
-     <AllFemaleProducts/>
+     <AllFemaleProducts category="westerndress" />
        <RightIconSmartphone />    {/* this component has static cart icon in left, right slideshow */}
       <Footer/> 
     </div>

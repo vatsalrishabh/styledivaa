@@ -9,7 +9,7 @@ const FirstAbout = () => {
       {/* Top Heading */}
       <div className="top-heading flex justify-center p-6">
         <h1 className="text-5xl font-extrabold text-pink-600 font-serif tracking-wide">
-          Style Diva Designer Boutique
+          Style Divaa Designer Boutique
         </h1>
       </div>
 
@@ -33,7 +33,7 @@ const FirstAbout = () => {
             Our Vision
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
-            At Style Diva, we envision creating bespoke fashion that celebrates
+            At Style Divaa, we envision creating bespoke fashion that celebrates
             individuality and elegance. From bridal couture to casual wear, our
             designs blend tradition with modernity, crafted with meticulous
             attention to detail.

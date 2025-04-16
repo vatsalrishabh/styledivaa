@@ -19,8 +19,7 @@ const Page = () => {
 
   return (
     <>
-      <RightSlideCart />
-      <RightIconSmartphone />
+  
 
       <div className="min-h-screen bg-pink-50 flex flex-col items-center">
         {/* Header */}
@@ -67,7 +66,8 @@ const Page = () => {
 
         {/* Body */}
         <div className="body mt-8 flex flex-col items-center">
-          {step === 1 && <StepOne gotoNextStep={gotoNextStep} />}
+          {step === 1 &&<><StepOne gotoNextStep={gotoNextStep} />    <RightSlideCart />
+            <RightIconSmartphone /></> }
           {step === 2 && <StepTwo gotoPrevStep={gotoPrevStep} />}
         </div>
       </div>

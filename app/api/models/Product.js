@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
     XXL: { type: Number, default: 0 }
   },
 
-  category: { type: String, default: "Kurta" }, // e.g., Kurta
+  category: { type: String, default: "Kurta" }, // e.g.,  //dressmaterial //
   color: { type: String, }, // e.g., Green
   print: { type: String,  }, // e.g., Bandhani printed
   neck: { type: String, }, // e.g., Round neck

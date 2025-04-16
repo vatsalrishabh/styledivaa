@@ -49,7 +49,7 @@ const AllFemaleProducts = ({ category }) => {
   if (!categorySpecific.length) {
     return (
       <p className="text-center text-pink-500 text-lg">
-          No {category} available.
+     
       </p>
     );
   }

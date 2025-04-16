@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "@/redux/cart/allProductSlice";
 
 const AllFemaleProducts = ({ category }) => {  
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.allProducts.products); 
+  const dispatch = useDispatch(); // put all the category of products in the store
+  const products = useSelector((state) => state.allProducts.products);  //get all the products from store
   const [categorySpecific, setCategoryProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +49,7 @@ const AllFemaleProducts = ({ category }) => {
   if (!categorySpecific.length) {
     return (
       <p className="text-center text-pink-500 text-lg">
-          No {category} available.
+     
       </p>
     );
   }

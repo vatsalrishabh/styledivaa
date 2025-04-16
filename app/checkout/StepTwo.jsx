@@ -144,7 +144,7 @@ const StepTwo = ({ gotoPrevStep }) => {
           onClick={() => setPaymentMethod("cod")}
         >
           <label className="flex justify-between items-center cursor-pointer">
-            <span className="text-gray-700 font-semibold">Cash on Delivery</span>
+            <span className="text-gray-700 font-semibold">Store Pick Up</span>
             <input
               type="radio"
               checked={paymentMethod === "cod"}
