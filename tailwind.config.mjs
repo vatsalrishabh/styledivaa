@@ -16,7 +16,7 @@ export default {
         gray: {
           900: "#121212", // Very dark gray for primary background
           700: "#2A2A2A", // Slightly lighter gray for borders
-          300: "#B0B0B0", // Text color
+          300: "#B0B0B0", // Text color of the pink
           100: "#E0E0E0", // Hover text color
         },
       },
