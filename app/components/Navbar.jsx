@@ -84,8 +84,12 @@ const Navbar = () => {
       subNav: [
         { name: "Dress Materials", href: "/dressmaterial" },
         { name: "Readymade Kurtas", href: "/kurtas" },
-        { name: "Readymade Dress", href: "/readymadedress" },
+        { name: "Readymade Suits", href: "/readymadedress" },
         { name: "Western Dress", href: "/westerndress" },
+        { name: "Kids Wear", href: "/kidswear" }, // New item
+        { name: "Gowns", href: "/gowns" }, // New item
+        { name: "Readymade Blouses", href: "/readymadeblouses" }, // New item
+        { name: "Sarees", href: "/sarees" }, // New item
       ],
     },
     { name: "About Us", href: "/aboutus", dropdown: false },

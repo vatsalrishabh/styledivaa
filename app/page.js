@@ -1,12 +1,28 @@
 // pages/index.js
+"use client"; 
 import Head from 'next/head';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import RightIconSmartphone from './components/SmartphoneCartIcon/RightIconSmartphone';
 import { seoMetadata } from "./SEO/seoMetadata";
 import ForHerHome from './ForHerHome';
+import HomeLoader from "../app/components/HomeLoader"
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 3000); // 1.5 seconds (adjust as needed)
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (isLoading) {
+        return <HomeLoader />;
+    }
     return (
         <div className='Main'>
             {/* SEO Meta Tags */}

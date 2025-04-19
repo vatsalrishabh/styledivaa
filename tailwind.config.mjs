@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        custombg: "rgb(239 183 221)", // Dark background
+        custombg: "rgb(239 183 221)", // pink background
         brightPink: "#FF6F91", // Bright pink for active states
         lightPink: "#FFD3E2", // Light pink for hover
         customText: "rgb(81 75 75)", // Default text color

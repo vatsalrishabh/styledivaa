@@ -25,8 +25,12 @@ const AnNavbar = () => {
       subLinks: [
         { title: "Dress Materials", href: "/dressmaterial" },
         { title: "Readymade Kurtas", href: "/kurtas" },
-        { title: "Readymade Dress", href: "/readymadedress" },
+        { title: "Readymade Suits", href: "/readymadedress" },
         { title: "Western Dress", href: "/westerndress" },
+        { title: "Kids Wear", href: "/kidswear" }, // New item
+        { title: "Gowns", href: "/gowns" }, // New item
+        { title: "Readymade Blouses", href: "/readymadeblouses" }, // New item
+        { title: "Sarees", href: "/sarees" }, // New item
       ],
     },
     { title: "About Us", href: "/aboutus" },

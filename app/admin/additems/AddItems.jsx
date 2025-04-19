@@ -42,17 +42,25 @@ const AddItems = ({ isOpen, onClose }) => {
   const onSubmit = async (data) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
-      if (data[key] instanceof File) {
+      if (key === "stock") {
+        const stockObj = data[key];
+        Object.keys(stockObj).forEach((size) => {
+          formData.append(`stock[${size}]`, stockObj[size]);
+        });
+      } else if (data[key] instanceof File) {
         formData.append(key, data[key], `${Date.now()}-${data[key].name}`);
       } else {
         formData.append(key, data[key]);
       }
     });
+    
 
     try {
+      console.log(formData.stock);
       await axios.post("/api/admin/addProduct", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log(formData.stock+"THE STOCK");
       alert("Product added successfully!");
       reset();
       setPreviewImages({});
@@ -88,6 +96,10 @@ const AddItems = ({ isOpen, onClose }) => {
             <option value="readymadekurtas">Readymade Kurtas</option>
             <option value="readymadedress">Readymade Dress</option>
             <option value="westerndress">Western Dress</option>
+            <option value="kidswear">Kids Wear</option> 
+            <option value="gowns">Gowns</option>       
+            <option value="readymadeblouses">Readymade Blouses</option>
+            <option value="sarees">Sarees</option>    
           </select>
 
           <input {...register("color")} placeholder="Color" className="border p-2 rounded" />

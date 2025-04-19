@@ -9,7 +9,7 @@ import Script from "next/script";
 import SnackBarr from "../components/SnackBarr";
 
 const StepTwo = ({ gotoPrevStep }) => {
-  const [paymentMethod, setPaymentMethod] = useState("cod"); // Default: Cash on Delivery
+  const [paymentMethod, setPaymentMethod] = useState("online"); // Default: Cash on Delivery
   const [finalCart, setFinalCart] = useState(null);
     const [snackMessage, setSnackMessage] = useState("");
     const [statusCode, setStatusCode] = useState(null);
@@ -135,7 +135,7 @@ const StepTwo = ({ gotoPrevStep }) => {
         </h2>
 
         {/* Cash on Delivery */}
-        <div
+        {/* <div
           className={`p-6 mt-6 rounded-2xl border-2 cursor-pointer transition text-lg ${
             paymentMethod === "cod"
               ? "border-pink-500 bg-pink-100"
@@ -153,7 +153,7 @@ const StepTwo = ({ gotoPrevStep }) => {
             />
           </label>
           <p className="text-gray-500 text-sm mt-2">Pay on delivery.</p>
-        </div>
+        </div> */}
 
         {/* Online Payment */}
         <div
