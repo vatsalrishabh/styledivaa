@@ -12,8 +12,8 @@ const HomeLoader = () => {
           <Image
             src={logo}
             alt="StyleDivaa Logo"
-            width={320}
-            height={320}
+            width={420}
+            height={420}
             priority
             className="animate-breathe mt-4 drop-shadow-2xl"
           />
@@ -26,7 +26,7 @@ const HomeLoader = () => {
 
         {/* "Since 1986" with smooth fade-in from bottom */}
         <p className="text-lg sm:text-xl font-light text-gray-600 mt-4 opacity-0 animate__animated animate__fadeInUp animate__delay-1s">
-          Since 1986
+          Since 2008
         </p>
       </div>
     </div>
