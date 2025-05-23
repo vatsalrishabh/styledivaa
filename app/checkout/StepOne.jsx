@@ -35,7 +35,7 @@ const StepOne = ({ gotoNextStep }) => {
         console.log(jwtDecode(data.token));
         setLoggedInUser(jwtDecode(data.token));
       } else {
-        router.push("/home");
+        // router.push("/home");
       }
     };
     loadUserDetails();

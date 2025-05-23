@@ -19,7 +19,7 @@ const OrderAfterLogin = () => {
             const userDetails = localStorage.getItem("userDetails");
 
             if (!userDetails) {
-                router.push("/home");
+                // router.push("/home");
                 return;
             }
 
@@ -29,7 +29,7 @@ const OrderAfterLogin = () => {
                 setLoggedInUser(decodedToken);
             } catch (error) {
                 console.error("Error decoding token:", error);
-                router.push("/home");
+                // router.push("/home");
             }
         };
 
