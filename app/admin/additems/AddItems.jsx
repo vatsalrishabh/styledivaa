@@ -132,12 +132,13 @@ const AddItems = ({ isOpen, onClose }) => {
             <div key={num} className="flex flex-col items-center">
               <label className="text-sm font-semibold">Image {num}</label>
               <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, `image${num}`)} className="border p-2 rounded" />
-              {previewImages[`image${num}`] &&  <Image
-    src={previewImages[`image${num}`]}
-    alt={`Preview ${num}`}
-    fill
-    className="object-cover rounded"
-  />}
+              {previewImages[`image${num}`] && <Image
+  src={previewImages[`image${num}`]}
+  alt={`Preview ${num}`}
+  width={100}
+  height={100}
+  className="object-cover rounded"
+/>}
             </div>
           ))}
 
