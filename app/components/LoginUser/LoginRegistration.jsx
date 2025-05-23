@@ -1,3 +1,4 @@
+//login and registratin for here and switching logic betweent two
 import React, { useEffect, useState } from 'react';
 import {jwtDecode} from 'jwt-decode'; // Ensure you have jwt-decode installed
 import BeforeLogin from './BeforeLogin';
@@ -5,7 +6,7 @@ import RegisterUser from './RegisterUser';
 
 const LoginRegistration = () => {
     const [showLogin, setShowLogin] = useState(true); // Show login by default
-    const [openModall, setOpenModal] = useState(false); // Modal open state
+    const [openModall, setOpenModal] = useState(false); // Modal open state either login or registration
     const [loggedInUser, setLoggedInUser] = useState(null); // Track logged-in user
 
     // Function to get user details from localStorage
@@ -72,9 +73,9 @@ const LoginRegistration = () => {
                     <>
                         {
                             showLogin ? (
-                                <BeforeLogin openLoginModal={openLoginModal} openModall={openModall} />
+                                <BeforeLogin openRegisterModal={openRegisterModal}  openModall={openModall} />
                             ) : (
-                                <RegisterUser openRegisterModal={openRegisterModal} openModall={openModall} />
+                                <RegisterUser openLoginModal={openLoginModal}  openModall={openModall} />
                             )
                         }
                     </>

@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addItem, removeItem, updateQuantity, clearCart } from "../../redux/cart/cartSlice";
 import { openCart as openCartAction, closeCart, updateNumOfItems } from "../../redux/cart/openCartSlice";  // Import the updateNumOfItems action
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function RightSlideCart() {
   const dispatch = useDispatch();
@@ -70,9 +71,11 @@ export default function RightSlideCart() {
                         {cartItems.map((product,index) => (
                           <li key={index} className="flex py-6">
                             <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                              <img
+                              <Image
                                 alt={product.imageOne}
                                 src={product.imageOne}
+                                 width={96} // width in pixels
+    height={96} // height in pixels
                                 className="size-full object-cover"
                               />
                             </div>

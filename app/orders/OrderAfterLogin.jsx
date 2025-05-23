@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import "animate.css"; 
 import { FaBoxOpen, FaMoneyCheckAlt, FaShippingFast } from "react-icons/fa";
 import BreadCrumbs from "../components/BreadCrumbs";
+import Image from "next/image";
 
 const OrderAfterLogin = () => {
     const [yourOrders, setYourOrders] = useState([]);
@@ -75,7 +76,9 @@ const OrderAfterLogin = () => {
                            key={order._id}
                            className="relative p-4 bg-white/60 backdrop-blur-lg rounded-2xl shadow-lg border border-pink-300 hover:scale-[1.02] transition-transform duration-300 hover:shadow-xl"
                        >
-                           <img 
+                           <Image
+                           width={200} 
+                           height={200}
                                src={order.imageOne} 
                                alt="Product" 
                                className="w-full h-44 object-cover rounded-lg border border-pink-200"

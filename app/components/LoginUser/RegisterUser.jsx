@@ -20,7 +20,7 @@ import {
 import axios from "axios";
 import SnackBarr from "../SnackBarr";
 
-const RegisterUser = ({ openRegisterModal, openModall }) => {
+const RegisterUser = ({ openLoginModal, openModall }) => {
   const [openModal, setOpenModal] = useState(openModall);
   const [otpModal, setOtpModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", mobile: "", password: "" });
@@ -142,7 +142,7 @@ const RegisterUser = ({ openRegisterModal, openModall }) => {
             Registration Form
           </DialogTitle>
           <div className="text-right text-sm flex justify-end">
-            Already Registered? - <button className="text-blue-500" onClick={openRegisterModal}>Login here</button>
+            Already Registered? - <button className="text-blue-500" onClick={openLoginModal}>Login here</button>
           </div>
 
           <DialogContent className="flex flex-col gap-4 mt-4">

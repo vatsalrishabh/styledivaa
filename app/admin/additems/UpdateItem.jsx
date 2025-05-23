@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import Image from "next/image";
 
 const UpdateItem = ({ isOpen, onClose, products }) => {
   const { register, handleSubmit, reset, setValue, watch } = useForm();
@@ -178,20 +179,25 @@ const UpdateItem = ({ isOpen, onClose, products }) => {
                   onChange={(e) => handleFileChange(e, imageField)}
                   className="border p-2 rounded"
                 />
-                {selectedProduct[imageField] && (
-                  <img
-                    src={selectedProduct[imageField]}
-                    alt={`Image ${index + 1}`}
-                    className="w-20 h-20 object-cover mt-2"
-                  />
-                )}
-                {previewImages[imageField] && (
-                  <img
-                    src={previewImages[imageField]}
-                    alt={`Preview ${index + 1}`}
-                    className="w-20 h-20 object-cover mt-2"
-                  />
-                )}
+              {selectedProduct[imageField] && (
+  <Image
+    src={selectedProduct[imageField]}
+    alt={`Image ${index + 1}`}
+    width={80}
+    height={80}
+    className="object-cover mt-2 rounded"
+  />
+)}
+
+{previewImages[imageField] && (
+  <Image
+    src={previewImages[imageField]}
+    alt={`Preview ${index + 1}`}
+    width={80}
+    height={80}
+    className="object-cover mt-2 rounded"
+  />
+)}
               </div>
             ))}
           </div>

@@ -18,7 +18,7 @@ import {
 import axios from "axios";
 import SnackBarr from "../SnackBarr";
 
-const BeforeLogin = ({ openLoginModal }) => {
+const BeforeLogin = ({ openRegisterModal }) => {
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -111,7 +111,7 @@ const BeforeLogin = ({ openLoginModal }) => {
           <DialogTitle className="text-center text-xl font-semibold">Login Form</DialogTitle>
 
           <div className="text-right text-sm flex justify-end">
-            Not Registered ? - <button className="text-blue-500" onClick={openLoginModal}>Register here</button>
+            Not Registered ? - <button className="text-blue-500" onClick={openRegisterModal}>Register here</button>
           </div>
 
           <DialogContent className="flex flex-col gap-4 mt-4">

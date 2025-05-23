@@ -39,14 +39,14 @@ const RightProductDetails = ({ product }) => {
   const handleCartAction = () => {
     let storedUser = localStorage.getItem("userDetails");
 
-    if (!storedUser) {
-      openLoginModal();
-      return;
-    }
+    // if (!storedUser) {
+    //   openLoginModal();
+    //   return;
+    // }
 
-    storedUser = JSON.parse(storedUser);
-    const decodedToken = jwtDecode(storedUser.token);
-    console.log("Decoded Token:", decodedToken);
+    // storedUser = JSON.parse(storedUser);
+    // const decodedToken = jwtDecode(storedUser.token);
+    // console.log("Decoded Token:", decodedToken);
 
     if (isInCart) {
       router.push("/checkout");

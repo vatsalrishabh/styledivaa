@@ -1,5 +1,5 @@
 "use client";
-
+// it has afterLogin component and before login componet -
 import React, { useState, useEffect } from "react";
 import AfterLogin from "./LoginUser/AfterLogin";
 import LoginRegistration from "./LoginUser/LoginRegistration";
@@ -70,9 +70,9 @@ const LogInUserDetail = () => {
           userEmail={loggedInUser.userEmail}
           userNumber={loggedInUser.userNumber} // Fixed typo
           onLogout={logoutUser}
-        />
+        /> //after lgoin the dp componnet is displayed 
       ) : (
-        <LoginRegistration />
+        <LoginRegistration /> //it has login and registration page both 
       )}
     </div>
   );

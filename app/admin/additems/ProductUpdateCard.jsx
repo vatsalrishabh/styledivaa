@@ -13,7 +13,13 @@ const ProductUpdateCard = ({ productId, productImg, productName, setProductId })
     <div className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
       {/* Product Image */}
       {productImg ? (
-        <img className="w-full h-56 object-cover" src={productImg} alt="Product" />
+       <Image
+    src={productImg}
+    alt="Product"
+    width={400} // adjust based on your design
+    height={224} // e.g., 16:9 ratio (400x224)
+    className="w-full h-56 object-cover rounded-md"
+  />
       ) : (
         <div className="w-full h-56 flex items-center justify-center bg-gray-200">
           <p className="text-gray-500">No Image Available</p>

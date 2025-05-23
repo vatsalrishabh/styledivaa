@@ -7,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Image from "next/image";
 
 const theme = createTheme({
   palette: {
@@ -47,7 +48,9 @@ const LoginModal = (props) => {
               color="secondary"
               startIcon={
                 <IconButton>
-                  <img
+                  <Image
+                  width={200}
+                  height={200}
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/640px-Google_%22G%22_logo.svg.png"
                     alt="Google Logo"
                     style={{ width: "20px", height: "20px" }}

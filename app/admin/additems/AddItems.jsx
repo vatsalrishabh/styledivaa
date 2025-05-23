@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import CloseIcon from '@mui/icons-material/Close';
+import Image from "next/image";
 import axios from "axios";
 
 const AddItems = ({ isOpen, onClose }) => {
@@ -131,7 +132,12 @@ const AddItems = ({ isOpen, onClose }) => {
             <div key={num} className="flex flex-col items-center">
               <label className="text-sm font-semibold">Image {num}</label>
               <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, `image${num}`)} className="border p-2 rounded" />
-              {previewImages[`image${num}`] && <img src={previewImages[`image${num}`]} alt={`Preview ${num}`} className="w-20 h-20 object-cover mt-2" />}
+              {previewImages[`image${num}`] &&  <Image
+    src={previewImages[`image${num}`]}
+    alt={`Preview ${num}`}
+    fill
+    className="object-cover rounded"
+  />}
             </div>
           ))}
 

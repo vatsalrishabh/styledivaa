@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Image from "next/image";
 import axios from "axios";
 
 const ProductCard = ({ productId, productImg, productName }) => {
@@ -20,7 +21,12 @@ const ProductCard = ({ productId, productImg, productName }) => {
   return (
     <div className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
       {/* Product Image */}
-      <img className="w-full h-56 object-cover" src={productImg} alt="Product" />
+ <Image
+    src={productImg}
+    alt="Product"
+    fill
+    className="object-cover rounded"
+  />
 
       {/* Product Details */}
       <div className="p-4">

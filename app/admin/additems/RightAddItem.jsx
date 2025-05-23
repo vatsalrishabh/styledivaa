@@ -6,6 +6,7 @@ import DeleteItem from './DeleteItem';
 import UpdateItem from './UpdateItem';
 import { Button } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
+import Image from 'next/image';
 import axios from 'axios';
 
 const RightAddItem = () => {
@@ -73,12 +74,15 @@ const RightAddItem = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <div key={product.productId} className="bg-white shadow-lg rounded-lg p-4 transition-all hover:shadow-xl">
-              <img
-                src={product.imageOne || "https://via.placeholder.com/150"}
-                alt={product.name}
-                className="w-full h-44 object-cover rounded-md"
-                loading="lazy"
-              />
+           <Image
+  src={product.imageOne || "https://via.placeholder.com/150"}
+  alt={product.name}
+  width={300} // Set your desired width
+  height={176} // Set your desired height (maintain aspect ratio)
+  className="w-full h-44 object-cover rounded-md"
+  loading="lazy"
+/>
+
               <h3 className="text-lg font-semibold mt-3">{product.name}</h3>
               <p className="text-gray-500 text-sm">{product.category}</p>
 
