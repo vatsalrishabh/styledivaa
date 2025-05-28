@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm , Controller} from "react-hook-form";
+import CreatableSelect from "react-select/creatable";
 import CloseIcon from '@mui/icons-material/Close';
 import Image from "next/image";
 import axios from "axios";
 
 const AddItems = ({ isOpen, onClose }) => {
-  const { register, handleSubmit, reset, setValue, watch } = useForm();
+  const { register, handleSubmit, reset, setValue, watch, control } = useForm();
   const [previewImages, setPreviewImages] = useState({});
   const [discount, setDiscount] = useState(0);
 
@@ -103,7 +104,29 @@ const AddItems = ({ isOpen, onClose }) => {
             <option value="sarees">Sarees</option>    
           </select>
 
-          <input {...register("color")} placeholder="Color" className="border p-2 rounded" />
+          {/* <input {...register("color")} placeholder="Color" className="border p-2 rounded" /> */}
+
+<input type="hidden" {...register("color")} />
+ <Controller
+  name="colors"
+  control={control}
+  defaultValue={[]} // Start with empty array
+  render={({ field }) => (
+    <CreatableSelect
+      {...field}
+      isMulti
+      placeholder="Enter colors"
+      className="react-select"
+      classNamePrefix="select"
+      onChange={(selectedOptions) => {
+        field.onChange(selectedOptions); // For the select's internal state
+        const selectedValues = selectedOptions?.map((opt) => opt.value || opt.label).join(",") || "";
+        setValue("color", selectedValues); // This updates the actual 'color' field as a string
+      }}
+    />
+  )}
+/>
+
           <input {...register("print")} placeholder="Print Type" className="border p-2 rounded" />
           <input {...register("neck")} placeholder="Neck Style" className="border p-2 rounded" />
           <input {...register("sleeves")} placeholder="Sleeve Type" className="border p-2 rounded" />
