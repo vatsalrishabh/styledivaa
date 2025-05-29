@@ -11,44 +11,44 @@ export async function PATCH(request) {
 
   try {
     const req = await request.formData();
-    const productId = req.get("productId"); // Get productId from the request body
-    console.log("Received form data:", Object.fromEntries(req.entries())); // Debugging log
+    const productId = req.get("productId");
 
-    // Check if productId is provided
     if (!productId) {
       return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
     }
 
-    // Find the existing product by productId
     const existingProduct = await Product.findOne({ productId });
     if (!existingProduct) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Ensure the uploads directory exists
     const uploadDir = path.join(process.cwd(), "public/uploads");
     await fs.mkdir(uploadDir, { recursive: true });
 
-    // Extract form data (fields and files)
     const files = {};
     const fields = {};
 
     for (const [key, value] of req.entries()) {
       if (value instanceof File) {
-        if (!["image1", "image2", "image3", "image4", "image5", "image6"].includes(key)) {
-          continue;
-        }
-
+        if (!["imageOne", "imageTwo", "imageThree", "imageFour", "imageFive", "imageSix"].includes(key)) continue;
         const ext = path.extname(value.name) || ".jpg";
         const buffer = Buffer.from(await value.arrayBuffer());
-
-        files[key] = { buffer, ext, filename: value.name };
+        files[key] = { buffer, ext };
       } else {
-        fields[key] = value.toString(); // Convert FormData values to strings
+        fields[key] = value.toString();
       }
     }
 
-    // Update fields if provided, otherwise keep the existing values
+    // Parse stock if sent as JSON string
+    let stockObj = existingProduct.stock;
+    if (fields.stock && typeof fields.stock === "string") {
+      try {
+        stockObj = JSON.parse(fields.stock);
+      } catch (e) {
+        console.warn("Invalid stock JSON string. Using existing stock.");
+      }
+    }
+
     const updatedFields = {
       name: fields.name || existingProduct.name,
       rating: fields.rating ? parseFloat(fields.rating) : existingProduct.rating,
@@ -67,56 +67,53 @@ export async function PATCH(request) {
       length: fields.length || existingProduct.length,
       material: fields.material || existingProduct.material,
       fit: fields.fit || existingProduct.fit,
+      stock: {
+        XS: parseInt(stockObj.XS ?? existingProduct.stock.XS, 10),
+        S: parseInt(stockObj.S ?? existingProduct.stock.S, 10),
+        M: parseInt(stockObj.M ?? existingProduct.stock.M, 10),
+        L: parseInt(stockObj.L ?? existingProduct.stock.L, 10),
+        XL: parseInt(stockObj.XL ?? existingProduct.stock.XL, 10),
+        XXL: parseInt(stockObj.XXL ?? existingProduct.stock.XXL, 10),
+      }
     };
 
-    // Update stock sizes
-    const updatedStock = {
-      XS: parseInt(fields["stock[XS]"] || existingProduct.stock.XS, 10),
-      S: parseInt(fields["stock[S]"] || existingProduct.stock.S, 10),
-      M: parseInt(fields["stock[M]"] || existingProduct.stock.M, 10),
-      L: parseInt(fields["stock[L]"] || existingProduct.stock.L, 10),
-      XL: parseInt(fields["stock[XL]"] || existingProduct.stock.XL, 10),
-      XXL: parseInt(fields["stock[XXL]"] || existingProduct.stock.XXL, 10),
+    const imageUrls = {
+      imageOne: existingProduct.imageOne,
+      imageTwo: existingProduct.imageTwo,
+      imageThree: existingProduct.imageThree,
+      imageFour: existingProduct.imageFour,
+      imageFive: existingProduct.imageFive,
+      imageSix: existingProduct.imageSix,
     };
-
-    updatedFields.stock = updatedStock;
-
-    // Handle image updates
-    const imageUrls = { ...existingProduct.images };
 
     for (const [key, { buffer, ext }] of Object.entries(files)) {
-      const savedFileName = `${productId}-${key}${ext}`;
-      const filePath = path.join(uploadDir, savedFileName);
-
+      const filename = `${productId}-${key}${ext}`;
+      const filePath = path.join(uploadDir, filename);
       await fs.writeFile(filePath, buffer);
-      imageUrls[key] = `/uploads/${savedFileName}`;
+      console.log(`✅ Saved ${key} to ${filePath}`);
+      imageUrls[key] = `/uploads/${filename}`;
     }
 
-    // Update the product in the database
     const updatedProduct = await Product.findOneAndUpdate(
       { productId },
       {
         ...updatedFields,
-        imageOne: imageUrls.image1 || existingProduct.imageOne,
-        imageTwo: imageUrls.image2 || existingProduct.imageTwo,
-        imageThree: imageUrls.image3 || existingProduct.imageThree,
-        imageFour: imageUrls.image4 || existingProduct.imageFour,
-        imageFive: imageUrls.image5 || existingProduct.imageFive,
-        imageSix: imageUrls.image6 || existingProduct.imageSix,
+        imageOne: imageUrls.imageOne,
+        imageTwo: imageUrls.imageTwo,
+        imageThree: imageUrls.imageThree,
+        imageFour: imageUrls.imageFour,
+        imageFive: imageUrls.imageFive,
+        imageSix: imageUrls.imageSix,
       },
-      { new: true } // Return the updated document
+      { new: true }
     );
 
-    if (!updatedProduct) {
-      return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
-    }
-
     return NextResponse.json(
-      { message: "Product updated successfully", product: updatedProduct },
+      { message: "✅ Product updated successfully", product: updatedProduct },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error("❌ Error updating product:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

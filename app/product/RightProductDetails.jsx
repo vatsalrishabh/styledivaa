@@ -1,11 +1,11 @@
+"use client";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addItem } from "../../redux/cart/cartSlice";
 import { IoChevronForward } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
-import BeforeLogin from "../components/LoginUser/BeforeLogin";
-import RegisterUser from "../components/LoginUser/RegisterUser";
+import Image from "next/image";
 
 const RightProductDetails = ({ product }) => {
   const dispatch = useDispatch();
@@ -13,42 +13,55 @@ const RightProductDetails = ({ product }) => {
   const cart = useSelector((state) => state.cart);
 
   const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedColor, setSelectedColor] = useState("");
-  const [showLogin, setShowLogin] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(null);
 
- 
-const colors = product?.color?.split(",") || [];
-console.log(colors);
+  const colorNames = product?.color?.split(",") || [];
 
-  const openLoginModal = () => {
-    setShowLogin(true);
-    setOpenModal(true);
-  };
+  const imageArray = [
+    product?.imageOne,
+    product?.imageTwo,
+    product?.imageThree,
+    product?.imageFour,
+    product?.imageFive,
+    product?.imageSix,
+  ].filter(Boolean);
 
-  const openRegisterModal = () => {
-    setShowLogin(false);
-    setOpenModal(true);
-  };
-
-  const closeModal = () => {
-    setOpenModal(false);
-  };
+  const productImgColor = imageArray.map((img, index) => ({
+    image: img,
+    color: colorNames.length > index ? colorNames[index] : `Color ${index + 1}`,
+  }));
 
   const isInCart = cart.some((item) => item.id === product?.id);
 
   const handleCartAction = () => {
     if (!selectedSize || !selectedColor) return;
-    dispatch(addItem({ ...product, size: selectedSize, color: selectedColor, quantity: 1 }));
+    dispatch(
+      addItem({
+        ...product,
+        size: selectedSize,
+        color: selectedColor.color,
+        image: selectedColor.image,
+        quantity: 1,
+      })
+    );
   };
 
   const handleCheckout = () => {
-    dispatch(addItem({ ...product, size: selectedSize || null, color: selectedColor || null, quantity: 1 }));
+    if (!selectedSize || !selectedColor) return;
+    dispatch(
+      addItem({
+        ...product,
+        size: selectedSize,
+        color: selectedColor.color,
+        image: selectedColor.image,
+        quantity: 1,
+      })
+    );
     router.push("/checkout");
   };
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-lg max-w-xl mx-auto">
+    <div className="p-6 bg-white rounded-2xl shadow-xl max-w-xl mx-auto transition-all duration-300 ease-in-out">
       {/* Title and rating */}
       <div className="mb-4">
         <h1 className="text-2xl font-bold text-gray-800">{product?.name}</h1>
@@ -68,12 +81,14 @@ console.log(colors);
       </div>
 
       {/* Tax */}
-      <div className="text-green-600 mb-4">
-        {product?.inclusiveOfTaxes ? "Inclusive of all taxes" : "Taxes not included"}
+      <div className="text-green-600 mb-4 text-sm font-medium">
+        {product?.inclusiveOfTaxes
+          ? "Inclusive of all taxes"
+          : "Taxes not included"}
       </div>
 
       {/* Select Size */}
-      <div className="mb-4">
+      <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-700 font-medium">Select Size</span>
           <IoChevronForward className="text-gray-500" />
@@ -87,14 +102,14 @@ console.log(colors);
               <div
                 key={size}
                 onClick={() => isAvailable && setSelectedSize(size)}
-                className={`rounded-full border-2 p-2 text-center w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-200
-                  ${
-                    isAvailable
-                      ? isSelected
-                        ? "border-pink-600 bg-pink-600 text-white font-semibold shadow-md"
-                        : "border-pink-400 text-pink-600 hover:bg-pink-100 hover:border-pink-600"
-                      : "border-gray-300 text-gray-400 cursor-not-allowed opacity-50"
-                  }`}
+                className={`rounded-full border-2 p-2 text-center w-10 h-10 flex items-center justify-center cursor-pointer transform transition-all duration-200 ease-in-out
+                ${
+                  isAvailable
+                    ? isSelected
+                      ? "border-pink-600 bg-pink-600 text-white shadow-lg scale-105"
+                      : "border-pink-300 text-pink-600 hover:border-pink-600 hover:bg-pink-100"
+                    : "border-gray-300 text-gray-400 cursor-not-allowed opacity-50"
+                }`}
               >
                 {size}
               </div>
@@ -104,20 +119,39 @@ console.log(colors);
       </div>
 
       {/* Select Color */}
-      <div className="mb-4">
-        <label className="block mb-1 text-gray-700 font-medium">Select Color</label>
-        <select
-          value={selectedColor}
-          onChange={(e) => setSelectedColor(e.target.value)}
-          className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-        >
-          <option value="">-- Choose a color --</option>
-          {colors.map((color, index) => (
-            <option key={index} value={color}>
-              {color}
-            </option>
-          ))}
-        </select>
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-gray-700 font-medium">Select Color</span>
+        </div>
+        <div className="flex gap-4 flex-wrap">
+          {productImgColor.map((imgObj, index) => {
+            const isSelected = selectedColor?.image === imgObj.image;
+            return (
+              <div key={index} className="text-center">
+                <div
+                  onClick={() => setSelectedColor(imgObj)}
+                  className={`w-20 h-20 border-4 rounded-xl overflow-hidden cursor-pointer transform transition duration-300
+                    ${
+                      isSelected
+                        ? "border-pink-600 scale-105 shadow-xl"
+                        : "border-gray-300 hover:scale-105 hover:border-pink-400"
+                    }`}
+                >
+                  <Image
+                    src={imgObj.image}
+                    alt={`Color option ${index + 1}`}
+                    width={100}
+                    height={100}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div className="text-sm text-gray-600 mt-1">
+                  {imgObj.color}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Buttons */}
@@ -125,70 +159,29 @@ console.log(colors);
         <button
           onClick={handleCartAction}
           disabled={!selectedSize || !selectedColor}
-          className={`w-full py-3 rounded-lg text-white font-semibold transition ${
-            selectedSize && selectedColor
-              ? "bg-pink-500 hover:bg-pink-700"
-              : "bg-gray-300 cursor-not-allowed"
-          }`}
+          className={`w-full py-3 rounded-lg text-white font-semibold transition-all duration-300 transform
+            ${
+              selectedSize && selectedColor
+                ? "bg-pink-500 hover:bg-pink-600 active:scale-95"
+                : "bg-gray-300 cursor-not-allowed"
+            }`}
         >
           {isInCart ? "Go to Checkout" : "Add to Cart"}
         </button>
 
         <button
           onClick={handleCheckout}
-          className="w-full py-3 rounded-lg bg-indigo-500 hover:bg-indigo-700 text-white font-semibold transition"
+          disabled={!selectedSize || !selectedColor}
+          className={`w-full py-3 rounded-lg text-white font-semibold transition-all duration-300 transform
+            ${
+              selectedSize && selectedColor
+                ? "bg-pink-600 hover:bg-pink-700 active:scale-95"
+                : "bg-gray-300 cursor-not-allowed"
+            }`}
         >
           Checkout Now
         </button>
       </div>
-
-      {/* Modal */}
-      {openModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="relative bg-white p-6 rounded-lg shadow-lg w-96 text-center">
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl"
-            >
-              ✖
-            </button>
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold text-gray-800 flex items-center justify-center">
-                🚫 You are not logged in!
-              </h2>
-              <p className="text-gray-600 text-sm mt-1">
-                Please log in to continue shopping.
-              </p>
-            </div>
-
-            {showLogin ? <BeforeLogin /> : <RegisterUser />}
-
-            <div className="mt-4 text-sm text-gray-600">
-              {showLogin ? (
-                <>
-                  Don't have an account?{" "}
-                  <button
-                    onClick={() => setShowLogin(false)}
-                    className="text-pink-600 font-semibold underline"
-                  >
-                    Register Now
-                  </button>
-                </>
-              ) : (
-                <>
-                  Already have an account?{" "}
-                  <button
-                    onClick={() => setShowLogin(true)}
-                    className="text-blue-600 font-semibold underline"
-                  >
-                    Login Here
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

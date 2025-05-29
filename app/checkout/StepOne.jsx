@@ -41,6 +41,7 @@ const StepOne = ({ gotoNextStep }) => {
     loadUserDetails();
   }, []);
 
+  console.log(cartItems)
   useEffect(() => {
     const fetchAddress = async () => {
       try {

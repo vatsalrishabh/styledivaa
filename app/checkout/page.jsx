@@ -14,8 +14,8 @@ import RightIconSmartphone from "../components/SmartphoneCartIcon/RightIconSmart
 const Page = () => {
   const [step, setStep] = useState(1);
 
-  const gotoNextStep = () => setStep((prev) => Math.min(prev + 1, 2));
-  const gotoPrevStep = () => setStep((prev) => Math.max(prev - 1, 1));
+  const gotoNextStep = () => setStep((prev) => Math.min(prev + 1, 2)); //got to next but 2 se jada nhi ye likha hai
+  const gotoPrevStep = () => setStep((prev) => Math.max(prev - 1, 1)); // goto previsou lekin 1 se km na ho
 
   return (
     <>
@@ -28,9 +28,10 @@ const Page = () => {
             <div className="logo">
               <Image src={logo} alt="Logo" width={120} height={40} />
             </div>
-          
-            {/* Steps Indicator */}
-            <div className="steps flex items-center">
+
+
+            {/* Steps Indicator */}  
+            <div className="steps flex items-center"> 
               {/* Step 1 */}
               <div
                 className={`rounded-full w-8 h-8 flex items-center justify-center 
@@ -64,10 +65,11 @@ const Page = () => {
           </nav>
         </div>
 
+
         {/* Body */}
         <div className="body mt-8 flex flex-col items-center">
           {step === 1 &&<><StepOne gotoNextStep={gotoNextStep} />    <RightSlideCart />
-            <RightIconSmartphone /></> }
+            <RightIconSmartphone /></> } 
           {step === 2 && <StepTwo gotoPrevStep={gotoPrevStep} />}
         </div>
       </div>
