@@ -20,7 +20,7 @@ const StepOne = ({ gotoNextStep }) => {
   // const { numOfItems } = useSelector((state) => state.openCart);
   const cartItems = useSelector((state) => state.cart); // List and details of the items in the cart
   const [isOpen, setIsOpen] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState({}); // user details
+  const [loggedInUser, setLoggedInUser] = useState({}); // user details after the localstorage
   const [allAddress, setAllAddress] = useState([]);
      const [snackMessage, setSnackMessage] = useState("");
       const [statusCode, setStatusCode] = useState(null);
@@ -59,7 +59,7 @@ const StepOne = ({ gotoNextStep }) => {
     if (loggedInUser.email) {
       fetchAddress();
     }
-  }, [loggedInUser.email]);
+  }, [loggedInUser.email,allAddress]);
 
   // Calculate total price
   const totalPrice = cartItems.reduce(
@@ -116,7 +116,7 @@ const StepOne = ({ gotoNextStep }) => {
   return (
     <div className="bg-pink-50 h-full w-full flex flex-col md:flex-row justify-between items-start p-6 rounded-lg shadow-lg">
       {/* Left Section - Product & Address Details */}
-      <div className="w-full md:w-1/2 p-4">
+      <div className="w-full md:w-1/2 pb-4">
         <h2 className="text-pink-600 text-2xl font-semibold flex items-center gap-2">
           <ShoppingCartIcon className="h-6 w-6 text-pink-500" />
           Product Details
@@ -129,7 +129,7 @@ const StepOne = ({ gotoNextStep }) => {
         {cartItems.map((product, index) => (
           <div
             key={index}
-            className="bg-white p-4 rounded-lg shadow mt-4 transition transform hover:scale-105"
+            className="bg-white p-4  rounded-lg shadow mt-4 transition transform hover:scale-105"
           >
             <h3 className="text-gray-800 font-semibold">{product.name}</h3>
             <p className="text-gray-700 mt-1 font-bold">₹{product.price}</p>
@@ -139,6 +139,10 @@ const StepOne = ({ gotoNextStep }) => {
               <p className="flex items-center gap-2">
                 <CreditCardIcon className="h-5 w-5 text-gray-500" />
                 Size: <b>{product.size}</b>
+              </p>
+               <p className="flex items-center gap-2">
+                <CreditCardIcon className="h-5 w-5 text-gray-500" />
+                Color: <b>{product.color}</b>
               </p>
               <p className="flex items-center gap-2">
                 <ShoppingCartIcon className="h-5 w-5 text-gray-500" />
@@ -162,12 +166,14 @@ const StepOne = ({ gotoNextStep }) => {
             <HomeIcon className="h-6 w-6 text-pink-500" />
             User Details
           </h3>
-
-          <div className="bg-white p-4 rounded-lg shadow mt-4">
+{
+  loggedInUser&& ( <div className="bg-white p-4 rounded-lg shadow mt-4">
             <p className="text-gray-800 font-bold">{loggedInUser.name}</p>
             <p className="text-gray-600">{loggedInUser.email}</p>
             <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
-          </div>
+          </div>) 
+}
+       
         </div>
 
         {/* Address Section */}
@@ -231,14 +237,11 @@ const StepOne = ({ gotoNextStep }) => {
 
           <button
   onClick={() => {
-    if (!loggedInUser.name) {
-      setSnackMessage("User details are missing!");
-      setStatusCode(400);
-      setShowSnackBar(true);
-    } else if (allAddress.length === 0) {
+  if (allAddress.length === 0) {
       setSnackMessage("Please add a shipping address!");
       setStatusCode(400);
       setShowSnackBar(true);
+      setIsOpen(true)
     } else if (cartItems.length === 0) {
       setSnackMessage("Your cart is empty!");
       setStatusCode(400);
@@ -249,7 +252,7 @@ const StepOne = ({ gotoNextStep }) => {
   }}
   className={`mt-4 w-full px-6 py-3 rounded transition transform hover:scale-105 
     ${
-      !loggedInUser.name || allAddress.length === 0 || cartItems.length === 0
+      ! allAddress.length === 0 || cartItems.length === 0
         ? "bg-gray-400 cursor-not-allowed"
         : "bg-pink-500 text-white hover:bg-pink-700"
     }`}
@@ -261,7 +264,7 @@ const StepOne = ({ gotoNextStep }) => {
       </div>
 
       {/* Address Modal */}
-      <AddressModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />
+      <AddressModal isOpen={isOpen} closeModal={() => setIsOpen(false)} setAllAddress={setAllAddress} />
          {showSnackBar && <SnackBarr message={snackMessage} statusCode={statusCode} showSnackBar={showSnackBar} />}
     </div>
   );

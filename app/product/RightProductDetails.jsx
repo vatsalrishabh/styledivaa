@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addItem } from "../../redux/cart/cartSlice";
+import { openSizeChart } from "@/redux/cart/openCartSlice";
 import { IoChevronForward } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
 import Image from "next/image";
+import RightSlideMesurments from "../components/RightSlideMesurments";
 
 const RightProductDetails = ({ product }) => {
   const dispatch = useDispatch();
@@ -47,17 +49,19 @@ const RightProductDetails = ({ product }) => {
   };
 
   const handleCheckout = () => {
-    if (!selectedSize || !selectedColor) return;
+    
     dispatch(
       addItem({
         ...product,
-        size: selectedSize,
-        color: selectedColor.color,
-        image: selectedColor.image,
+        size: selectedSize||"not selected",
+        color: selectedColor?.color || "not selected",
+        image: selectedColor?.image,
         quantity: 1,
       })
     );
+    console.log("before checkout")
     router.push("/checkout");
+      console.log("after checkout")
   };
 
   return (
@@ -75,9 +79,15 @@ const RightProductDetails = ({ product }) => {
 
       {/* Price */}
       <div className="flex items-center mb-4">
-        <h1 className="text-xl font-bold text-gray-900 mr-2">₹{product?.price}</h1>
-        <h1 className="text-base text-gray-500 line-through mr-2">MRP ₹{product?.mrp}</h1>
-        <h1 className="text-pink-500 font-semibold">({product?.discount}% OFF)</h1>
+        <h1 className="text-xl font-bold text-gray-900 mr-2">
+          ₹{product?.price}
+        </h1>
+        <h1 className="text-base text-gray-500 line-through mr-2">
+          MRP ₹{product?.mrp}
+        </h1>
+        <h1 className="text-pink-500 font-semibold">
+          ({product?.discount}% OFF)
+        </h1>
       </div>
 
       {/* Tax */}
@@ -91,7 +101,21 @@ const RightProductDetails = ({ product }) => {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-700 font-medium">Select Size</span>
-          <IoChevronForward className="text-gray-500" />
+          <div className="flex ">
+            <button
+              onClick={() => {
+                dispatch(openSizeChart());
+              }}
+              className="px-4 mr-4 py-2 bg-pink-500 text-white font-semibold rounded-lg shadow-md 
+             hover:bg-pink-600 hover:shadow-lg 
+             active:bg-pink-700 active:scale-95 
+             transition duration-200 ease-in-out"
+            >
+              Open Size Chart
+            </button>
+
+            <IoChevronForward className="text-gray-500" />
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           {Object.entries(product?.stock || {}).map(([size, quantity]) => {
@@ -145,9 +169,7 @@ const RightProductDetails = ({ product }) => {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <div className="text-sm text-gray-600 mt-1">
-                  {imgObj.color}
-                </div>
+                <div className="text-sm text-gray-600 mt-1">{imgObj.color}</div>
               </div>
             );
           })}
@@ -169,19 +191,16 @@ const RightProductDetails = ({ product }) => {
           {isInCart ? "Go to Checkout" : "Add to Cart"}
         </button>
 
-        <button
-          onClick={handleCheckout}
-          disabled={!selectedSize || !selectedColor}
-          className={`w-full py-3 rounded-lg text-white font-semibold transition-all duration-300 transform
-            ${
-              selectedSize && selectedColor
-                ? "bg-pink-600 hover:bg-pink-700 active:scale-95"
-                : "bg-gray-300 cursor-not-allowed"
-            }`}
-        >
-          Checkout Now
-        </button>
+      <button
+  onClick={handleCheckout}
+  className="w-full py-3 rounded-lg text-white font-semibold transition-all duration-300 transform
+             bg-pink-600 hover:bg-pink-700 active:scale-95"
+>
+  Checkout Now
+</button>
+
       </div>
+      <RightSlideMesurments />
     </div>
   );
 };

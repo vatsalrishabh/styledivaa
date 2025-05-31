@@ -9,7 +9,7 @@ import { FaCheck } from "react-icons/fa";
 import RightSlideCart from "../components/RightSlideCart";
 import RightIconSmartphone from "../components/SmartphoneCartIcon/RightIconSmartphone";
 
-
+//this page has no user or cart data or address data
 
 const Page = () => {
   const [step, setStep] = useState(1);
@@ -67,8 +67,8 @@ const Page = () => {
 
 
         {/* Body */}
-        <div className="body mt-8 flex flex-col items-center">
-          {step === 1 &&<><StepOne gotoNextStep={gotoNextStep} />    <RightSlideCart />
+        <div className="body mt-2 flex flex-col items-center lg:w-5/6">
+{step === 1 &&<><StepOne gotoNextStep={gotoNextStep} />                 <RightSlideCart /> {/*  this one is basically the cart */}
             <RightIconSmartphone /></> } 
           {step === 2 && <StepTwo gotoPrevStep={gotoPrevStep} />}
         </div>

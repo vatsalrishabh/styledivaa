@@ -3,7 +3,7 @@ import axios from "axios";
 import { XCircleIcon, MapPinIcon } from "@heroicons/react/24/solid";
 import { jwtDecode } from "jwt-decode";
 
-const AddressModal = ({ isOpen, closeModal }) => {
+const AddressModal = ({ isOpen, closeModal, setAllAddress }) => {
   const [userEmail, setUserEmail] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -19,6 +19,15 @@ const AddressModal = ({ isOpen, closeModal }) => {
     category: "Home",
   });
 
+
+   useEffect(() => {
+      localStorage.setItem(
+        "finalCart",
+        JSON.stringify({ formData })
+      );
+    }, [formData]); 
+  
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("userDetails"));
     if (storedUser?.token) {
@@ -30,12 +39,11 @@ const AddressModal = ({ isOpen, closeModal }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  console.log(formData)
+  setAllAddress(formData);
 
   const handleSaveAddress = async () => {
-    if (!userEmail) {
-      alert("User not found. Please log in.");
-      return;
-    }
+   
 
     if (!formData.name || !formData.mobileNumber || !formData.streetAddress || !formData.city || !formData.state || !formData.zipcode) {
       alert("Please fill all required fields.");
@@ -59,7 +67,7 @@ const AddressModal = ({ isOpen, closeModal }) => {
       }
     } catch (error) {
       console.error("Error adding address:", error);
-      alert("Failed to add address. Please try again.");
+        closeModal();
     }
   };
 
