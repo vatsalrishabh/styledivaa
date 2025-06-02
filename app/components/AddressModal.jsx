@@ -3,7 +3,7 @@ import axios from "axios";
 import { XCircleIcon, MapPinIcon } from "@heroicons/react/24/solid";
 import { jwtDecode } from "jwt-decode";
 
-const AddressModal = ({ isOpen, closeModal, setAllAddress }) => {
+const AddressModal = ({ isOpen, closeModal, setAllAddress, loggedInUser,  cartItems }) => {
   const [userEmail, setUserEmail] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -15,9 +15,16 @@ const AddressModal = ({ isOpen, closeModal, setAllAddress }) => {
     city: "",
     state: "",
     zipcode: "",
-    landmark: "",
+    email: "",
     category: "Home",
   });
+
+    // useEffect(() => {
+    //   localStorage.setItem(
+    //     "finalCart",
+    //     JSON.stringify({ loggedInUser, formData, cartItems })
+    //   );
+    // }, [loggedInUser, formData, cartItems]);
 
 
    useEffect(() => {
@@ -54,6 +61,11 @@ const AddressModal = ({ isOpen, closeModal, setAllAddress }) => {
       alert("Please enter a valid 10-digit mobile number.");
       return;
     }
+
+ localStorage.setItem(
+        "finalCart",
+        JSON.stringify({ loggedInUser, formData, cartItems })
+      );
 
     try {
       const response = await axios.put("/api/users/addAddress", {
@@ -101,7 +113,7 @@ const AddressModal = ({ isOpen, closeModal, setAllAddress }) => {
             <input type="text" name="state" value={formData.state} onChange={handleChange} placeholder="State" className="input-style" required />
           </div>
           <input type="text" name="zipcode" value={formData.zipcode} onChange={handleChange} placeholder="Pincode" className="input-style" required />
-          <input type="text" name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Nearby Landmark (Optional)" className="input-style" />
+          <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email (mandatory)" className="input-style" />
 
           {/* Category Selection */}
           <select name="category" value={formData.category} onChange={handleChange} className="input-style">

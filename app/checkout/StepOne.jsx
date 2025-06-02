@@ -9,7 +9,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { toggleCart } from "@/redux/cart/openCartSlice";
-import AddressModal from "../components/AddressModal";
+import AddressModal from "../components/AddressModal"; // this will be having localstorage to store data
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation"; // Correct for Next.js App Router
 import SnackBarr from "../components/SnackBarr";
@@ -32,7 +32,7 @@ const StepOne = ({ gotoNextStep }) => {
       if (userDetails) {
         const data = JSON.parse(userDetails);
         setLoggedInUser(data);
-        console.log(jwtDecode(data.token));
+        // console.log(jwtDecode(data.token));
         setLoggedInUser(jwtDecode(data.token));
       } else {
         // router.push("/home");
@@ -41,7 +41,7 @@ const StepOne = ({ gotoNextStep }) => {
     loadUserDetails();
   }, []);
 
-  console.log(cartItems)
+  // console.log(cartItems)
   useEffect(() => {
     const fetchAddress = async () => {
       try {
@@ -49,8 +49,8 @@ const StepOne = ({ gotoNextStep }) => {
           email: loggedInUser.email,
         });
         setAllAddress(response.data.addresses); // Fix: Extract 'addresses' array
-        console.log(response.data.addresses);
-        console.log(response.data);
+        // console.log(response.data.addresses);
+        // console.log(response.data);
       } catch (error) {
         console.error("Error fetching address:", error);
       }
@@ -110,6 +110,7 @@ const StepOne = ({ gotoNextStep }) => {
       "finalCart",
       JSON.stringify({ loggedInUser, allAddress, cartItems })
     );
+    console.log(JSON.parse(localStorage.getItem('finalCart')))
   }, [loggedInUser, allAddress, cartItems]); // Runs whenever any of these change
   // creating a final cart with all the details to hit the payment gateway api in next component
 
@@ -237,22 +238,22 @@ const StepOne = ({ gotoNextStep }) => {
 
           <button
   onClick={() => {
-  if (allAddress.length === 0) {
+  if (allAddress.name.length === 0) {
       setSnackMessage("Please add a shipping address!");
       setStatusCode(400);
       setShowSnackBar(true);
       setIsOpen(true)
     } else if (cartItems.length === 0) {
-      setSnackMessage("Your cart is empty!");
-      setStatusCode(400);
-      setShowSnackBar(true);
+      console.log("the cart is empty")
+      alert("Your cart is empty!");
+   
     } else {
       gotoNextStep();
     }
   }}
   className={`mt-4 w-full px-6 py-3 rounded transition transform hover:scale-105 
     ${
-      ! allAddress.length === 0 || cartItems.length === 0
+       allAddress.length === 0
         ? "bg-gray-400 cursor-not-allowed"
         : "bg-pink-500 text-white hover:bg-pink-700"
     }`}
@@ -264,7 +265,7 @@ const StepOne = ({ gotoNextStep }) => {
       </div>
 
       {/* Address Modal */}
-      <AddressModal isOpen={isOpen} closeModal={() => setIsOpen(false)} setAllAddress={setAllAddress} />
+      <AddressModal isOpen={isOpen} closeModal={() => setIsOpen(false)} setAllAddress={setAllAddress} loggedInUser={loggedInUser} cartItems={cartItems} />
          {showSnackBar && <SnackBarr message={snackMessage} statusCode={statusCode} showSnackBar={showSnackBar} />}
     </div>
   );

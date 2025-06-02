@@ -37,6 +37,7 @@ const RightProductDetails = ({ product }) => {
 
   const handleCartAction = () => {
     if (!selectedSize || !selectedColor) return;
+    console.log(product);
     dispatch(
       addItem({
         ...product,

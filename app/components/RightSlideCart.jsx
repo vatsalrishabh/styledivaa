@@ -26,12 +26,12 @@ export default function RightSlideCart() {
   }, [cartItems, dispatch, totalItems]);
 
   // Handle quantity change
-  const handleQuantityChange = (id, action) => {
-    const product = cartItems.find((item) => item.id === id);
+  const handleQuantityChange = (productId, action) => {
+    const product = cartItems.find((item) => item.productId === productId);
     if (product) {
       const newQuantity = action === 'increase' ? product.quantity + 1 : product.quantity - 1;
       if (newQuantity > 0) {
-        dispatch(updateQuantity({ id, quantity: newQuantity }));
+        dispatch(updateQuantity({ productId, quantity: newQuantity }));
       }
     }
   };
@@ -41,6 +41,7 @@ export default function RightSlideCart() {
     dispatch(removeItem(id));
   };
 
+  console.log(cartItems)
   return (
     <Dialog open={isCartOpen} onClose={() => dispatch(openCartAction(false))} className="relative z-50">
       <DialogBackdrop className="fixed inset-0 bg-gray-500/75" />
@@ -94,7 +95,7 @@ export default function RightSlideCart() {
                                 <div className="flex items-center">
                                   <button
                                     type="button"
-                                    onClick={() => handleQuantityChange(product.id, 'decrease')}
+                                    onClick={() => handleQuantityChange(product.productId, 'decrease')}
                                     className="font-medium text-pink-600 hover:text-pink-500"
                                   >
                                     -
@@ -102,7 +103,7 @@ export default function RightSlideCart() {
                                   <p className="mx-2 text-gray-500">Qty {product.quantity}</p>
                                   <button
                                     type="button"
-                                    onClick={() => handleQuantityChange(product.id, 'increase')}
+                                    onClick={() => handleQuantityChange(product.productId, 'increase')}
                                     className="font-medium text-pink-600 hover:text-pink-500"
                                   >
                                     +

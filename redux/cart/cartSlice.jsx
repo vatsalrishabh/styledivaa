@@ -7,7 +7,7 @@
     ],
     reducers:{
         addItem: (state, action) => {
-            const existingItem = state.find((item) => item.id === action.payload.id);
+            const existingItem = state.find((item) => item.productId === action.payload.productId);
             if (existingItem) {
               existingItem.quantity++;
             } else {
@@ -18,7 +18,7 @@
             return state.filter((item) => item.id !== action.payload);
           },
           updateQuantity: (state, action) => {
-            const itemToUpdate = state.find((item) => item.id === action.payload.id);
+            const itemToUpdate = state.find((item) => item.productId === action.payload.productId);
             if (itemToUpdate) {
               itemToUpdate.quantity = action.payload.quantity;
             }

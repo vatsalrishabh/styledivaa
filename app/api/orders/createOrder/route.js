@@ -28,9 +28,9 @@ export async function POST(req) {
       currency: "INR", // Currency type
       receipt: 'receipt_001', // Unique receipt ID
       notes: { order_notes: 'Order notes here' }, // Notes should be an object
-      name: body.user.name, // User's name
-      email: body.user.email, // User's email
-      mobileNumber: body.user.mobile, // User's mobile number
+      name: body?.address?.name, // User's name
+      email: body?.address?.email || "abc@gmail.com", // User's email
+      mobileNumber: body.address.mobileNumber, // User's mobile number
       roomNumber: body.address.roomNumber, // Room number
       floor: body.address.floor, // Floor number
       houseNumber: body.address.houseNumber, // House number

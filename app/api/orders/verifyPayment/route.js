@@ -2,10 +2,15 @@ import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import Order from "../../models/Order";
 import Product from "../../models/Product";
+import { receiptToCx } from "../../utils/receiptToCx";
 
 export async function POST(req) {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await req.json();
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature,orderData } = await req.json();
+    console.log("verify payment ")
+    console.log(razorpay_payment_id );
+        console.log(razorpay_signature );
+            console.log(orderData );
 
     const secret = process.env.RAZORPAY_KEY_SECRET;
     if (!secret) {
@@ -38,9 +43,8 @@ export async function POST(req) {
     }
     // //update the stock in database 
 
-    // const stockData = await Order.findOne({razorpayId:razorpay_order_id});
-    // const await Product.findOneAndUpdate({stockData.productId},{$set:quantiy- stockDta.quanity})
 
+    await receiptToCx(orderData.address.email, "Payment Receipt", razorpay_payment_id,orderData);
     return NextResponse.json({ 
       status: "ok", 
       message: "Payment verified & order updated", 
