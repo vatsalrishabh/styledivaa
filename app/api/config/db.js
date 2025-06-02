@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 //  const DATABASE_URL = "mongodb+srv://vatsal00:StyleDiva2025@cluster0.cvuh3.mongodb.net/StyleDivaa?retryWrites=true&w=majority&appName=Cluster0StyleDivaa";
 //  const DATABASE_URL = "mongodb://housenplots_dkleanuser:a47PJkc%26K@localhost:27017/housenplots_dkleandb";
-  const DATABASE_URL = "mongodb://localhost:27017/StyleDivaa";
+const DATABASE_URL = process.env.DATABASE_URL;
 
 
 
