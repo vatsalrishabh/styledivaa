@@ -168,11 +168,17 @@ const StepOne = ({ gotoNextStep }) => {
             User Details
           </h3>
 {
-  loggedInUser&& ( <div className="bg-white p-4 rounded-lg shadow mt-4">
+  loggedInUser? ( <div className="bg-white p-4 rounded-lg shadow mt-4">
             <p className="text-gray-800 font-bold">{loggedInUser.name}</p>
             <p className="text-gray-600">{loggedInUser.email}</p>
             <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
-          </div>) 
+          </div>) :(
+            <div className="bg-white p-4 rounded-lg shadow mt-4">
+            <p className="text-gray-800 font-bold">{allAddress.name}</p>
+            <p className="text-gray-600">{loggedInUser.email}</p>
+            <p className="text-gray-600">📞 {loggedInUser.mobile}</p>
+          </div>
+          )
 }
        
         </div>

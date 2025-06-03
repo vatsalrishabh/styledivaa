@@ -58,7 +58,7 @@ export const receiptToCx =  (to,  subject, receipt,orderData) => {
                     ${orderData.address.streetAddress}, ${orderData.address.city}<br />
                     ${orderData.address.state} - ${orderData.address.zipcode}<br />
                     Mobile: ${orderData.address.mobileNumber}<br />
-                    Email: ${orderData.email ||"NA"}
+                    Email: ${orderData.address.email ||"NA"}
                 </p>
 
                 <h4 style="margin-top: 20px;">Item Details:</h4>

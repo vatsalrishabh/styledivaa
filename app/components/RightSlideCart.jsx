@@ -41,7 +41,7 @@ export default function RightSlideCart() {
     dispatch(removeItem(id));
   };
 
-  console.log(cartItems)
+  
   return (
     <Dialog open={isCartOpen} onClose={() => dispatch(openCartAction(false))} className="relative z-50">
       <DialogBackdrop className="fixed inset-0 bg-gray-500/75" />

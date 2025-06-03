@@ -56,7 +56,7 @@ const StepTwo = ({ gotoPrevStep }) => {
       console.log("Order Response:", response.data);
 
       const options = {
-        key: "rzp_test_l0gnUnaG8U4VmM",
+        key: process.env.RAZORPAY_KEY_ID,
         amount: totalAmount * 100,
         currency: "INR",
         name: "Styledivaa Fashion Boutique",
@@ -72,7 +72,7 @@ const StepTwo = ({ gotoPrevStep }) => {
           color: "#a32121",
         },
         handler: async function (response) {
-           console.log(orderData)
+          //  console.log(orderData)
           try {
            
             const verificationResponse = await axios.post(

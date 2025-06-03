@@ -32,7 +32,7 @@ const Page = () => {
   }, [dispatch, products.length]);
 
   // Find the product using productId
-  const specificProduct = products.find((product) => product?.productId === productId);
+  const specificProduct = products.find((product) => product?.productId === productId); //find and select the product from reux where product id of that prouct matches with URL
   // console.log(specificProduct);
 
   return (
