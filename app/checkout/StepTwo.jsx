@@ -83,24 +83,25 @@ const StepTwo = ({ gotoPrevStep }) => {
     }
 
     try {
-      const totalAmount = cartItems.reduce(
+      const subtotal = cartItems.reduce(
         (total, item) => total + item.price * item.quantity,
         0
       );
+      const gst = subtotal * 0.18;
+      const totalWithGst = subtotal + gst;
 
       const orderData = {
         address: allAddress[0],
         items: cartItems,
         paymentMethod,
-        totalAmount,
+        totalAmount: totalWithGst, // <-- send total with GST
       };
 
       const response = await axios.post("/api/orders/createOrder", orderData);
-      // console.log("Order Response:", response.data);
-  
+
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: totalAmount * 100,
+        amount: Math.round(totalWithGst * 100), // <-- use totalWithGst
         currency: "INR",
         name: "Styledivaa Fashion Boutique",
         description: "Product Purchase",
@@ -115,9 +116,7 @@ const StepTwo = ({ gotoPrevStep }) => {
           color: "#a32121",
         },
         handler: async function (response) {
-          //  console.log(orderData)
           try {
-           
             const verificationResponse = await axios.post(
               `/api/orders/verifyPayment`,
               {
@@ -233,16 +232,31 @@ const StepTwo = ({ gotoPrevStep }) => {
               </div>
 
               <hr className="my-4 border-gray-300" />
-              <p className="flex justify-between text-gray-800 font-bold text-xl">
-                <span>Order Total</span>
-                <span>
-                  ₹
-                  {finalCart.cartItems.reduce(
-                    (total, item) => total + item.price * item.quantity,
-                    0
-                  )}
-                </span>
-              </p>
+              {/* GST Calculation */}
+              {(() => {
+                const subtotal = finalCart.cartItems.reduce(
+                  (total, item) => total + item.price * item.quantity,
+                  0
+                );
+                const gst = subtotal * 0.18;
+                const totalWithGst = subtotal + gst;
+                return (
+                  <>
+                    <p className="flex justify-between text-gray-800 font-semibold text-lg">
+                      <span>Subtotal</span>
+                      <span>₹{subtotal.toFixed(2)}</span>
+                    </p>
+                    <p className="flex justify-between text-gray-800 font-semibold text-lg">
+                      <span>GST (18%)</span>
+                      <span>₹{gst.toFixed(2)}</span>
+                    </p>
+                    <p className="flex justify-between text-gray-800 font-bold text-xl mt-2">
+                      <span>Order Total</span>
+                      <span>₹{totalWithGst.toFixed(2)}</span>
+                    </p>
+                  </>
+                );
+              })()}
             </div>
           ) : (
             <p className="text-red-500 text-center">No cart data available</p>
