@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addItem } from "../../redux/cart/cartSlice";
 import { openSizeChart } from "@/redux/cart/openCartSlice";
+import { setColorImg, resetColorImg } from "@/redux/cart/colorImgSlice";
 import { IoChevronForward } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
 import Image from "next/image";
@@ -17,8 +18,8 @@ const RightProductDetails = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
 
-  const colorNames = product?.color?.split(",") || [];
-
+  // Parse color names and images
+  const colorNames = product?.color?.split(",").map((c) => c.trim()) || [];
   const imageArray = [
     product?.imageOne,
     product?.imageTwo,
@@ -28,41 +29,63 @@ const RightProductDetails = ({ product }) => {
     product?.imageSix,
   ].filter(Boolean);
 
-  const productImgColor = imageArray.map((img, index) => ({
-    image: img,
-    color: colorNames.length > index ? colorNames[index] : `Color ${index + 1}`,
+  // Map color to image
+  const productImgColor = colorNames.map((color, idx) => ({
+    color,
+    image: imageArray[idx] || imageArray[0] || "",
   }));
 
-  const isInCart = cart.some((item) => item.id === product?.id);
-
+  // Add to Cart handler
   const handleCartAction = () => {
     if (!selectedSize || !selectedColor) return;
-    console.log(product);
+
     dispatch(
       addItem({
-        ...product,
-        size: selectedSize,
-        color: selectedColor.color,
+        productId: product.productId,
+        name: product.name,
+        price: product.price,
+        mrp: product.mrp,
+        discount: product.discount,
         image: selectedColor.image,
+        color: selectedColor.color,
+        size: selectedSize,
         quantity: 1,
+        id: `${product.productId}-${selectedColor.color}-${selectedSize}`,
       })
     );
+
+    setSelectedSize(null);
+    setSelectedColor(null);
+    alert("Item added to cart successfully!");
   };
 
+  // Checkout handler
   const handleCheckout = () => {
-    
-    dispatch(
-      addItem({
-        ...product,
-        size: selectedSize||"not selected",
-        color: selectedColor?.color || "not selected",
-        image: selectedColor?.image,
-        quantity: 1,
-      })
+   
+    // Optionally add to cart before checkout if not already there
+    const exists = cart.some(
+      (item) =>
+        item.productId === product.productId &&
+        item.color === selectedColor.color &&
+        item.size === (selectedSize || "not selected")
     );
-    console.log("before checkout")
+    if (!exists) {
+      dispatch(
+        addItem({
+          productId: product.productId,
+          name: product.name,
+          price: product.price,
+          mrp: product.mrp,
+          discount: product.discount,
+          image: selectedColor.image,
+          color: selectedColor.color,
+          size: selectedSize || "not selected",
+          quantity: 1,
+          id: `${product.productId}-${selectedColor.color}-${selectedSize || "notselected"}`,
+        })
+      );
+    }
     router.push("/checkout");
-      console.log("after checkout")
   };
 
   return (
@@ -104,9 +127,7 @@ const RightProductDetails = ({ product }) => {
           <span className="text-gray-700 font-medium">Select Size</span>
           <div className="flex ">
             <button
-              onClick={() => {
-                dispatch(openSizeChart());
-              }}
+              onClick={() => dispatch(openSizeChart())}
               className="px-4 mr-4 py-2 bg-pink-500 text-white font-semibold rounded-lg shadow-md 
              hover:bg-pink-600 hover:shadow-lg 
              active:bg-pink-700 active:scale-95 
@@ -114,7 +135,6 @@ const RightProductDetails = ({ product }) => {
             >
               Open Size Chart
             </button>
-
             <IoChevronForward className="text-gray-500" />
           </div>
         </div>
@@ -122,7 +142,6 @@ const RightProductDetails = ({ product }) => {
           {Object.entries(product?.stock || {}).map(([size, quantity]) => {
             const isSelected = selectedSize === size;
             const isAvailable = quantity > 0;
-
             return (
               <div
                 key={size}
@@ -149,31 +168,36 @@ const RightProductDetails = ({ product }) => {
           <span className="text-gray-700 font-medium">Select Color</span>
         </div>
         <div className="flex gap-4 flex-wrap">
-          {productImgColor.map((imgObj, index) => {
-            const isSelected = selectedColor?.image === imgObj.image;
-            return (
-              <div key={index} className="text-center">
-                <div
-                  onClick={() => setSelectedColor(imgObj)}
-                  className={`w-20 h-20 border-4 rounded-xl overflow-hidden cursor-pointer transform transition duration-300
-                    ${
-                      isSelected
-                        ? "border-pink-600 scale-105 shadow-xl"
-                        : "border-gray-300 hover:scale-105 hover:border-pink-400"
-                    }`}
-                >
-                  <Image
-                    src={imgObj.image}
-                    alt={`Color option ${index + 1}`}
-                    width={100}
-                    height={100}
-                    className="object-cover w-full h-full"
-                  />
+          {productImgColor
+            .filter((imgObj) => !!imgObj.image)
+            .map((imgObj, index) => {
+              const isSelected = selectedColor?.color === imgObj.color;
+              return (
+                <div key={index} className="text-center">
+                  <div
+                    onClick={() => {
+                      setSelectedColor(imgObj);
+                      dispatch(setColorImg(imgObj)); // <-- Store color and image in Redux
+                    }}
+                    className={`w-20 h-20 border-4 rounded-xl overflow-hidden cursor-pointer transform transition duration-300
+                      ${
+                        isSelected
+                          ? "border-pink-600 scale-105 shadow-xl"
+                          : "border-gray-300 hover:scale-105 hover:border-pink-400"
+                      }`}
+                  >
+                    <Image
+                      src={imgObj.image}
+                      alt={`Product color option: ${imgObj.color}`}
+                      width={100}
+                      height={100}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">{imgObj.color}</div>
                 </div>
-                <div className="text-sm text-gray-600 mt-1">{imgObj.color}</div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
 
@@ -189,17 +213,15 @@ const RightProductDetails = ({ product }) => {
                 : "bg-gray-300 cursor-not-allowed"
             }`}
         >
-          {isInCart ? "Go to Checkout" : "Add to Cart"}
+          Add to Cart
         </button>
-
-      <button
-  onClick={handleCheckout}
-  className="w-full py-3 rounded-lg text-white font-semibold transition-all duration-300 transform
+        <button
+          onClick={handleCheckout}
+          className="w-full py-3 rounded-lg text-white font-semibold transition-all duration-300 transform
              bg-pink-600 hover:bg-pink-700 active:scale-95"
->
-  Checkout Now
-</button>
-
+        >
+          Checkout Now
+        </button>
       </div>
       <RightSlideMesurments />
     </div>

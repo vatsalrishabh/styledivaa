@@ -8,11 +8,15 @@ import { addItem, removeItem, updateQuantity, clearCart } from "../../redux/cart
 import { openCart as openCartAction, closeCart, updateNumOfItems } from "../../redux/cart/openCartSlice";  // Import the updateNumOfItems action
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation'; // Add this import at the top
 
 export default function RightSlideCart() {
   const dispatch = useDispatch();
+  const router = useRouter(); // Add this line
   const cartItems = useSelector((state) => state.cart);
   const isCartOpen = useSelector((state) => state.openCart.isOpen);
+
+ // Log the cart items to check if they are being fetched correctly
 
   // Calculate total price
   const total = cartItems.reduce((sum, product) => sum + product.price * product.quantity, 0);
@@ -26,12 +30,17 @@ export default function RightSlideCart() {
   }, [cartItems, dispatch, totalItems]);
 
   // Handle quantity change
-  const handleQuantityChange = (productId, action) => {
-    const product = cartItems.find((item) => item.productId === productId);
+  const handleQuantityChange = (productId, size, color, action) => {
+    const product = cartItems.find(
+      (item) =>
+        item.productId === productId &&
+        item.size === size &&
+        item.color === color
+    );
     if (product) {
       const newQuantity = action === 'increase' ? product.quantity + 1 : product.quantity - 1;
       if (newQuantity > 0) {
-        dispatch(updateQuantity({ productId, quantity: newQuantity }));
+        dispatch(updateQuantity({ productId, size, color, quantity: newQuantity }));
       }
     }
   };
@@ -69,60 +78,66 @@ export default function RightSlideCart() {
                   <div className="mt-8">
                     <div className="flow-root">
                       <ul role="list" className="-my-6 divide-y divide-gray-200">
-                        {cartItems.map((product,index) => (
-                          <li key={index} className="flex py-6">
-                            <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                              <Image
-                                alt={product.imageOne}
-                                src={product.imageOne}
-                                 width={96} // width in pixels
-    height={96} // height in pixels
-                                className="size-full object-cover"
-                              />
-                            </div>
+                        {cartItems.map((product, index) => {
+                     // Log each product to check if they are being rendered correctly
+                          const imageUrl = product?.image;
 
-                            <div className="ml-4 flex flex-1 flex-col">
-                              <div>
-                                <div className="flex justify-between text-base font-medium text-gray-900">
-                                  <h3>
-                                    <a href={product.href}>{product.name}</a>
-                                  </h3>
-                                  <p className="ml-4">₹{product.price}</p>
-                                </div>
-                                <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                          return (
+                            <li key={index} className="flex py-6">
+                              <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                <Image
+                                  alt={`Product color option: ${product.color}`}
+                                  src={imageUrl}
+                                  width={96}
+                                  height={96}
+                                  className="size-full object-cover"
+                                />
                               </div>
-                              <div className="flex flex-1 items-end justify-between text-sm">
-                                <div className="flex items-center">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleQuantityChange(product.productId, 'decrease')}
-                                    className="font-medium text-pink-600 hover:text-pink-500"
-                                  >
-                                    -
-                                  </button>
-                                  <p className="mx-2 text-gray-500">Qty {product.quantity}</p>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleQuantityChange(product.productId, 'increase')}
-                                    className="font-medium text-pink-600 hover:text-pink-500"
-                                  >
-                                    +
-                                  </button>
-                                </div>
 
-                                <div className="flex">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleRemoveProduct(product.id)}
-                                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                                  >
-                                    Remove
-                                  </button>
+                              <div className="ml-4 flex flex-1 flex-col">
+                                <div>
+                                  <div className="flex justify-between text-base font-medium text-gray-900">
+                                    <h3>
+                                      <a href={product.href}>{product.name}</a>
+                                    </h3>
+                                    <p className="ml-4">₹{product.price}</p>
+                                  </div>
+                                  <p className="mt-1 text-sm text-gray-500">Color: {product.color}</p>
+                                   <p className="mt-1 text-sm text-gray-500">Size: {product.size}</p>
+                                </div>
+                                <div className="flex flex-1 items-end justify-between text-sm">
+                                  <div className="flex items-center">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleQuantityChange(product.productId, product.size, product.color, 'decrease')}
+                                      className="font-medium text-pink-600 hover:text-pink-500"
+                                    >
+                                      -
+                                    </button>
+                                    <p className="mx-2 text-gray-500">Qty {product.quantity}</p>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleQuantityChange(product.productId, product.size, product.color, 'increase')}
+                                      className="font-medium text-pink-600 hover:text-pink-500"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+
+                                  <div className="flex">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveProduct(product.id)}
+                                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </li>
-                        ))}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   </div>
@@ -131,16 +146,19 @@ export default function RightSlideCart() {
                 <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                   <div className="flex justify-between text-base font-medium text-gray-900">
                     <p>Subtotal</p>
-                    <p>${total.toFixed(2)}</p>
+                    <p>₹ {total.toFixed(2)}</p>
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                   <div className="mt-6">
-                    <Link
-                      href="/checkout"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-pink-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-pink-700"
+                    <button
+                      onClick={() => {
+                        dispatch(closeCart());
+                        router.push('/checkout');
+                      }}
+                      className="flex items-center justify-center rounded-md border border-transparent bg-pink-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-pink-700 w-full"
                     >
                       Checkout
-                    </Link>
+                    </button>
                   </div>
                   <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                     <p>

@@ -9,18 +9,61 @@ import SnackBarr from "../components/SnackBarr";
 
 const StepTwo = ({ gotoPrevStep }) => {
   const [paymentMethod, setPaymentMethod] = useState("online");
-  const [finalCart, setFinalCart] = useState(null);
+  const [finalCart, setFinalCart] = useState(null); // 1. Initialize finalCart to nul
   const [snackMessage, setSnackMessage] = useState("");
   const [showSnackBar, setShowSnackBar] = useState(false);
 
   useEffect(() => {
-    const cartData = JSON.parse(localStorage.getItem("finalCart"));
+ 
+    const cartData = JSON.parse(localStorage.getItem("finalCart")); //   // finalCart structure example:
+  // {
+  //   loggedInUser: { ... }, // user info (not used here)
+  //   allAddress: {
+  //     name: "Vatsal Rishabh Pandey",
+  //     mobileNumber: "8123573669",
+  //     streetAddress: "234/2 LAN STREET",
+  //     houseNumber: "G-02 Lake beauty appartment KR puram banmglore",
+  //     roomNumber: "flat 32 ",
+  //     floor: "2nd floor",
+  //     city: "Bengaluru",
+  //     state: "Uttar Pradesh",
+  //     zipcode: "211008",
+  //     email: "vatsalrishabh00@gmail.com",
+  //     category: "Home"
+  //   },
+  //   cartItems: [
+  //     {
+  //       productId: "PRD000001",
+  //       name: "Product one ",
+  //       price: 1300,
+  //       mrp: 1500,
+  //       discount: 13.33,
+  //       image: "/uploads/PRD000001-imageFour.png",
+  //       color: "blue",
+  //       size: "XXL",
+  //       quantity: 2,
+  //       id: "PRD000001-blue-XXL"
+  //     },
+  //     {
+  //       productId: "PRD000001",
+  //       name: "Product one ",
+  //       price: 1300,
+  //       mrp: 1500,
+  //       discount: 13.33,
+  //       image: "/uploads/PRD000001-image1.jpg",
+  //       color: "red",
+  //       size: "L",
+  //       quantity: 4,
+  //       id: "PRD000001-red-L"
+  //     }
+  //   ]
+  // }
     if (cartData) {
       setFinalCart({
-        ...cartData,
+        ...cartData, // spread operator to include all properties from cartDat
         allAddress: [cartData.formData], // converting formData into address array
       });
-      console.log(cartData);
+        console.log(finalCart)
     }
   }, []);
 
@@ -53,10 +96,10 @@ const StepTwo = ({ gotoPrevStep }) => {
       };
 
       const response = await axios.post("/api/orders/createOrder", orderData);
-      console.log("Order Response:", response.data);
-
+      // console.log("Order Response:", response.data);
+  
       const options = {
-        key: process.env.RAZORPAY_KEY_ID,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: totalAmount * 100,
         currency: "INR",
         name: "Styledivaa Fashion Boutique",

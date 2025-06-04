@@ -19,7 +19,7 @@ const StepOne = ({ gotoNextStep }) => {
   const dispatch = useDispatch();
   // const { numOfItems } = useSelector((state) => state.openCart);
   const cartItems = useSelector((state) => state.cart); // List and details of the items in the cart
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Modal state for address
   const [loggedInUser, setLoggedInUser] = useState({}); // user details after the localstorage
   const [allAddress, setAllAddress] = useState([]);
      const [snackMessage, setSnackMessage] = useState("");
@@ -27,6 +27,7 @@ const StepOne = ({ gotoNextStep }) => {
       const [showSnackBar, setShowSnackBar] = useState(false);
 
   useEffect(() => {
+    console.log(cartItems);
     const loadUserDetails = async () => {
       const userDetails = localStorage.getItem("userDetails");
       if (userDetails) {
@@ -250,7 +251,7 @@ const StepOne = ({ gotoNextStep }) => {
       setShowSnackBar(true);
       setIsOpen(true)
     } else if (cartItems.length === 0) {
-      console.log("the cart is empty")
+      // console.log("the cart is empty")
       alert("Your cart is empty!");
    
     } else {

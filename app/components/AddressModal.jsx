@@ -46,7 +46,7 @@ const AddressModal = ({ isOpen, closeModal, setAllAddress, loggedInUser,  cartIt
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  console.log(formData)
+  // console.log(formData)
   setAllAddress(formData);
 
   const handleSaveAddress = async () => {

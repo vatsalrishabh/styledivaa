@@ -66,7 +66,7 @@ export const receiptToCx =  (to,  subject, receipt,orderData) => {
                     <thead>
                         <tr>
                             <th style="border: 1px solid #ccc; padding: 8px;">Product</th>
-                            <th style="border: 1px solid #ccc; padding: 8px;">Category</th>
+                            <th style="border: 1px solid #ccc; padding: 8px;">Color</th>
                             <th style="border: 1px solid #ccc; padding: 8px;">Qty</th>
                             <th style="border: 1px solid #ccc; padding: 8px;">Price</th>
                             <th style="border: 1px solid #ccc; padding: 8px;">MRP</th>
@@ -77,10 +77,10 @@ export const receiptToCx =  (to,  subject, receipt,orderData) => {
                         ${orderData.items.map(item => `
     <tr>
       <td style="border: 1px solid #ccc; padding: 8px;">
-        <img src="https://www.styledivadesignerboutique.com/${item.imageOne}" alt="Product Image" width="60" />
+        <img src="https://www.styledivadesignerboutique.com/${item.image}" alt="Product Image" width="60" />
         <br />${item.productId}
       </td>
-      <td style="border: 1px solid #ccc; padding: 8px;">${item.category}</td>
+      <td style="border: 1px solid #ccc; padding: 8px;">${item.color}</td>
       <td style="border: 1px solid #ccc; padding: 8px;">${item.quantity}</td>
       <td style="border: 1px solid #ccc; padding: 8px;">₹${item.price}</td>
       <td style="border: 1px solid #ccc; padding: 8px;">₹${item.mrp}</td>
