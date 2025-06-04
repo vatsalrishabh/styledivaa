@@ -91,5 +91,5 @@ export const seoMetadata = {
             { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" }
         ],
         googleSiteVerification: "XYZ123ABC",
-    }
+    } //seo
 };
