@@ -20,7 +20,7 @@ const Page = () => {
               <h2 className="text-lg font-semibold text-gray-800">Return & Exchange</h2>
             </div>
             <p className="text-gray-600 mt-2">
-              Items can be returned or exchanged within <strong>14 days</strong> of the purchase date.
+              Items can be returned or exchanged within <strong>7 days</strong> of the purchase date.
             </p>
           </div>
           
@@ -31,7 +31,7 @@ const Page = () => {
               <h2 className="text-lg font-semibold text-gray-800">How to Initiate a Return</h2>
             </div>
             <p className="text-gray-600 mt-2">
-              Email us at <strong>support@syledivaa.com</strong> with your order details to start a return or exchange request.
+              Email us at <strong>rathnastylediva19@gmail.com</strong> with your order details to start a return or exchange request.
             </p>
           </div>
           
@@ -48,7 +48,7 @@ const Page = () => {
         </div>
         
         <div className="mt-6 text-center text-gray-600 text-sm">
-          For further assistance, contact us at <strong>support@syledivaa.com</strong>.
+          For further assistance, contact us at <strong>rathnastylediva19@gmail.com</strong>.
         </div>
       </div>
     </div>

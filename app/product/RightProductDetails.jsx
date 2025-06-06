@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addItem } from "../../redux/cart/cartSlice";
@@ -20,6 +20,7 @@ const RightProductDetails = ({ product }) => {
 
   // Parse color names and images
   const colorNames = product?.color?.split(",").map((c) => c.trim()) || [];
+  // above we have taken into array of color names from product.color, which is a string of colors separated by commas
   const imageArray = [
     product?.imageOne,
     product?.imageTwo,
@@ -34,6 +35,17 @@ const RightProductDetails = ({ product }) => {
     color,
     image: imageArray[idx] || imageArray[0] || "",
   }));
+
+  useEffect(() => {
+    // Reset color image when component mounts
+    dispatch(
+      setColorImg({
+        color: productImgColor[0]?.color || "",
+        image: productImgColor[0]?.image || "",
+      })
+    );
+    // Reset color image when product changes
+  }, [dispatch]);
 
   // Add to Cart handler
   const handleCartAction = () => {
@@ -61,7 +73,6 @@ const RightProductDetails = ({ product }) => {
 
   // Checkout handler
   const handleCheckout = () => {
-   
     // Optionally add to cart before checkout if not already there
     const exists = cart.some(
       (item) =>
@@ -125,17 +136,32 @@ const RightProductDetails = ({ product }) => {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-700 font-medium">Select Size</span>
-          <div className="flex ">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => dispatch(openSizeChart())}
-              className="px-4 mr-4 py-2 bg-pink-500 text-white font-semibold rounded-lg shadow-md 
-             hover:bg-pink-600 hover:shadow-lg 
-             active:bg-pink-700 active:scale-95 
-             transition duration-200 ease-in-out"
+              className="px-4 mr-2 py-2 bg-pink-500 text-white font-semibold rounded-lg shadow-md 
+          hover:bg-pink-600 hover:shadow-lg 
+          active:bg-pink-700 active:scale-95 
+          transition duration-200 ease-in-out"
             >
               Open Size Chart
             </button>
             <IoChevronForward className="text-gray-500" />
+            {/* Want Stitching Button */}
+            <button
+              className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition ml-2"
+              onClick={() => {
+                // WhatsApp number (with country code, e.g., +91 for India)
+                const phone = "919945752429";
+                // Compose message
+                const msg = `Hello, I am interested in stitching for:\nProduct: ${product?.name}\nColor: ${selectedColor?.color || "Not selected"}\nSize: ${selectedSize || "Not selected"}\nProduct ID: ${product?.productId}`;
+                // WhatsApp URL
+                const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+                window.open(url, "_blank");
+              }}
+            >
+              Want Stitching?
+            </button>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -147,13 +173,13 @@ const RightProductDetails = ({ product }) => {
                 key={size}
                 onClick={() => isAvailable && setSelectedSize(size)}
                 className={`rounded-full border-2 p-2 text-center w-10 h-10 flex items-center justify-center cursor-pointer transform transition-all duration-200 ease-in-out
-                ${
-                  isAvailable
-                    ? isSelected
-                      ? "border-pink-600 bg-pink-600 text-white shadow-lg scale-105"
-                      : "border-pink-300 text-pink-600 hover:border-pink-600 hover:bg-pink-100"
-                    : "border-gray-300 text-gray-400 cursor-not-allowed opacity-50"
-                }`}
+            ${
+              isAvailable
+                ? isSelected
+                  ? "border-pink-600 bg-pink-600 text-white shadow-lg scale-105"
+                  : "border-pink-300 text-pink-600 hover:border-pink-600 hover:bg-pink-100"
+                : "border-gray-300 text-gray-400 cursor-not-allowed opacity-50"
+            }`}
               >
                 {size}
               </div>
