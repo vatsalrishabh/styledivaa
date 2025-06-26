@@ -15,6 +15,7 @@ const GalleryOne = () => {
         const response = await axios.get(`/api/gallery`);
         if (response.data && Array.isArray(response.data)) {
           setPosts(response.data);
+          console.log(response.data);
         } else {
           throw new Error("Invalid API response format");
         }
@@ -22,13 +23,13 @@ const GalleryOne = () => {
         console.error("Error fetching Instagram posts:", error);
         setError("Failed to load posts");
         setPosts([
-          { instagramLink: "https://www.instagram.com/p/C3KHOW8x-Gy/", productId: "product1" },
-          { instagramLink: "https://www.instagram.com/p/DGSqSruvCUE", productId: "product2" },
-          { instagramLink: "https://www.instagram.com/p/C-zFuKESvBY/", productId: "product3" },
-          { instagramLink: "https://www.instagram.com/p/C94t02Py9En/", productId: "product4" },
-          { instagramLink: "https://www.instagram.com/p/C8VxMkoI83_/", productId: "product5" },
-          { instagramLink: "https://www.instagram.com/p/C7jCwMhykKQ/", productId: "product6" },
-          { instagramLink: "https://www.instagram.com/reel/C4VnGqqyuvg/", productId: "product7" },
+          // { instagramLink: "https://www.instagram.com/p/C3KHOW8x-Gy/", productId: "product1" },
+          // { instagramLink: "https://www.instagram.com/p/DGSqSruvCUE", productId: "product2" },
+          // { instagramLink: "https://www.instagram.com/p/C-zFuKESvBY/", productId: "product3" },
+          // { instagramLink: "https://www.instagram.com/p/C94t02Py9En/", productId: "product4" },
+          // { instagramLink: "https://www.instagram.com/p/C8VxMkoI83_/", productId: "product5" },
+          // { instagramLink: "https://www.instagram.com/p/C7jCwMhykKQ/", productId: "product6" },
+          // { instagramLink: "https://www.instagram.com/reel/C4VnGqqyuvg/", productId: "product7" },
         ]);
       } finally {
         setLoading(false);

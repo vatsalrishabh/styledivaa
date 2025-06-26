@@ -76,6 +76,19 @@ const AdminGalleryOne = () => {
   return (
     <div>
       <h1 className="text-center text-2xl font-bold my-4 text-gray-600">Our Gallery</h1>
+{/* add Item button which opens modal */}
+<div className="flex justify-center my-4">
+  <button
+    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-800 transition-all"
+    onClick={() => {
+      setSelectedPost({ productId: "", instagramLink: "" });
+      setIsModalOpen(true);
+    }}
+  >
+    ➕ Add Instagram Post
+  </button>
+</div>
+
 
       {isModalOpen && (
         <ModalToAdd

@@ -38,7 +38,7 @@ const ModalToAdd = ({ isOpen, onClose, productId, instagramLink }) => {
 
     try {
       const response = await axios.post(
-        "/admin/gallery/postNew",
+        "/api/gallery/postNew",
         { isNewProduct, productId: productIdState, instagramLink: instagramLinkState },
         {
           headers: {
