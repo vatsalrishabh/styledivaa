@@ -43,7 +43,7 @@ export async function POST(request) {
         quantity: parseInt(fields[key], 10),
       }));
 
-    // Create and save product
+    // fCreate and save product
     const newProduct = new Product({
       productId: fields.productId,
       name: fields.name,
